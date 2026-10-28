@@ -171,8 +171,8 @@ const svgCache = new Map(), imgCache = new Map();
 const BUG = Object.fromEntries(BUGS.map(b => [b.id, b]));
 function bugURL(id) { if (!svgCache.has(id)) { const b = BUG[id]; svgCache.set(id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(T[b.tpl](b.opt))); } return svgCache.get(id); }
 function bugImg(id) { if (!imgCache.has(id)) { const im = new Image(); im.src = bugURL(id); imgCache.set(id, im); } return imgCache.get(id); }
-const BIG = new Set(['rhino', 'rhino_f', 'stag', 'stag_saw', 'stag_king', 'swallowtail', 'swallowtail2', 'black_sw', 'monarch', 'peacock', 'mantis', 'mantis_big', 'mantis_brown', 'stick', 'waterbug', 'emperor', 'luna', 'locust', 'katydid', 'centipede', 'earthworm', 'hornet', 'hawkmoth', 'cicada_black', 'silkworm', 'swallow_cat']);
-const SMALL = new Set(['ant', 'ant_red', 'termite', 'ladybug', 'ladybug2', 'ladybug28', 'firefly', 'firefly2', 'strider', 'damselfly', 'mayfly', 'aphid', 'fruitfly', 'mosquito', 'weevil', 'pillbug', 'jumping_spider', 'blue_bf', 'housefly', 'click', 'darkling', 'lacewing']);
+const BIG = new Set(['rhino', 'rhino_f', 'stag', 'stag_saw', 'stag_king', 'stag_true', 'swallowtail', 'swallowtail2', 'black_sw', 'monarch', 'peacock', 'mantis', 'mantis_big', 'mantis_brown', 'stick', 'waterbug', 'emperor', 'luna', 'locust', 'katydid', 'centipede', 'earthworm', 'hornet', 'hawkmoth', 'cicada_black', 'silkworm', 'swallow_cat']);
+const SMALL = new Set(['stag_small', 'stag_mini', 'whirligig', 'backswimmer', 'ant', 'ant_red', 'termite', 'ladybug', 'ladybug2', 'ladybug28', 'firefly', 'firefly2', 'strider', 'damselfly', 'mayfly', 'aphid', 'fruitfly', 'mosquito', 'weevil', 'pillbug', 'jumping_spider', 'blue_bf', 'housefly', 'click', 'darkling', 'lacewing']);
 const sizeOf = id => BIG.has(id) ? 112 : SMALL.has(id) ? 72 : 94;
 
 const PLACES = [
