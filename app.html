@@ -72,27 +72,28 @@ img.px{image-rendering:pixelated}
 .card .rare{position:absolute;top:6px;left:6px;font-size:12px}
 .card.new::after{content:"NEW";position:absolute;bottom:6px;right:6px;background:var(--red);color:#FFF;font-size:9px;font-weight:900;border-radius:6px;padding:1px 5px}
 
-.modal{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(31,58,26,.55);padding:18px}
+.modal{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(31,58,26,.55);padding:12px}
 .modal[hidden]{display:none}
-.modal .box{width:100%;max-width:360px;max-height:92%;overflow:auto;background:#FFF;border-radius:24px;padding:18px 16px 16px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);animation:pop .35s cubic-bezier(.2,1.4,.4,1);position:relative}
+.modal .box{width:100%;max-width:360px;max-height:96%;display:flex;flex-direction:column;overflow:hidden;background:#FFF;border-radius:20px;padding:12px 14px 12px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);animation:pop .35s cubic-bezier(.2,1.4,.4,1);position:relative}
 @keyframes pop{from{transform:scale(.6);opacity:0}}
-.modal .badge{display:inline-block;background:var(--red);color:#FFF;font-family:var(--display);font-size:16px;padding:4px 14px;border-radius:999px;margin-bottom:6px;animation:wiggle .6s ease-in-out 2}
+.modal .badge{display:inline-block;align-self:flex-start;background:var(--red);color:#FFF;font-family:var(--display);font-size:14px;padding:3px 12px;border-radius:999px;margin-bottom:4px;animation:wiggle .6s ease-in-out 2}
 .modal .badge.again{background:var(--blue)}
 @keyframes wiggle{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
-.modal .hero{display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#FFF8E6,#F2EBD6);border-radius:18px;padding:12px;margin-bottom:10px;position:relative;overflow:hidden}
-.modal .hero img{width:170px;height:170px;filter:drop-shadow(0 8px 6px rgba(0,0,0,.25));animation:bob 2s ease-in-out infinite}
+.modal .hero{flex:0 1 auto;min-height:70px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#FFF8E6,#F2EBD6);border-radius:16px;padding:6px;margin-bottom:6px;position:relative;overflow:hidden}
+.modal .hero img{height:clamp(80px,20dvh,150px);width:auto;max-height:100%;filter:drop-shadow(0 8px 6px rgba(0,0,0,.25));animation:bob 2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-6px)}}
-.modal h2{font-family:var(--display);font-size:26px;margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.modal h2{font-family:var(--display);font-size:22px;margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.2}
 .modal h2 .grp{font-family:var(--body);font-size:12px;font-weight:900;color:#FFF;background:var(--green);padding:3px 9px;border-radius:999px}
 .modal h2 .grp.not{background:var(--purple)}
-.modal .rows{display:grid;gap:6px;margin:10px 0}
-.modal .r{display:grid;grid-template-columns:64px 1fr;gap:8px;font-size:14px;background:var(--cream);border-radius:10px;padding:7px 10px}
-.modal .r b{color:var(--accent-2);font-weight:900}
-.modal .fact{background:#FFF1E3;border:2px dashed var(--accent);border-radius:14px;padding:10px 12px;font-size:14px;font-weight:700;line-height:1.5}
+.modal .rows{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:6px 0}
+.modal .r{display:flex;flex-direction:column;gap:1px;font-size:12px;line-height:1.3;background:var(--cream);border-radius:10px;padding:5px 9px}
+.modal .r.wide{grid-column:1/-1}
+.modal .r b{color:var(--accent-2);font-weight:900;font-size:11px}
+.modal .fact{background:#FFF1E3;border:2px dashed var(--accent);border-radius:12px;padding:7px 10px;font-size:12.5px;font-weight:700;line-height:1.4;overflow:auto;min-height:0}
 .modal .fact::before{content:"💡 알고 있나요? ";color:var(--accent-2)}
-.modal .close{width:100%;margin-top:12px;padding:13px;border-radius:14px;background:var(--accent);color:#FFF;font-family:var(--display);font-size:18px;box-shadow:0 4px 0 var(--accent-2)}
+.modal .close{flex:none;width:100%;margin-top:8px;padding:11px;border-radius:12px;background:var(--accent);color:#FFF;font-family:var(--display);font-size:17px;box-shadow:0 4px 0 var(--accent-2)}
 .modal .close:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent-2)}
-.modal .cnt{font-size:12px;color:var(--dim);font-weight:700;text-align:right}
+.modal .cnt{font-size:11px;color:var(--dim);font-weight:700;text-align:right;margin-top:4px}
 .toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#FFF;border:2px solid var(--accent);color:var(--ink);padding:8px 16px;border-radius:999px;font-weight:900;font-size:14px;z-index:9;box-shadow:0 8px 20px -8px rgba(0,0,0,.4);animation:tin .3s;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
 .toast[hidden]{display:none}
 @keyframes tin{from{transform:translate(-50%,-12px);opacity:0}}
@@ -348,13 +349,13 @@ function showCard(b, mode) {
     <div class="hero"><img src="${bugURL(b.id)}" alt="${b.name}"></div>
     <h2 class="disp">${b.name} <span class="grp${b.notInsect ? ' not' : ''}">${b.grp}</span>${b.rare === 2 ? ' <span title="아주 드물어요">⭐</span>' : ''}</h2>
     <div class="rows">
-      <div class="r"><b>크기</b><span>${b.size}</span></div>
+      <div class="r wide"><b>크기</b><span>${b.size}</span></div>
       <div class="r"><b>먹이</b><span>${b.food}</span></div>
       <div class="r"><b>사는 곳</b><span>${b.home}</span></div>
-      <div class="r"><b>언제</b><span>${b.time === 'night' ? '🌙 밤에 나와요' : b.time === 'day' ? '☀️ 낮에 나와요' : '☀️🌙 낮과 밤 모두'} · ${b.place.map(p => PLACES.find(x => x.id === p).name).join('·')}</span></div>
+      <div class="r wide"><b>언제 · 어디서</b><span>${b.time === 'night' ? '🌙 밤에 나와요' : b.time === 'day' ? '☀️ 낮에 나와요' : '☀️🌙 낮과 밤 모두'} · ${b.place.map(p => PLACES.find(x => x.id === p).name).join('·')}</span></div>
     </div>
     <div class="fact">${b.fact}</div>
-    <div class="cnt" style="margin-top:8px">지금까지 ${n}마리 잡았어요</div>
+    <div class="cnt">지금까지 ${n}마리 잡았어요</div>
     <button class="close" id="mClose">${mode === 'new' ? '도감에 넣기!' : '좋아요!'}</button>`;
   $('modal').hidden = false; $('mClose').onclick = () => { $('modal').hidden = true; beep(SND.tap); };
 }
