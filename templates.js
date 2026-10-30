@@ -514,3 +514,40 @@ Object.assign(T, {
   },
 
 });
+
+// ====== 바다 생물 틀 ======
+Object.assign(T, {
+  // 게 (위) — bigClaw: 한쪽 집게가 큼(농게), shell: 소라 껍데기(소라게)
+  crab: o => {
+    const a = o.a || '#B85C38', b = dark(a, .5), col = dark(a, .85);
+    let s = '';
+    const legsL = [[[66, 110], [36, 92], [20, 104], [10, 120]], [[62, 120], [30, 116], [14, 134], [6, 150]], [[62, 132], [32, 140], [18, 162], [12, 178]], [[68, 142], [44, 162], [34, 184], [30, 198]]];
+    legsL.forEach(pts => { s += leg(pts, col, 4.5) + leg(pts.map(([x, y]) => [200 - x, y]), col, 4.5); });
+    if (o.shell) s += C(100, 150, 42, 'url(#shl)', `stroke="${OL}" stroke-width="2"`) + L('M142 150 C142 128 124 112 102 114 C82 116 70 132 72 150 C74 166 88 178 104 176 C116 174 126 164 124 150 C122 140 112 136 104 138', 2.2, dark(o.shellC || '#C89060', .55)) + SHINE(86, 134, 10, 6);
+    // 등딱지: 옆으로 넓은 육각형에 가까운 모양
+    s += P(o.shell ? 'M60 112 C66 90 134 90 140 112 C146 126 136 140 100 142 C64 140 54 126 60 112 Z' : 'M56 108 C62 80 138 80 144 108 C150 126 138 148 100 150 C62 148 50 126 56 108 Z', 'url(#cb)') + L('M76 100 Q100 94 124 100', 1.2, dark(a, .5), 'opacity=".5"') + L('M70 116 Q100 110 130 116', 1.2, dark(a, .5), 'opacity=".5"') + SHINE(80, 100, 10, 5, -10, .28);
+    // 눈자루 + 겹눈
+    s += L('M88 86 L86 74', 3, OL) + L('M112 86 L114 74', 3, OL) + ceye(86, 72, 4, 4.5, '#15121A') + ceye(114, 72, 4, 4.5, '#15121A');
+    // 집게발
+    const claw = (x, big, flip) => { const k = big ? 1.5 : 1, f = flip ? -1 : 1; return P(`M${x} 100 C${x - 14 * f} ${92 - 10 * k} ${x - 26 * f} ${84 - 10 * k} ${x - 34 * f} ${66 - 14 * k} L${x - 22 * f} ${62 - 12 * k} C${x - 20 * f} ${74 - 8 * k} ${x - 12 * f} ${84 - 6 * k} ${x - 2 * f} 94 Z`, dark(a, 1.05)) + P(`M${x - 34 * f} ${66 - 14 * k} C${x - 42 * f} ${52 - 16 * k} ${x - 30 * f} ${40 - 18 * k} ${x - 20 * f} ${50 - 14 * k} L${x - 22 * f} ${62 - 12 * k} Z`, dark(a, .95)) + P(`M${x - 34 * f} ${66 - 14 * k} C${x - 48 * f} ${62 - 12 * k} ${x - 46 * f} ${44 - 14 * k} ${x - 36 * f} ${42 - 16 * k} L${x - 30 * f} ${48 - 14 * k} C${x - 36 * f} ${52 - 12 * k} ${x - 38 * f} ${60 - 10 * k} ${x - 32 * f} ${64 - 12 * k} Z`, dark(a, .8)); };
+    s += claw(74, o.bigClaw, false) + claw(126, false, true);
+    return wrap(G('cb', a, b) + G('shl', o.shellC || '#C89060', dark(o.shellC || '#C89060', .55)), s);
+  },
+  // 불가사리 (위)
+  starfish: o => {
+    const a = o.a || '#E07A3A', b = dark(a, .55);
+    let d = ''; for (let i = 0; i < 5; i++) { const ang = -Math.PI / 2 + i * Math.PI * 2 / 5, ang2 = ang + Math.PI / 5; const tx = 100 + Math.cos(ang) * 86, ty = 108 + Math.sin(ang) * 86, ix = 100 + Math.cos(ang2) * 30, iy = 108 + Math.sin(ang2) * 30; d += (i ? 'L' : 'M') + `${tx.toFixed(1)} ${ty.toFixed(1)} Q${(100 + Math.cos(ang2) * 40).toFixed(1)} ${(108 + Math.sin(ang2) * 40).toFixed(1)} ${ix.toFixed(1)} ${iy.toFixed(1)} `; }
+    let s = P(d + 'Z', 'url(#sf)');
+    for (let i = 0; i < 5; i++) { const ang = -Math.PI / 2 + i * Math.PI * 2 / 5; for (let k = 1; k <= 5; k++) { const r = 14 + k * 13; s += C(100 + Math.cos(ang) * r, 108 + Math.sin(ang) * r, 4 - k * .4, dark(a, 1.25), 'opacity=".9"'); s += C(100 + Math.cos(ang + .12) * (r - 6), 108 + Math.sin(ang + .12) * (r - 6), 2, dark(a, .7), 'opacity=".6"') + C(100 + Math.cos(ang - .12) * (r - 6), 108 + Math.sin(ang - .12) * (r - 6), 2, dark(a, .7), 'opacity=".6"'); } }
+    s += C(100, 108, 7, dark(a, 1.2), `stroke="${OL}" stroke-width="1.2"`) + SHINE(86, 92, 8, 5, -30, .25);
+    return wrap(G('sf', a, b, .4, .35), s);
+  },
+  // 따개비 (바위에 붙은 모습)
+  barnacle: o => {
+    const a = o.a || '#C9C2B2', b = dark(a, .6);
+    let s = P('M20 160 C40 150 70 146 100 146 C130 146 160 150 180 160 C170 176 130 184 100 184 C70 184 30 176 20 160 Z', '#6E6A66') + SHINE(60, 158, 14, 4, -5, .15);
+    const cone = (cx, cy, r, h) => { let c = P(`M${cx - r} ${cy} C${cx - r * .6} ${cy - h} ${cx + r * .6} ${cy - h} ${cx + r} ${cy} Z`, 'url(#bn)'); for (let i = 0; i < 6; i++) { const k = (i + .5) / 6, x = cx - r + 2 * r * k; c += L(`M${x} ${cy} L${cx + (x - cx) * .35} ${cy - h * .9}`, 1.2, b, 'opacity=".6"'); } c += P(`M${cx - r * .3} ${cy - h * .82} C${cx - r * .1} ${cy - h * .95} ${cx + r * .1} ${cy - h * .95} ${cx + r * .3} ${cy - h * .82} C${cx + r * .1} ${cy - h * .72} ${cx - r * .1} ${cy - h * .72} ${cx - r * .3} ${cy - h * .82} Z`, '#3A3A44', 'stroke-width="1.2"'); return c; };
+    s += cone(60, 156, 22, 44) + cone(140, 158, 20, 40) + cone(100, 150, 30, 64) + cone(90, 172, 12, 22);
+    return wrap(G('bn', a, b, .4, .3), s);
+  },
+});
