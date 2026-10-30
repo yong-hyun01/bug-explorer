@@ -81,8 +81,22 @@ img.px{image-rendering:pixelated}
 .modal .badge{display:inline-block;align-self:flex-start;background:var(--red);color:#FFF;font-family:var(--display);font-size:14px;padding:3px 12px;border-radius:999px;margin-bottom:4px;animation:wiggle .6s ease-in-out 2}
 .modal .badge.again{background:var(--blue)}
 @keyframes wiggle{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
-.modal .hero{flex:0 1 auto;min-height:70px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#FFF8E6,#F2EBD6);border-radius:16px;padding:6px;margin-bottom:6px;position:relative;overflow:hidden}
-.modal .hero img{height:clamp(80px,20dvh,150px);width:auto;max-height:100%;filter:drop-shadow(0 8px 6px rgba(0,0,0,.25));animation:bob 2s ease-in-out infinite}
+.modal .mbody{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
+.modal .hero{display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#FFF8E6,#F2EBD6);border-radius:16px;padding:6px;margin-bottom:6px;position:relative;overflow:hidden;min-height:90px}
+.modal .hero.photo{padding:0;background:#1F3A1A}
+.modal .hero.photo img.ph{width:100%;height:clamp(140px,28dvh,220px);object-fit:cover;display:block;animation:none;filter:none}
+.modal .hero .inset{position:absolute;right:8px;bottom:8px;width:56px;height:56px;border-radius:12px;background:rgba(255,248,230,.92);border:2px solid #fff;display:grid;place-items:center;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.modal .hero .inset img{width:46px;height:46px;animation:none;filter:none}
+.modal .credit{font-size:10px;color:var(--dim);text-align:right;margin:-2px 0 4px}
+.modal .credit a{color:var(--dim)}
+.modal .sci{font-family:var(--body);font-size:12px;font-weight:500;color:var(--dim);font-style:italic}
+.modal details{margin-top:6px;background:var(--cream);border-radius:12px;padding:6px 10px}
+.modal details summary{font-weight:900;font-size:13px;color:var(--accent-2);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.modal details summary::after{content:"▼";font-size:10px}
+.modal details[open] summary::after{content:"▲"}
+.modal details p{margin:6px 0 2px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.modal details .more{font-size:11px;font-weight:700}
+.modal .hero img{height:clamp(90px,20dvh,150px);width:auto;max-height:100%;filter:drop-shadow(0 8px 6px rgba(0,0,0,.25));animation:bob 2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-6px)}}
 .modal h2{font-family:var(--display);font-size:22px;margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.2}
 .modal h2 .grp{font-family:var(--body);font-size:12px;font-weight:900;color:#FFF;background:var(--green);padding:3px 9px;border-radius:999px}
@@ -149,6 +163,7 @@ const pick = a => a[Math.floor(Math.random() * a.length)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 /*__BUGS_DATA__*/
+const PHOTOS = /*__PHOTOS__*/{};
 
 // ======================= 픽셀 아이콘 =======================
 const PAL = { e: '#1A1018', k: '#2E2A33', r: '#E53935', y: '#FFD54A', g: '#7CC24A', G: '#3F8A2A', b: '#8A5A2B', n: '#F3E7C3', N: '#D9C58F', t: '#D6EEFF', m: '#8FD3FF', c: '#5ED3F3', o: '#FF8A3D', w: '#FFFFFF' };
@@ -177,6 +192,12 @@ const BIG = new Set(['golden_ring', 'great_purple', 'mt_swallow', 'blue_band', '
 const SMALL = new Set(['sea_skater', 'kelp_fly', 'beach_flea', 'barnacle', 'striped_bug', 'hairy_cicada', 'coast_tiger', 'sand_darkling', 'stag_small', 'stag_mini', 'whirligig', 'backswimmer', 'ant', 'ant_red', 'termite', 'ladybug', 'ladybug2', 'ladybug28', 'firefly', 'firefly2', 'strider', 'damselfly', 'mayfly', 'aphid', 'fruitfly', 'mosquito', 'weevil', 'pillbug', 'jumping_spider', 'blue_bf', 'housefly', 'click', 'darkling', 'lacewing']);
 const sizeOf = id => BIG.has(id) ? 112 : SMALL.has(id) ? 72 : 94;
 
+const COMPLETE = new Set(['딱정벌레', '나비', '벌', '파리', '풀잠자리', '날도래', '나비 애벌레']);
+function lifecycle(b) {
+  if (b.notInsect) return '곤충이 아니라서 곤충의 한살이와 달라요';
+  if (b.grp === '나비 애벌레') return '지금은 애벌레! 번데기를 거쳐 나비가 돼요';
+  return COMPLETE.has(b.grp) ? '알 → 애벌레 → 번데기 → 어른벌레 (완전탈바꿈)' : '알 → 애벌레 → 어른벌레 (번데기 없이 자라요)';
+}
 const PLACES = [
   { id: 'meadow', name: '풀밭', hint: '꽃과 풀 사이를 잘 봐요', sky: ['#9FDBFF', '#D8F1FF'], nightSky: ['#141B38', '#2B3A66'] },
   { id: 'forest', name: '숲', hint: '나무 위와 아래를 살펴요', sky: ['#8FD3FF', '#CFF0E0'], nightSky: ['#0F1530', '#1E2A52'] },
@@ -376,20 +397,26 @@ function caught(b) {
   beep(first ? SND.new : SND.catch); if (first) confetti();
   showCard(b, first ? 'new' : 'again');
 }
+window.photoFail = img => { const hero = img.parentElement, ins = hero.querySelector('.inset'); hero.className = 'hero'; if (ins) { const il = ins.querySelector('img'); ins.remove(); img.replaceWith(il); } else img.remove(); const cr = hero.nextElementSibling; if (cr && cr.classList.contains('credit')) cr.remove(); };
 function showCard(b, mode) {
-  const box = $('mbox'); const n = S.caught[b.id] || 0;
+  const box = $('mbox'); const n = S.caught[b.id] || 0, ph = PHOTOS[b.id];
   box.innerHTML = `
     ${mode === 'new' ? '<span class="badge">🎉 새로운 곤충 발견!</span>' : mode === 'again' ? '<span class="badge again">또 잡았어요!</span>' : ''}
-    <div class="hero"><img src="${bugURL(b.id)}" alt="${b.name}"></div>
+    <div class="mbody">
+    ${ph && ph.img ? `<div class="hero photo"><img class="ph" src="${ph.img}" alt="${b.name} 사진" onerror="photoFail(this)"><div class="inset"><img src="${bugURL(b.id)}" alt=""></div></div><div class="credit">사진·설명 출처: <a href="${ph.url || '#'}" target="_blank" rel="noopener">위키백과</a></div>` : `<div class="hero"><img src="${bugURL(b.id)}" alt="${b.name}"></div>`}
     <h2 class="disp">${b.name} <span class="grp${b.notInsect ? ' not' : ''}">${b.grp}</span>${b.rare === 2 ? ' <span title="아주 드물어요">⭐</span>' : ''}</h2>
+    ${ph && ph.sci && ph.lang === 'ko' ? `<div class="sci">${ph.sci}</div>` : ''}
     <div class="rows">
       <div class="r wide"><b>크기</b><span>${b.size}</span></div>
       <div class="r"><b>먹이</b><span>${b.food}</span></div>
       <div class="r"><b>사는 곳</b><span>${b.home}</span></div>
       <div class="r wide"><b>언제 · 어디서</b><span>${b.time === 'night' ? '🌙 밤에 나와요' : b.time === 'day' ? '☀️ 낮에 나와요' : '☀️🌙 낮과 밤 모두'} · ${b.place.map(p => PLACES.find(x => x.id === p).name).join('·')}</span></div>
+      <div class="r wide"><b>한살이</b><span>${lifecycle(b)}</span></div>
     </div>
     <div class="fact">${b.fact}</div>
+    ${ph && ph.extract && ph.lang === 'ko' ? `<details><summary>📖 더 알아보기</summary><p>${ph.extract.replace(/</g, '&lt;')}</p>${ph.url ? `<a class="more" href="${ph.url}" target="_blank" rel="noopener">위키백과에서 더 읽기 →</a>` : ''}</details>` : ''}
     <div class="cnt">지금까지 ${n}마리 잡았어요</div>
+    </div>
     <button class="close" id="mClose">${mode === 'new' ? '도감에 넣기!' : '좋아요!'}</button>`;
   $('modal').hidden = false; $('mClose').onclick = () => { $('modal').hidden = true; beep(SND.tap); };
 }
