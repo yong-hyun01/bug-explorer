@@ -134,10 +134,10 @@ img.px{image-rendering:pixelated}
 @media (orientation: landscape) and (min-width: 560px) {
   body{align-items:stretch}
   .phone{max-width:none;max-height:none;height:100dvh;border-radius:0;border:0;box-shadow:none}
-  .scroller{display:grid;grid-template-columns:auto minmax(300px,1fr);grid-template-rows:auto 1fr auto;grid-template-areas:"hud hud" "scene side" "pad side";column-gap:12px;overflow:hidden;scroll-behavior:auto}
-  .hud{grid-area:hud;padding:8px 16px 4px}
-  .scene{grid-area:scene;height:min(calc(100dvh - 176px),760px);width:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
-  .pad{grid-area:pad;padding:8px 12px 10px;margin-left:12px;justify-content:space-between}
+  .scroller{display:grid;grid-template-columns:auto minmax(280px,520px);grid-template-rows:auto 1fr auto;grid-template-areas:"hud hud" "scene side" "pad side";column-gap:12px;justify-content:center;overflow:hidden;scroll-behavior:auto}
+  .hud{grid-area:hud;padding:8px 16px 4px;max-width:1120px;width:100%;justify-self:center}
+  .scene{grid-area:scene;height:min(calc(100dvh - 176px),calc(100vw - 330px),760px);width:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
+  .pad{grid-area:pad;align-self:start;padding:8px 12px 10px;margin-left:12px;justify-content:space-between}
   .side{display:flex;flex-direction:column;grid-area:side;min-height:0;overflow:auto;padding-right:12px;overscroll-behavior:contain}
   .places{padding:0 0 4px;grid-template-columns:repeat(4,1fr)}
   .place{padding:4px 2px;font-size:12px}.place img{width:22px;height:22px}.place small{font-size:10px}
@@ -150,7 +150,7 @@ img.px{image-rendering:pixelated}
 @media (orientation: landscape) and (min-width: 560px) and (max-height: 520px) {
   /* 스마트폰 가로: 탐험 화면을 세로로 꽉 채우고 키패드는 오른쪽 아래에 */
   .scroller{grid-template-rows:auto 1fr;grid-template-areas:"hud hud" "scene side"}
-  .scene{height:calc(100dvh - 62px)}
+  .scene{height:min(calc(100dvh - 62px),calc(100vw - 330px))}
   .pad{grid-area:side;align-self:end;z-index:3;margin:0;padding:6px 10px 8px;background:linear-gradient(180deg,rgba(255,248,230,0),var(--cream) 30%)}
   .side{padding-bottom:96px}
   .dpad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,36px)}
