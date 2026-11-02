@@ -7,9 +7,10 @@ const LG = (id, a, b, v) => `<linearGradient id="${id}" x1="0" y1="0" x2="${v ? 
 const FACET = `<pattern id="fc" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".75" fill="#000" opacity=".35"/></pattern>`;
 const HAIR = `<pattern id="hr" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M1 3 L2 0" stroke="#000" stroke-width=".7" opacity=".28"/></pattern>`;
 const SW = extra => /stroke-width/.test(extra || '') ? '' : 'stroke-width="2"';
-const E = (cx, cy, rx, ry, fill, extra) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${OL}" ${SW(extra)} ${extra || ''}/>`;
+const SK = extra => /\sstroke=|^stroke=/.test(' ' + (extra || '')) ? '' : `stroke="${OL}"`;
+const E = (cx, cy, rx, ry, fill, extra) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" ${SK(extra)} ${SW(extra)} ${extra || ''}/>`;
 const C = (cx, cy, r, fill, extra) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" ${extra || ''}/>`;
-const P = (d, fill, extra) => `<path d="${d}" fill="${fill}" stroke="${OL}" ${SW(extra)} stroke-linejoin="round" ${extra || ''}/>`;
+const P = (d, fill, extra) => `<path d="${d}" fill="${fill}" ${SK(extra)} ${SW(extra)} stroke-linejoin="round" ${extra || ''}/>`;
 const L = (d, w, col, extra) => `<path d="${d}" fill="none" stroke="${col || OL}" stroke-width="${w || 3}" stroke-linecap="round" stroke-linejoin="round" ${extra || ''}/>`;
 const SHINE = (cx, cy, rx, ry, rot, op) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" opacity="${op == null ? .32 : op}" transform="rotate(${rot == null ? -30 : rot} ${cx} ${cy})"/>`;
 const mirror = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => `${(200 - x).toFixed(1)} ${y}`);
@@ -552,6 +553,90 @@ Object.assign(T, {
   },
 });
 
+// ====== 심해·땅속 생물 틀 ======
+Object.assign(T, {
+  jellyfish: o => {
+    const a = o.a || '#9FD8FF', b = dark(a, .7);
+    let s = '';
+    for (let i = 0; i < 7; i++) { const x = 58 + i * 14, len = 70 + ((i * 37) % 40); s += L(`M${x} 118 C${x - 8} ${118 + len * .4} ${x + 10} ${118 + len * .7} ${x - 2} ${118 + len}`, 2.2, a, 'opacity=".8"'); }
+    for (let i = 0; i < 4; i++) { const x = 76 + i * 16; s += L(`M${x} 120 C${x - 12} 150 ${x + 12} 170 ${x} 196`, 5, dark(a, .9), 'opacity=".6"'); }
+    s += P('M30 112 C30 50 170 50 170 112 C140 124 60 124 30 112 Z', 'url(#jf)', 'fill-opacity=".85"') + P('M44 108 C44 70 156 70 156 108 C130 102 70 102 44 108 Z', '#fff', 'fill-opacity=".18" stroke="none"');
+    for (let i = 0; i < 5; i++) s += L(`M${52 + i * 24} 112 C${54 + i * 24} 90 ${58 + i * 24} 80 ${62 + i * 24} 70`, 1.2, '#fff', 'opacity=".5"');
+    s += SHINE(70, 76, 18, 8, -20, .45);
+    return wrap(G('jf', a, b, .45, .35), s);
+  },
+  anglerfish: o => {
+    const a = o.a || '#3A3A50', b = dark(a, .45);
+    let s = L('M96 70 C80 40 60 30 50 44', 3.5, OL) + L('M96 70 C80 40 60 30 50 44', 2, dark(a, 1.3)) + `<circle cx="48" cy="48" r="12" fill="url(#gl)" opacity=".8"/>` + C(48, 48, 5, '#FFF59D', `stroke="${OL}" stroke-width="1.5"`);
+    s += P('M170 110 C150 60 60 60 34 104 C30 110 30 118 34 124 C60 170 150 170 170 120 L196 100 L190 128 L172 118 Z', 'url(#af)');
+    s += P('M100 68 C90 50 80 54 84 70 Z', dark(a, .9)) + P('M120 70 C112 48 100 50 106 72 Z', dark(a, .9)) + P('M110 158 C100 180 90 176 94 160 Z', dark(a, .9));
+    s += P('M34 116 C60 108 100 108 130 118 C100 132 60 136 34 124 Z', dark(a, .6)); for (let i = 0; i < 8; i++) s += P(`M${44 + i * 11} 112 L${48 + i * 11} 124 L${52 + i * 11} 112 Z`, '#F6F0E0', 'stroke-width="1"') + P(`M${50 + i * 11} 130 L${54 + i * 11} 118 L${58 + i * 11} 130 Z`, '#F6F0E0', 'stroke-width="1"');
+    s += ceye(80, 90, 11, 11, '#C8D8FF') + C(82, 92, 5, '#15121A') + SHINE(120, 86, 20, 8, -10, .18);
+    return wrap(G('af', a, b, .4, .35) + G('gl', '#FFF59D', '#FFB300', .5, .5), s);
+  },
+  squid: o => {
+    const a = o.a || '#E07A6A', b = dark(a, .6);
+    let s = '';
+    for (let i = 0; i < 8; i++) { const x = 72 + i * 8; s += L(`M${x} 120 C${x - 10 + i * 2} 150 ${x + 6 - i * 2} 170 ${x - 4 + i} 192`, 4, dark(a, .9)); }
+    s += L('M66 120 C40 150 36 180 30 196', 5, dark(a, .85)) + L('M134 120 C160 150 164 180 170 196', 5, dark(a, .85)) + P('M30 196 C24 186 36 182 36 194 Z', dark(a, .85)) + P('M170 196 C176 186 164 182 164 194 Z', dark(a, .85));
+    s += P('M100 4 C128 30 134 80 130 118 C120 128 80 128 70 118 C66 80 72 30 100 4 Z', 'url(#sq)') + P('M100 20 C120 40 126 60 124 70 C110 56 90 56 76 70 C74 60 80 40 100 20 Z', dark(a, .85), 'stroke-width="1.2"');
+    for (let i = 0; i < 12; i++) s += C(84 + (i * 23) % 36, 50 + (i * 17) % 60, 2, dark(a, .55), 'opacity=".6"');
+    s += ceye(78, 104, 9, 9, '#C8D8FF') + ceye(122, 104, 9, 9, '#C8D8FF') + C(80, 106, 4, '#15121A') + C(124, 106, 4, '#15121A') + SHINE(88, 50, 6, 24, 0, .3);
+    return wrap(G('sq', a, b, .4, .3), s);
+  },
+  shrimp: o => {
+    const a = o.a || '#E9A0A0', b = dark(a, .65), col = dark(a, .85);
+    let s = antenna('M150 70 C170 50 190 36 198 20', col, 1.4) + antenna('M152 76 C180 70 196 72 200 80', col, 1.4);
+    for (let i = 0; i < 5; i++) s += L(`M${110 - i * 14} 118 C${106 - i * 14} 140 ${100 - i * 14} 150 ${96 - i * 14} 160`, 3, col);
+    s += P('M150 60 C176 70 176 110 150 126 C120 134 90 130 60 140 C44 146 36 160 30 176 L24 170 C28 150 36 136 50 124 C70 110 100 106 120 100 C136 96 140 80 150 60 Z', 'url(#sh2)');
+    for (let i = 0; i < 6; i++) { const x = 130 - i * 16, y = 108 + i * 6; s += L(`M${x} ${y - 10} Q${x - 6} ${y} ${x - 4} ${y + 12}`, 1.4, b, 'opacity=".6"'); }
+    s += P('M30 176 C20 170 14 178 20 186 L34 182 Z', dark(a, .9)) + P('M24 170 C14 164 8 172 14 180 L28 178 Z', dark(a, .9));
+    s += P('M150 60 C160 54 170 60 168 72 C160 70 154 66 150 60 Z', dark(a, .8)) + ceye(160, 66, 5, 5, '#15121A') + L('M156 80 L170 96 M160 82 L176 92', 2, col);
+    return wrap(G('sh2', a, b, .4, .3), s);
+  },
+  grub: o => {
+    const a = o.a || '#F3E7C3', b = dark(a, .7), col = dark(a, .6);
+    let s = '';
+    const pts = []; for (let i = 0; i < 9; i++) { const ang = -1.2 + i * .42; pts.push([110 + Math.cos(ang) * 56, 100 + Math.sin(ang) * 56]); }
+    for (let i = pts.length - 1; i >= 0; i--) { const [x, y] = pts[i]; s += C(x, y, 20 - (i > 6 ? (i - 6) * 3 : 0), 'url(#gb)', `stroke="${OL}" stroke-width="2"`); if (i < 7) s += C(x + 8, y - 6, 2, '#8A6A4A', 'opacity=".8"'); }
+    s += leg([[pts[0][0] + 6, pts[0][1] + 14], [pts[0][0] + 2, pts[0][1] + 28]], col, 3) + leg([[pts[1][0] + 10, pts[1][1] + 10], [pts[1][0] + 12, pts[1][1] + 26]], col, 3) + leg([[pts[2][0] + 10, pts[2][1] + 4], [pts[2][0] + 18, pts[2][1] + 18]], col, 3);
+    s += C(pts[0][0] - 12, pts[0][1] - 10, 15, '#A86E3A', `stroke="${OL}" stroke-width="2"`) + L(`M${pts[0][0] - 18} ${pts[0][1] - 2} l-6 8 M${pts[0][0] - 8} ${pts[0][1] + 2} l-2 9`, 2.5, OL) + C(pts[0][0] - 18, pts[0][1] - 14, 2, OL) + SHINE(pts[4][0] - 6, pts[4][1] - 8, 7, 4, -20, .3);
+    return wrap(G('gb', a, b, .4, .3), s);
+  },
+  nymph: o => {
+    const a = o.a || '#8A6A4A', b = dark(a, .5), col = dark(a, .8);
+    let s = leg([[72, 92], [40, 76], [26, 86], [20, 100]], col, 7) + spines(40, 76, 26, 86, 3, 4) + leg([[128, 92], [160, 76], [174, 86], [180, 100]], col, 7) + spines(160, 76, 174, 86, 3, -4);
+    s += leg([[70, 120], [40, 128], [26, 148]], col, 4) + leg([[130, 120], [160, 128], [174, 148]], col, 4) + leg([[74, 140], [50, 162], [40, 184]], col, 4) + leg([[126, 140], [150, 162], [160, 184]], col, 4);
+    s += E(100, 128, 36, 48, 'url(#ny)') + segs(100, 100, 100, 176, 7, dark(a, .45), 30) + P('M64 92 C64 70 80 62 100 62 C120 62 136 70 136 92 C124 100 76 100 64 92 Z', dark(a, .9)) + P('M70 66 C70 50 84 44 100 44 C116 44 130 50 130 66 C120 72 80 72 70 66 Z', dark(a, .8));
+    s += ceye(76, 58, 6, 6, '#2A2230') + ceye(124, 58, 6, 6, '#2A2230') + L('M100 70 L100 94', 2, b) + P('M86 104 C92 96 108 96 114 104 L112 114 C104 108 96 108 88 114 Z', dark(a, .75), 'stroke-width="1.2"') + SHINE(84, 116, 7, 16, -8, .22);
+    return wrap(G('ny', a, b), s);
+  },
+  antlion_larva: o => {
+    const a = o.a || '#9A8A6A', b = dark(a, .5), col = dark(a, .8);
+    let s = leg([[80, 100], [56, 90], [44, 102]], col, 3.5) + leg([[120, 100], [144, 90], [156, 102]], col, 3.5) + leg([[76, 116], [48, 124], [38, 140]], col, 3.5) + leg([[124, 116], [152, 124], [162, 140]], col, 3.5) + leg([[80, 134], [58, 156], [52, 172]], col, 3.5) + leg([[120, 134], [142, 156], [148, 172]], col, 3.5);
+    s += E(100, 130, 46, 50, 'url(#al)') + `<ellipse cx="100" cy="130" rx="46" ry="50" fill="url(#hr)"/>` + hairs(100, 130, 48, 30, dark(a, .6)) + segs(100, 92, 100, 176, 6, dark(a, .45), 40);
+    s += P('M72 92 C72 72 86 64 100 64 C114 64 128 72 128 92 C118 100 82 100 72 92 Z', dark(a, .85)) + P('M80 66 C82 50 86 36 70 10 C76 8 82 14 86 26 C90 40 92 54 94 64 Z', dark(a, .5)) + P(mirror('M80 66 C82 50 86 36 70 10 C76 8 82 14 86 26 C90 40 92 54 94 64 Z'), dark(a, .5)) + L('M78 34 l6 2 M82 46 l6 2 M122 34 l-6 2 M118 46 l-6 2', 1.5);
+    s += ceye(84, 78, 3.5, 3.5, '#15121A') + ceye(116, 78, 3.5, 3.5, '#15121A') + SHINE(84, 116, 8, 14, -8, .22);
+    return wrap(G('al', a, b), s);
+  },
+  springtail: o => {
+    const a = o.a || '#8A9AB0', b = dark(a, .55), col = dark(a, .8);
+    let s = L('M60 150 C40 170 30 180 24 192', 4, OL) + L('M60 150 C40 170 30 180 24 192', 2.2, dark(a, 1.1)) + L('M24 192 L16 198 M24 192 L30 200', 2, OL);
+    s += leg([[90, 128], [76, 146], [64, 156]], col, 3) + leg([[112, 124], [112, 148], [100, 162]], col, 3) + leg([[132, 112], [146, 136], [142, 154]], col, 3);
+    s += P('M56 146 C70 112 110 96 150 92 C166 90 176 98 172 108 C150 124 110 138 62 152 Z', 'url(#sp2)') + segs(70, 140, 150, 100, 6, dark(a, .45), 6);
+    s += E(164, 100, 14, 12, dark(a, .9)) + ceye(170, 96, 4, 4, '#15121A') + antenna('M174 90 C182 76 190 70 196 62', col, 1.4) + antenna('M176 94 C186 90 192 90 198 92', col, 1.4) + SHINE(100, 118, 18, 5, -20, .3);
+    return wrap(G('sp2', a, b), s);
+  },
+  mole: o => {
+    const a = o.a || '#4A3A3A', b = dark(a, .5);
+    let s = P('M40 110 C60 70 140 66 170 104 C180 118 178 142 164 154 C130 170 70 168 40 148 C28 138 30 122 40 110 Z', 'url(#ml)') + `<path d="M40 110 C60 70 140 66 170 104 C180 118 178 142 164 154 C130 170 70 168 40 148 C28 138 30 122 40 110 Z" fill="url(#hr)"/>`;
+    s += P('M166 112 C180 110 194 118 194 128 C188 134 176 132 168 126 Z', '#E8A0A0') + C(190, 126, 3, '#3A2A2A') + L('M178 118 L196 108 M180 126 L200 124 M178 132 L196 140', 1.2, '#2A1E1E');
+    s += C(160, 108, 2.5, '#15121A') + P('M110 150 C100 162 80 164 72 176 C86 182 104 176 112 168 Z', '#E8B8A8') + L('M78 176 l-4 6 M86 178 l-2 7 M94 176 l0 8 M102 174 l2 7', 2, OL) + P('M138 152 C136 166 124 170 118 180 C132 184 146 178 150 166 Z', '#E8B8A8') + L('M120 180 l-2 6 M128 182 l0 7 M136 180 l2 7 M144 176 l3 6', 2, OL);
+    s += L('M40 128 C30 126 22 130 18 138', 3, dark(a, .9)) + SHINE(90, 94, 22, 8, -10, .18);
+    return wrap(G('ml', a, b, .4, .3), s);
+  },
+});
+
 // ======================= 곤충 100종 =======================
 // [id, 이름, 종류, 장소[], 시간(day|night|both), 움직임(fly|crawl|hop|swim|glide), 희귀도(0~2), 템플릿, 옵션, 크기, 먹이, 사는 곳, 재미있는 사실, 추가플래그]
 const RAW = [
@@ -718,6 +803,27 @@ const RAW = [
 ['striped_bug', '홍줄노린재', '노린재', ['mountain'], 'day', 'crawl', 1, 'shield', { a: '#E53935', sc: '#E53935', spots: [[70, 100, 3, '#1E1A26'], [86, 96, 3, '#1E1A26'], [114, 96, 3, '#1E1A26'], [130, 100, 3, '#1E1A26'], [76, 140, 3, '#1E1A26'], [124, 140, 3, '#1E1A26']] }, '1cm · 콩알만 해요', '당근·미나리 꽃의 즙', '산속 꽃밭', '빨간 몸에 까만 줄무늬가 있어요. 눈에 잘 띄는 색으로 "나는 맛없어!"라고 알려요.'],
 ['orb_spider', '왕거미', '곤충 아님!', ['mountain'], 'night', 'crawl', 0, 'spider', { a: '#6B5A3A', fat: true, bands: '#3A2E26' }, '2.5cm · 콩알 네 개 크기', '거미줄에 걸린 벌레', '나뭇가지 사이 둥근 거미줄', '밤마다 둥근 거미줄을 새로 짜요. 아침이 되면 거미줄을 먹어 치우고 다시 만들어요.', 'not'],
 ['millipede', '노래기', '곤충 아님!', ['mountain'], 'night', 'crawl', 0, 'centipede', { a: '#3A2E3A', leg: '#8A7A6A' }, '4cm · 어른 엄지손가락만 해요', '썩은 잎', '산속 낙엽 아래', '지네와 닮았지만 한 마디에 다리가 두 쌍씩 있어요. 건드리면 돌돌 말리고 고약한 냄새를 내요.', 'not'],
+// ---- 심해 ----
+['giant_isopod', '대왕등각류', '곤충 아님!', ['deepsea'], 'both', 'crawl', 1, 'pillbug', { a: '#B8A8B0' }, '30cm · 어른 발만큼 커요', '바다 밑에 가라앉은 먹이', '깊은 바다 바닥', '공벌레를 아주 크게 키운 모습이에요. 깊고 차가운 바다에서 몇 년 동안 안 먹고도 살 수 있어요.', 'not'],
+['sea_spider', '바다거미', '곤충 아님!', ['deepsea'], 'both', 'crawl', 1, 'spider', { a: '#C8A070' }, '20cm · 다리를 펴면 어른 손 두 개 크기', '말미잘, 산호', '깊은 바다 바닥', '다리는 거미처럼 8개지만 거미와는 다른 동물이에요. 몸이 너무 작아서 다리 속에 내장이 들어 있어요.', 'not'],
+['deep_shrimp', '심해새우', '곤충 아님!', ['deepsea'], 'both', 'swim', 0, 'shrimp', { a: '#E05050' }, '5cm · 어른 엄지손가락보다 커요', '바다 눈(가라앉는 먹이 조각)', '깊은 바다 속', '깊은 바다에서는 빨간색이 검게 보여서 숨기 좋아요. 뜨거운 물이 솟는 곳 주변에 떼 지어 살아요.', 'not'],
+['tube_worm', '관벌레', '곤충 아님!', ['deepsea'], 'both', 'still', 2, 'worm', { a: '#E85050' }, '2m · 어른 키보다 커요', '먹지 않아요 (몸속 세균이 영양을 만들어요)', '뜨거운 물이 솟는 바다 밑', '입도 위장도 없어요. 몸속에 사는 세균이 대신 영양분을 만들어 줘요. 하얀 관 속에 몸을 넣고 살아요.', 'not'],
+['jellyfish', '해파리', '곤충 아님!', ['deepsea'], 'both', 'fly', 0, 'jellyfish', {}, '30cm · 우산 크기', '작은 물고기, 플랑크톤', '바다 속 어디든', '몸의 95%가 물이에요. 뇌도 심장도 없지만 수억 년 동안 바다에서 살아왔어요. 촉수에 쏘이면 아파요.', 'not'],
+['anglerfish', '초롱아귀', '곤충 아님!', ['deepsea'], 'both', 'swim', 2, 'anglerfish', {}, '20cm · 어른 손 두 개 크기', '작은 물고기', '빛이 없는 깊은 바다', '머리 위 낚싯대 끝이 초롱처럼 빛나요. 그 빛을 보고 다가온 물고기를 큰 입으로 꿀꺽 삼켜요.', 'not'],
+['giant_squid', '대왕오징어', '곤충 아님!', ['deepsea'], 'both', 'swim', 2, 'squid', { a: '#D06A5A' }, '13m · 버스보다 길어요', '물고기, 작은 오징어', '아주 깊은 바다', '눈이 농구공만큼 커서 세상에서 가장 큰 눈을 가졌어요. 향유고래와 싸운 흔적이 발견되기도 해요.', 'not'],
+['crinoid', '바다나리', '곤충 아님!', ['deepsea'], 'both', 'still', 1, 'starfish', { a: '#C96A9A' }, '20cm · 어른 손 두 개 크기', '물에 떠다니는 먹이', '깊은 바다 바위', '꽃처럼 생겼지만 동물이에요. 불가사리의 친척으로 깃털 같은 팔을 펼쳐 먹이를 걸러 먹어요.', 'not'],
+['sea_pig', '바다돼지', '곤충 아님!', ['deepsea'], 'both', 'crawl', 1, 'caterpillar', { a: '#F0B8C8', head: '#F0B8C8' }, '10cm · 어른 손바닥 길이', '바다 밑 진흙 속 먹이', '깊은 바다 진흙 바닥', '분홍빛 통통한 몸에 다리가 달린 해삼이에요. 진흙 바닥을 떼 지어 걸어 다니며 먹이를 찾아요.', 'not'],
+// ---- 땅속 ----
+['grub', '굼벵이', '딱정벌레 애벌레', ['underground'], 'both', 'crawl', 0, 'grub', {}, '7cm · 어른 손가락 길이', '썩은 나무, 뿌리', '땅속과 썩은 나무 속', '장수풍뎅이나 풍뎅이의 애벌레예요. C자로 몸을 구부리고 살며, 3년이나 땅속에서 자란 뒤 어른이 돼요.'],
+['cicada_nymph', '매미 애벌레', '매미', ['underground'], 'both', 'crawl', 1, 'nymph', {}, '3cm · 어른 엄지손가락만 해요', '나무뿌리의 즙', '나무뿌리 옆 땅속', '앞다리가 삽처럼 생겨서 땅을 파요. 땅속에서 5~7년을 살다가 여름밤에 나무로 올라가 허물을 벗어요.'],
+['antlion_larva', '개미귀신', '풀잠자리 애벌레', ['underground'], 'both', 'still', 1, 'antlion_larva', {}, '1cm · 콩알만 해요', '개미', '모래 속 깔때기 함정', '모래에 깔때기 모양 함정을 파고 바닥에 숨어 있어요. 개미가 미끄러져 떨어지면 큰 턱으로 잡아요. 자라면 명주잠자리가 돼요.'],
+['wireworm', '철사벌레', '딱정벌레 애벌레', ['underground'], 'both', 'crawl', 0, 'caterpillar', { a: '#E0B850', head: '#A87830' }, '2cm · 콩알 세 개 크기', '식물 뿌리, 씨앗', '밭 땅속', '방아벌레의 애벌레예요. 몸이 철사처럼 딱딱하고 길어서 철사벌레라고 불러요.'],
+['springtail', '톡토기', '톡토기', ['underground'], 'both', 'hop', 0, 'springtail', {}, '0.2cm · 깨알보다 작아요', '썩은 잎, 곰팡이', '축축한 흙 속', '배 밑에 접어 둔 꼬리를 튕겨서 톡 하고 뛰어요. 한 줌 흙 속에 수백 마리가 살아요.'],
+['queen_ant', '여왕개미', '벌', ['underground'], 'both', 'crawl', 2, 'ant', { a: '#5A3A2A', big: true }, '1.5cm · 콩알 두 개 크기', '일개미가 가져온 먹이', '땅속 개미집 가장 깊은 방', '개미집에서 알을 낳는 단 하나의 개미예요. 결혼 비행 뒤 날개를 떼고 땅속으로 들어가 집을 시작해요.'],
+['purse_spider', '땅거미', '곤충 아님!', ['underground'], 'both', 'still', 1, 'spider', { a: '#3A2E3A', fat: true }, '1.5cm · 콩알 두 개 크기', '지나가는 벌레', '땅속 거미줄 주머니', '땅속에 거미줄로 긴 주머니를 만들고 숨어요. 벌레가 주머니 위를 지나가면 안에서 콱 물어요.', 'not'],
+['mole', '두더지', '곤충 아님!', ['underground'], 'both', 'crawl', 2, 'mole', {}, '15cm · 어른 손 두 개 크기', '지렁이, 굼벵이', '땅속 굴', '곤충이 아니라 포유류예요. 삽 같은 앞발로 하루에 20m나 굴을 파요. 눈은 거의 보이지 않지만 코가 아주 예민해요.', 'not'],
+['burrow_bug', '땅노린재', '노린재', ['underground'], 'night', 'crawl', 1, 'shield', { a: '#3A2E2A', sc: '#4A3A32', spots: [] }, '1cm · 콩알만 해요', '식물 뿌리의 즙', '풀뿌리 옆 땅속', '까맣고 반질반질한 몸으로 땅속에서 뿌리의 즙을 빨아요. 다리에 가시가 있어 땅을 잘 파요.'],
+['red_worm', '줄지렁이', '곤충 아님!', ['underground'], 'both', 'crawl', 0, 'worm', { a: '#C86060' }, '8cm · 어른 손가락 길이', '썩은 잎, 음식 찌꺼기', '낙엽 아래 흙 속', '몸에 줄무늬가 있는 붉은 지렁이예요. 음식 찌꺼기를 먹어 좋은 흙을 만들어서 사람이 일부러 키우기도 해요.', 'not'],
 ];
 const BUGS = RAW.map(r => ({ id: r[0], name: r[1], grp: r[2], place: r[3], time: r[4], move: r[5], rare: r[6], tpl: r[7], opt: r[8], size: r[9], food: r[10], home: r[11], fact: r[12], notInsect: r[13] === 'not' }));
-const SIDE = new Set(['hopper', 'mantis', 'rhino', 'stick', 'mayfly', 'caterpillar', 'earwig', 'snail', 'worm']); // 옆모습 템플릿
+const SIDE = new Set(['hopper', 'mantis', 'rhino', 'stick', 'mayfly', 'caterpillar', 'earwig', 'snail', 'worm', 'anglerfish', 'shrimp', 'grub', 'springtail', 'mole']); // 옆모습 템플릿

@@ -7,9 +7,10 @@ const LG = (id, a, b, v) => `<linearGradient id="${id}" x1="0" y1="0" x2="${v ? 
 const FACET = `<pattern id="fc" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".75" fill="#000" opacity=".35"/></pattern>`;
 const HAIR = `<pattern id="hr" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M1 3 L2 0" stroke="#000" stroke-width=".7" opacity=".28"/></pattern>`;
 const SW = extra => /stroke-width/.test(extra || '') ? '' : 'stroke-width="2"';
-const E = (cx, cy, rx, ry, fill, extra) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${OL}" ${SW(extra)} ${extra || ''}/>`;
+const SK = extra => /\sstroke=|^stroke=/.test(' ' + (extra || '')) ? '' : `stroke="${OL}"`;
+const E = (cx, cy, rx, ry, fill, extra) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" ${SK(extra)} ${SW(extra)} ${extra || ''}/>`;
 const C = (cx, cy, r, fill, extra) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" ${extra || ''}/>`;
-const P = (d, fill, extra) => `<path d="${d}" fill="${fill}" stroke="${OL}" ${SW(extra)} stroke-linejoin="round" ${extra || ''}/>`;
+const P = (d, fill, extra) => `<path d="${d}" fill="${fill}" ${SK(extra)} ${SW(extra)} stroke-linejoin="round" ${extra || ''}/>`;
 const L = (d, w, col, extra) => `<path d="${d}" fill="none" stroke="${col || OL}" stroke-width="${w || 3}" stroke-linecap="round" stroke-linejoin="round" ${extra || ''}/>`;
 const SHINE = (cx, cy, rx, ry, rot, op) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" opacity="${op == null ? .32 : op}" transform="rotate(${rot == null ? -30 : rot} ${cx} ${cy})"/>`;
 const mirror = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => `${(200 - x).toFixed(1)} ${y}`);
@@ -549,5 +550,89 @@ Object.assign(T, {
     const cone = (cx, cy, r, h) => { let c = P(`M${cx - r} ${cy} C${cx - r * .6} ${cy - h} ${cx + r * .6} ${cy - h} ${cx + r} ${cy} Z`, 'url(#bn)'); for (let i = 0; i < 6; i++) { const k = (i + .5) / 6, x = cx - r + 2 * r * k; c += L(`M${x} ${cy} L${cx + (x - cx) * .35} ${cy - h * .9}`, 1.2, b, 'opacity=".6"'); } c += P(`M${cx - r * .3} ${cy - h * .82} C${cx - r * .1} ${cy - h * .95} ${cx + r * .1} ${cy - h * .95} ${cx + r * .3} ${cy - h * .82} C${cx + r * .1} ${cy - h * .72} ${cx - r * .1} ${cy - h * .72} ${cx - r * .3} ${cy - h * .82} Z`, '#3A3A44', 'stroke-width="1.2"'); return c; };
     s += cone(60, 156, 22, 44) + cone(140, 158, 20, 40) + cone(100, 150, 30, 64) + cone(90, 172, 12, 22);
     return wrap(G('bn', a, b, .4, .3), s);
+  },
+});
+
+// ====== 심해·땅속 생물 틀 ======
+Object.assign(T, {
+  jellyfish: o => {
+    const a = o.a || '#9FD8FF', b = dark(a, .7);
+    let s = '';
+    for (let i = 0; i < 7; i++) { const x = 58 + i * 14, len = 70 + ((i * 37) % 40); s += L(`M${x} 118 C${x - 8} ${118 + len * .4} ${x + 10} ${118 + len * .7} ${x - 2} ${118 + len}`, 2.2, a, 'opacity=".8"'); }
+    for (let i = 0; i < 4; i++) { const x = 76 + i * 16; s += L(`M${x} 120 C${x - 12} 150 ${x + 12} 170 ${x} 196`, 5, dark(a, .9), 'opacity=".6"'); }
+    s += P('M30 112 C30 50 170 50 170 112 C140 124 60 124 30 112 Z', 'url(#jf)', 'fill-opacity=".85"') + P('M44 108 C44 70 156 70 156 108 C130 102 70 102 44 108 Z', '#fff', 'fill-opacity=".18" stroke="none"');
+    for (let i = 0; i < 5; i++) s += L(`M${52 + i * 24} 112 C${54 + i * 24} 90 ${58 + i * 24} 80 ${62 + i * 24} 70`, 1.2, '#fff', 'opacity=".5"');
+    s += SHINE(70, 76, 18, 8, -20, .45);
+    return wrap(G('jf', a, b, .45, .35), s);
+  },
+  anglerfish: o => {
+    const a = o.a || '#3A3A50', b = dark(a, .45);
+    let s = L('M96 70 C80 40 60 30 50 44', 3.5, OL) + L('M96 70 C80 40 60 30 50 44', 2, dark(a, 1.3)) + `<circle cx="48" cy="48" r="12" fill="url(#gl)" opacity=".8"/>` + C(48, 48, 5, '#FFF59D', `stroke="${OL}" stroke-width="1.5"`);
+    s += P('M170 110 C150 60 60 60 34 104 C30 110 30 118 34 124 C60 170 150 170 170 120 L196 100 L190 128 L172 118 Z', 'url(#af)');
+    s += P('M100 68 C90 50 80 54 84 70 Z', dark(a, .9)) + P('M120 70 C112 48 100 50 106 72 Z', dark(a, .9)) + P('M110 158 C100 180 90 176 94 160 Z', dark(a, .9));
+    s += P('M34 116 C60 108 100 108 130 118 C100 132 60 136 34 124 Z', dark(a, .6)); for (let i = 0; i < 8; i++) s += P(`M${44 + i * 11} 112 L${48 + i * 11} 124 L${52 + i * 11} 112 Z`, '#F6F0E0', 'stroke-width="1"') + P(`M${50 + i * 11} 130 L${54 + i * 11} 118 L${58 + i * 11} 130 Z`, '#F6F0E0', 'stroke-width="1"');
+    s += ceye(80, 90, 11, 11, '#C8D8FF') + C(82, 92, 5, '#15121A') + SHINE(120, 86, 20, 8, -10, .18);
+    return wrap(G('af', a, b, .4, .35) + G('gl', '#FFF59D', '#FFB300', .5, .5), s);
+  },
+  squid: o => {
+    const a = o.a || '#E07A6A', b = dark(a, .6);
+    let s = '';
+    for (let i = 0; i < 8; i++) { const x = 72 + i * 8; s += L(`M${x} 120 C${x - 10 + i * 2} 150 ${x + 6 - i * 2} 170 ${x - 4 + i} 192`, 4, dark(a, .9)); }
+    s += L('M66 120 C40 150 36 180 30 196', 5, dark(a, .85)) + L('M134 120 C160 150 164 180 170 196', 5, dark(a, .85)) + P('M30 196 C24 186 36 182 36 194 Z', dark(a, .85)) + P('M170 196 C176 186 164 182 164 194 Z', dark(a, .85));
+    s += P('M100 4 C128 30 134 80 130 118 C120 128 80 128 70 118 C66 80 72 30 100 4 Z', 'url(#sq)') + P('M100 20 C120 40 126 60 124 70 C110 56 90 56 76 70 C74 60 80 40 100 20 Z', dark(a, .85), 'stroke-width="1.2"');
+    for (let i = 0; i < 12; i++) s += C(84 + (i * 23) % 36, 50 + (i * 17) % 60, 2, dark(a, .55), 'opacity=".6"');
+    s += ceye(78, 104, 9, 9, '#C8D8FF') + ceye(122, 104, 9, 9, '#C8D8FF') + C(80, 106, 4, '#15121A') + C(124, 106, 4, '#15121A') + SHINE(88, 50, 6, 24, 0, .3);
+    return wrap(G('sq', a, b, .4, .3), s);
+  },
+  shrimp: o => {
+    const a = o.a || '#E9A0A0', b = dark(a, .65), col = dark(a, .85);
+    let s = antenna('M150 70 C170 50 190 36 198 20', col, 1.4) + antenna('M152 76 C180 70 196 72 200 80', col, 1.4);
+    for (let i = 0; i < 5; i++) s += L(`M${110 - i * 14} 118 C${106 - i * 14} 140 ${100 - i * 14} 150 ${96 - i * 14} 160`, 3, col);
+    s += P('M150 60 C176 70 176 110 150 126 C120 134 90 130 60 140 C44 146 36 160 30 176 L24 170 C28 150 36 136 50 124 C70 110 100 106 120 100 C136 96 140 80 150 60 Z', 'url(#sh2)');
+    for (let i = 0; i < 6; i++) { const x = 130 - i * 16, y = 108 + i * 6; s += L(`M${x} ${y - 10} Q${x - 6} ${y} ${x - 4} ${y + 12}`, 1.4, b, 'opacity=".6"'); }
+    s += P('M30 176 C20 170 14 178 20 186 L34 182 Z', dark(a, .9)) + P('M24 170 C14 164 8 172 14 180 L28 178 Z', dark(a, .9));
+    s += P('M150 60 C160 54 170 60 168 72 C160 70 154 66 150 60 Z', dark(a, .8)) + ceye(160, 66, 5, 5, '#15121A') + L('M156 80 L170 96 M160 82 L176 92', 2, col);
+    return wrap(G('sh2', a, b, .4, .3), s);
+  },
+  grub: o => {
+    const a = o.a || '#F3E7C3', b = dark(a, .7), col = dark(a, .6);
+    let s = '';
+    const pts = []; for (let i = 0; i < 9; i++) { const ang = -1.2 + i * .42; pts.push([110 + Math.cos(ang) * 56, 100 + Math.sin(ang) * 56]); }
+    for (let i = pts.length - 1; i >= 0; i--) { const [x, y] = pts[i]; s += C(x, y, 20 - (i > 6 ? (i - 6) * 3 : 0), 'url(#gb)', `stroke="${OL}" stroke-width="2"`); if (i < 7) s += C(x + 8, y - 6, 2, '#8A6A4A', 'opacity=".8"'); }
+    s += leg([[pts[0][0] + 6, pts[0][1] + 14], [pts[0][0] + 2, pts[0][1] + 28]], col, 3) + leg([[pts[1][0] + 10, pts[1][1] + 10], [pts[1][0] + 12, pts[1][1] + 26]], col, 3) + leg([[pts[2][0] + 10, pts[2][1] + 4], [pts[2][0] + 18, pts[2][1] + 18]], col, 3);
+    s += C(pts[0][0] - 12, pts[0][1] - 10, 15, '#A86E3A', `stroke="${OL}" stroke-width="2"`) + L(`M${pts[0][0] - 18} ${pts[0][1] - 2} l-6 8 M${pts[0][0] - 8} ${pts[0][1] + 2} l-2 9`, 2.5, OL) + C(pts[0][0] - 18, pts[0][1] - 14, 2, OL) + SHINE(pts[4][0] - 6, pts[4][1] - 8, 7, 4, -20, .3);
+    return wrap(G('gb', a, b, .4, .3), s);
+  },
+  nymph: o => {
+    const a = o.a || '#8A6A4A', b = dark(a, .5), col = dark(a, .8);
+    let s = leg([[72, 92], [40, 76], [26, 86], [20, 100]], col, 7) + spines(40, 76, 26, 86, 3, 4) + leg([[128, 92], [160, 76], [174, 86], [180, 100]], col, 7) + spines(160, 76, 174, 86, 3, -4);
+    s += leg([[70, 120], [40, 128], [26, 148]], col, 4) + leg([[130, 120], [160, 128], [174, 148]], col, 4) + leg([[74, 140], [50, 162], [40, 184]], col, 4) + leg([[126, 140], [150, 162], [160, 184]], col, 4);
+    s += E(100, 128, 36, 48, 'url(#ny)') + segs(100, 100, 100, 176, 7, dark(a, .45), 30) + P('M64 92 C64 70 80 62 100 62 C120 62 136 70 136 92 C124 100 76 100 64 92 Z', dark(a, .9)) + P('M70 66 C70 50 84 44 100 44 C116 44 130 50 130 66 C120 72 80 72 70 66 Z', dark(a, .8));
+    s += ceye(76, 58, 6, 6, '#2A2230') + ceye(124, 58, 6, 6, '#2A2230') + L('M100 70 L100 94', 2, b) + P('M86 104 C92 96 108 96 114 104 L112 114 C104 108 96 108 88 114 Z', dark(a, .75), 'stroke-width="1.2"') + SHINE(84, 116, 7, 16, -8, .22);
+    return wrap(G('ny', a, b), s);
+  },
+  antlion_larva: o => {
+    const a = o.a || '#9A8A6A', b = dark(a, .5), col = dark(a, .8);
+    let s = leg([[80, 100], [56, 90], [44, 102]], col, 3.5) + leg([[120, 100], [144, 90], [156, 102]], col, 3.5) + leg([[76, 116], [48, 124], [38, 140]], col, 3.5) + leg([[124, 116], [152, 124], [162, 140]], col, 3.5) + leg([[80, 134], [58, 156], [52, 172]], col, 3.5) + leg([[120, 134], [142, 156], [148, 172]], col, 3.5);
+    s += E(100, 130, 46, 50, 'url(#al)') + `<ellipse cx="100" cy="130" rx="46" ry="50" fill="url(#hr)"/>` + hairs(100, 130, 48, 30, dark(a, .6)) + segs(100, 92, 100, 176, 6, dark(a, .45), 40);
+    s += P('M72 92 C72 72 86 64 100 64 C114 64 128 72 128 92 C118 100 82 100 72 92 Z', dark(a, .85)) + P('M80 66 C82 50 86 36 70 10 C76 8 82 14 86 26 C90 40 92 54 94 64 Z', dark(a, .5)) + P(mirror('M80 66 C82 50 86 36 70 10 C76 8 82 14 86 26 C90 40 92 54 94 64 Z'), dark(a, .5)) + L('M78 34 l6 2 M82 46 l6 2 M122 34 l-6 2 M118 46 l-6 2', 1.5);
+    s += ceye(84, 78, 3.5, 3.5, '#15121A') + ceye(116, 78, 3.5, 3.5, '#15121A') + SHINE(84, 116, 8, 14, -8, .22);
+    return wrap(G('al', a, b), s);
+  },
+  springtail: o => {
+    const a = o.a || '#8A9AB0', b = dark(a, .55), col = dark(a, .8);
+    let s = L('M60 150 C40 170 30 180 24 192', 4, OL) + L('M60 150 C40 170 30 180 24 192', 2.2, dark(a, 1.1)) + L('M24 192 L16 198 M24 192 L30 200', 2, OL);
+    s += leg([[90, 128], [76, 146], [64, 156]], col, 3) + leg([[112, 124], [112, 148], [100, 162]], col, 3) + leg([[132, 112], [146, 136], [142, 154]], col, 3);
+    s += P('M56 146 C70 112 110 96 150 92 C166 90 176 98 172 108 C150 124 110 138 62 152 Z', 'url(#sp2)') + segs(70, 140, 150, 100, 6, dark(a, .45), 6);
+    s += E(164, 100, 14, 12, dark(a, .9)) + ceye(170, 96, 4, 4, '#15121A') + antenna('M174 90 C182 76 190 70 196 62', col, 1.4) + antenna('M176 94 C186 90 192 90 198 92', col, 1.4) + SHINE(100, 118, 18, 5, -20, .3);
+    return wrap(G('sp2', a, b), s);
+  },
+  mole: o => {
+    const a = o.a || '#4A3A3A', b = dark(a, .5);
+    let s = P('M40 110 C60 70 140 66 170 104 C180 118 178 142 164 154 C130 170 70 168 40 148 C28 138 30 122 40 110 Z', 'url(#ml)') + `<path d="M40 110 C60 70 140 66 170 104 C180 118 178 142 164 154 C130 170 70 168 40 148 C28 138 30 122 40 110 Z" fill="url(#hr)"/>`;
+    s += P('M166 112 C180 110 194 118 194 128 C188 134 176 132 168 126 Z', '#E8A0A0') + C(190, 126, 3, '#3A2A2A') + L('M178 118 L196 108 M180 126 L200 124 M178 132 L196 140', 1.2, '#2A1E1E');
+    s += C(160, 108, 2.5, '#15121A') + P('M110 150 C100 162 80 164 72 176 C86 182 104 176 112 168 Z', '#E8B8A8') + L('M78 176 l-4 6 M86 178 l-2 7 M94 176 l0 8 M102 174 l2 7', 2, OL) + P('M138 152 C136 166 124 170 118 180 C132 184 146 178 150 166 Z', '#E8B8A8') + L('M120 180 l-2 6 M128 182 l0 7 M136 180 l2 7 M144 176 l3 6', 2, OL);
+    s += L('M40 128 C30 126 22 130 18 138', 3, dark(a, .9)) + SHINE(90, 94, 22, 8, -10, .18);
+    return wrap(G('ml', a, b, .4, .3), s);
   },
 });

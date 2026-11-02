@@ -1159,5 +1159,157 @@
 "lang": "ko",
 "sci": "노래기강에 속하는 절지동물의 총칭"
 },
-"hopper": null
+"hopper": null,
+"giant_isopod": {
+"title": "Bathynomus giganteus",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Bathynomus_giganteus_as_seen_by_remotely_operated_vehicle_%28ROV%29_Deep_Discoverer_at_a_depth_of_816_meters_at_South_Reed%2C_Gulf_of_Mexico%2C_2017-11-30.webm/500px--Bathynomus_giganteus_as_seen_by_remotely_operated_vehicle_%28ROV%29_Deep_Discoverer_at_a_depth_of_816_meters_at_South_Reed%2C_Gulf_of_Mexico%2C_2017-11-30.webm.jpg",
+"extract": "Bathynomus giganteus is a species of aquatic crustacean, of the order Isopoda. It is a member of the giant isopods (Bathynomus), and as such it is related—albeit distantly—to shrimps and crabs. It was the first Bathynomus species ever documented and was described in 1879 by French zoologist Alphonse Milne Edwards after the isopod was found in fishermen's nets off the coast of the Dry Tortugas in the Gulf of Mexico.",
+"url": "https://en.wikipedia.org/wiki/Bathynomus_giganteus",
+"lang": "en",
+"sci": "Species of crustacean"
+},
+"sea_spider": {
+"title": "바다거미목",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Pycnogonida_collage.png/500px-Pycnogonida_collage.png",
+"extract": "바다거미목(Pantopoda)은 협각아문에 속하는 절지동물 목의 하나이다. 바다거미강(Pycnogonida)의 유일한 목이다. 이 동물들은 모두 해양 저서성으로 보통 태형동물이나 히드라 등의 고착동물 위를 긴 다리로 천천히 걸으며 피식자의 체액을 흡입하는 육식성 동물이다. 일부는 해면동물, 연체동물, 극피동물 등에 기생하는 것도 있다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%B0%94%EB%8B%A4%EA%B1%B0%EB%AF%B8%EB%AA%A9",
+"lang": "ko",
+"sci": ""
+},
+"deep_shrimp": {
+"title": "Rimicaris exoculata",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Rimicaris_exoculata_%28MNHN-IU-2014-22822%29.jpeg/500px-Rimicaris_exoculata_%28MNHN-IU-2014-22822%29.jpeg",
+"extract": "Rimicaris exoculata, commonly known as the 'blind shrimp', is a species of shrimp. It thrives on active hydrothermal edifices at deep-sea vents of the Mid-Atlantic Ridge. This species belongs to the Alvinocarididae family of shrimp, named after the DSV Alvin, the vessel that collected the original samples described by M. L. Christoffersen in 1986.",
+"url": "https://en.wikipedia.org/wiki/Rimicaris_exoculata",
+"lang": "en",
+"sci": "Species of crustacean"
+},
+"tube_worm": {
+"title": "Riftia",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Campagne_HOT_-_Vers_g%C3%A9ants_%28Riftia_pachyptila%29_%28Ifremer_00530-64223_-_52381%29.jpg/500px-Campagne_HOT_-_Vers_g%C3%A9ants_%28Riftia_pachyptila%29_%28Ifremer_00530-64223_-_52381%29.jpg",
+"extract": "Riftia is a monotypic genus of polychaete annelid worms in the Siboglinidae family, which contains the sole species Riftia pachyptila, commonly known as the giant tubeworm or giant beardworm.",
+"url": "https://en.wikipedia.org/wiki/Riftia",
+"lang": "en",
+"sci": "Giant tube worm (species of annelid)"
+},
+"jellyfish": {
+"title": "해파리",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Jelly_Monterey.jpg/500px-Jelly_Monterey.jpg",
+"extract": "해파리는 해파리아문(영어: Medusozoa)에 속하는 무척추동물의 총칭이다. 해파리는 콩보다 작은 것부터 지름이 2m 이상에 이르기까지 종류가 다양한데, 네 개의 목과 약 200여 종이 여기에 속한다. 전 세계에서 출현한다.",
+"url": "https://ko.wikipedia.org/wiki/%ED%95%B4%ED%8C%8C%EB%A6%AC",
+"lang": "ko",
+"sci": "해파리아문에 속하는 무척추동물의 총칭"
+},
+"anglerfish": {
+"title": "초롱아귀",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Himantolophus_groenlandicus_by_OpenCage.jpg/500px-Himantolophus_groenlandicus_by_OpenCage.jpg",
+"extract": "초롱아귀(Himantolophus groenlandicus)는 초롱아귀과에 속하는 육식어류이다. 수심 800m 이하의 심해에서 서식한다. 몸은 럭비공처럼 생겼고 뼈 돌기 튀어나와 있다. 머리의 촉수 끝에는 발광체가 있다. 불이 초롱같다고 해서 초롱아귀라고 붙였다. 빛을 보고 온 작은 물고기를 잡아먹는다. 암컷의 길이는 평균 60cm, 수컷의 길이가 평균 4cm이며 암컷이 수컷보다 더 크다. 일반적으로 수컷이 암컷에게 기생하는 아귀류와는 달리 초롱아귀는 수컷이 암컷에게 기생을 하지 않는다. 때문에 번식을 하기 위해 발광체가 달린 촉수로 수컷을 유인한다. 이름이 아귀가 들어가지만 보통 아귀와 매우 다르다. 아귀는 깊지 않은 수심에 서식하기 때문에 잠수하다 발견할 수 있지만 초롱아귀는 어두운 심해에서 서식하기 때문에 발견할 수 없다. 그리고 아귀는 사냥감이 풍부한 곳에서 살기 때문에 잘 먹어서 살이 올라 식용으로 쓰이지만 초롱아귀는 희귀한 물고기라 식용으로 쓰이는 일은 드문 편이다. 대신 심해 생태의 연구나 진화 연구 분야에서 귀중한 심해어이다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%B4%88%EB%A1%B1%EC%95%84%EA%B7%80",
+"lang": "ko",
+"sci": ""
+},
+"giant_squid": {
+"title": "대왕오징어",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Architeuthis_distribution.png/500px-Architeuthis_distribution.png",
+"extract": "대왕오징어(大王오징어, 영어: giant squid)는 북대서양, 뉴질랜드, 북태평양 등지에서 발견되는 오징어이다. 학명은 Architeuthis dux(Steenstrup, 1857)이다. Architeuthis는 지배하는 오징어라는 뜻이다. 연체동물문의 두족강, 개안아목, 대왕오징어과에 속한다. 대부분의 개체는 길이 5m를 넘지 않는다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%8C%80%EC%99%95%EC%98%A4%EC%A7%95%EC%96%B4",
+"lang": "ko",
+"sci": "북대서양, 뉴질랜드, 북태평양 등지에서 발견되는 오징어"
+},
+"crinoid": {
+"title": "바다나리",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crinoid_on_the_reef_of_Batu_Moncho_Island.JPG/500px-Crinoid_on_the_reef_of_Batu_Moncho_Island.JPG",
+"extract": "바다나리(Sea lilly 또는 feather star)는 바다나리강(Crinoidea)에 속하는 극피동물의 통칭이다. 강의 학명은 백합꽃을 뜻하는 그리스어 단어 \"krinon\"과 형태를 뜻하는 \"eidos\"에서 따왔다. 극피동물 중 가장 원시적인 것으로서 얕은 연안에서도 발견되지만, 9,000m 깊이의 심해에서도 존재한다는 사실이 확인되었다. 다섯 개의 굴곡성이 있는 팔이 종지(술잔) 모양의 몸에서 방사상으로 나와 있으며, 또한 자루가 나와 바닥의 물체에 붙거나 감겨 있다. 전 세계에 약 620종 가량이 알려져 있으며, 바다나리·바다술·갯고사리 등이 여기에 해당한다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%B0%94%EB%8B%A4%EB%82%98%EB%A6%AC",
+"lang": "ko",
+"sci": ""
+},
+"sea_pig": {
+"title": "Scotoplanes",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Scotoplanes_globosa1.jpg/500px-Scotoplanes_globosa1.jpg",
+"extract": "Scotoplanes is a genus of deep-sea sea cucumbers in the family Elpidiidae. The species in this genus are commonly known as sea pigs.",
+"url": "https://en.wikipedia.org/wiki/Scotoplanes",
+"lang": "en",
+"sci": "Genus of deep-sea sea cucumbers known as sea pigs"
+},
+"grub": {
+"title": "유생",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Nachtkerzenschwaermer_Raupe.jpg/500px-Nachtkerzenschwaermer_Raupe.jpg",
+"extract": "유생(幼生, larva)은 완전한 성체로 자라기 전까지 많은 동물들이 겪는 아직 다 자라지 않은 상태를 가리킨다. 곤충, 양서류, 자포동물과 같은 간접적인 발생을 하는 동물들은 그들의 생활환에 유생 과정을 거친다. 곤충의 경우 유충(애벌레)이라 하며, 양서류의 경우 올챙이라 한다. 일부 절지동물과 극피동물은 모습이 다른 여러 유생 단계를 거치며 성장한다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%9C%A0%EC%83%9D",
+"lang": "ko",
+"sci": "성체 이전에 많은 동물들이 겪는 아직 다 자라지 않은 상태"
+},
+"cicada_nymph": {
+"title": "매미",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Neotibicen_linnei.jpg/500px-Neotibicen_linnei.jpg",
+"extract": "매미(영어: cicada, Cicadidae)는 매미과에 속하는 곤충의 총칭이다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%A7%A4%EB%AF%B8",
+"lang": "ko",
+"sci": "매미과에 속하는 곤충의 총칭"
+},
+"antlion_larva": {
+"title": "명주잠자리과",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Antlion.jpg/500px-Antlion.jpg",
+"extract": "명주잠자리과(明紬-)는 명주잠자리(Hagenomyia micans)를 포함한 풀잠자리목의 분류이다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%AA%85%EC%A3%BC%EC%9E%A0%EC%9E%90%EB%A6%AC%EA%B3%BC",
+"lang": "ko",
+"sci": ""
+},
+"wireworm": {
+"title": "Click beetle",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Denticollis.linearis.3.jpg/500px-Denticollis.linearis.3.jpg",
+"extract": "Elateridae or click beetles are a family of beetles. Other names include elaters, snapping beetles, spring beetles or skipjacks. This family was defined by English zoologist William Elford Leach (1790–1836) in 1815. They are a cosmopolitan beetle family characterized by the unusual click mechanism they possess. There are a few other families of Elateroidea in which a few members have the same mechanism, but most elaterid subfamilies can click. A spine on the prosternum can be snapped into a corresponding notch on the mesosternum, producing a violent \"click\" that can bounce the beetle into the air. The evolutionary purpose of this click is debated: hypotheses include that the clicking noise deters predators or is used for communication, or that the click may allow the beetle to \"pop\" out of the substrate in which it is pupating. It is unlikely that the click is used for avoiding predators as it does not carry the beetle very far (<50 cm), and in practice click beetles usually play dead or flee normally. There are about 9300 known species worldwide, and 965 valid species in North America.",
+"url": "https://en.wikipedia.org/wiki/Click_beetle",
+"lang": "en",
+"sci": "Family of beetles"
+},
+"springtail": {
+"title": "톡토기",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Orchesella_cincta.jpg/500px-Orchesella_cincta.jpg",
+"extract": "톡토기는 톡토기아강에 속하는 절지동물이다. 전 세계에 8,500여 종이 존재한다. 뛰어오를 수 있는 도약기라는 기관이 있으나 날개는 없다. 몸길이는 0.5~3mm로 낙엽이나 썩은 나무 밑, 물 위, 모래 등 전 세계 어느 곳에서나 서식한다. 톡토기는 원시적인 육각류로 배부 제1마디 아랫면에 복관(腹管)이라는 관 모양의 돌기가 있고 점액을 가진 신장형 또는 끈 모양의 주머니가 가장자리로부터 드나들 수 있다. 이는 수분 및 삼투압으로 조절하는 기관이다.",
+"url": "https://ko.wikipedia.org/wiki/%ED%86%A1%ED%86%A0%EA%B8%B0",
+"lang": "ko",
+"sci": ""
+},
+"queen_ant": {
+"title": "여왕개미",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Meat_eater_ant_qeen_excavating_hole.jpg/500px-Meat_eater_ant_qeen_excavating_hole.jpg",
+"extract": "여왕개미는 개미 군락에서 알을 낳는 암컷을 이르는 말이다. 대부분의 군락에서는 여왕개미가 개미 군락내의 모든 개미들의 어머니이다. 여왕개미와 일개미는 모두 암컷이지만, 여왕개미는 애벌레일 때 일반 애벌레들과는 다른 먹이를 먹어서 여왕으로 성장한다. 대부분의 종에서는 여왕개미가 한 마리뿐이나, 몇몇 종에서는 여왕개미가 수백에 달하기도 한다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%97%AC%EC%99%95%EA%B0%9C%EB%AF%B8",
+"lang": "ko",
+"sci": ""
+},
+"purse_spider": {
+"title": "박모",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Ammonite_lamp_post_at_dusk%2C_Lyme_Regis.JPG/500px-Ammonite_lamp_post_at_dusk%2C_Lyme_Regis.JPG",
+"extract": "박모(薄暮, Dusk)는 저녁의 어둠의 시작으로 땅거미라고도 한다. 일몰과 혼동되곤 한다. 하늘은 일반적으로 일몰후에도 잠시 밝고 푸르다. 이 기간은 박명이며 박모는 저녁 박명의 끝이다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%B0%95%EB%AA%A8",
+"lang": "ko",
+"sci": ""
+},
+"mole": {
+"title": "두더지과",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Talpa_europaea_MHNT.jpg/500px-Talpa_europaea_MHNT.jpg",
+"extract": "두더지과(Talpidae)는 진무맹장목에 속하는 두더지와 땃쥐류, 데스만류 그리고 기타 중간 크기의 작은 식충동물을 포함하고 있는 포유류 분류군이다. 두더지류는 모두 땅을 파고 들어가는 습성을 갖고 있으며, 종류별로 여러 단계가 있다. 두더지는 땅 속 밑에 사는 동물이다. 땃쥐두더지류와 동아시아두더지류는 약간 덜 하며, 그러나 데스만류는 기본적으로 수생동물이지만 겨울잠을 잘 때는 굴을 판다. 반면에 별코두더지는 매우 독특하여, 물과 땅 속 양쪽에 적응하여 발달했다. 두더지류는 북반구와 아시아 남부 지역, 유럽, 북아메리카에 걸쳐 발견되지만, 아일랜드와 멕시코 북부 지역 아래의 아메리카 지역에서는 발견되지 않는다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%91%90%EB%8D%94%EC%A7%80%EA%B3%BC",
+"lang": "ko",
+"sci": "작은 식충성 포유류의 과"
+},
+"burrow_bug": {
+"title": "Cydnidae",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Cydnus_aterrimus_MHNT.jpg/500px-Cydnus_aterrimus_MHNT.jpg",
+"extract": "Cydnidae are a family of pentatomoid bugs, known by common names including burrowing bugs or burrower bugs. As the common name would suggest, many members of the group live a subterranean lifestyle, burrowing into soil using their head and forelegs, only emerging to mate and then laying their eggs in soil. Other members of the group are not burrowers, and live above the soil layer, often in close association with plants. Several species are known as agricultural pests.",
+"url": "https://en.wikipedia.org/wiki/Cydnidae",
+"lang": "en",
+"sci": "Family of true bug"
+},
+"red_worm": {
+"title": "줄지렁이",
+"img": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Redwiggler1.jpg",
+"extract": "줄지렁이(학명: Eisenia fetida 에이세니아 페티다[*])는 썩어가는 유기물을 섭취하는 지렁이의 일종이다. 썩어가는 채소, 퇴비, 거름을 먹고 산다. 지표서식성이며, 드물게 흙 속에서 발견된다. 이러한 특성으로 붉은지렁이와 닮아있다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%A4%84%EC%A7%80%EB%A0%81%EC%9D%B4",
+"lang": "ko",
+"sci": ""
+}
 }

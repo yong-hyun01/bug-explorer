@@ -1,30 +1,456 @@
 {
- "ladybug2": [["en","Propylea japonica"]],
- "ladybug28": [["en","Henosepilachna vigintioctopunctata"]],
- "longhorn2": [["en","Apriona germari"],["en","Apriona"]],
- "jewel": [["en","Chrysochroa fulgidissima"],["ko","비단벌레과"]],
- "click": [["ko","방아벌레과"],["en","Click beetle"]],
- "darkling": [["en","Tenebrio molitor"],["en","Darkling beetle"]],
- "skipper": [["ko","팔랑나비과"],["en","Skipper (butterfly)"]],
- "tiger_moth": [["ko","불나방과"],["en","Arctia caja"],["en","Arctiinae"]],
- "mantis_brown": [["en","Tenodera angustipennis"],["ko","사마귀"]],
- "stinkbug": [["en","Nezara antennata"],["en","Nezara viridula"]],
- "jewel_bug": [["en","Poecilocoris lewisi"],["en","Scutelleridae"]],
- "stonefly": [["ko","강도래목"],["en","Plecoptera"]],
- "jumping_spider": [["ko","깡충거미과"],["en","Jumping spider"]],
- "stag_mini": [["en","Aegus laevicollis"],["en","Aegus"],["ko","넓적사슴벌레"]],
- "sea_skater": [["en","Halobates"]],
- "kelp_fly": [["en","Coelopidae"],["en","Coelopa frigida"]],
- "sand_darkling": [["en","Phaleria"],["en","Tenebrionidae"]],
- "coast_tiger": [["en","Cicindela"],["en","Tiger beetle"]],
- "beach_flea": [["en","Talitridae"],["en","Sand hopper"]],
- "mud_crab": [["en","Macrophthalmus japonicus"],["en","Macrophthalmus"]],
- "fiddler_crab": [["ko","농게과"],["en","Fiddler crab"]],
- "lugworm": [["en","Arenicola marina"],["en","Lugworm"]],
- "starfish": [["ko","불가사리류"],["en","Starfish"]],
- "silver_frit": [["en","Argynnis paphia"]],
- "red_ring": [["en","Hestina assimilis"]],
- "luna_long": [["en","Actias artemis"],["en","Actias"]],
- "striped_bug": [["en","Graphosoma rubrolineatum"],["en","Graphosoma"]],
- "orb_spider": [["en","Araneus ventricosus"],["ko","왕거미과"]]
+ "ladybug2": [
+  [
+   "en",
+   "Propylea japonica"
+  ]
+ ],
+ "ladybug28": [
+  [
+   "en",
+   "Henosepilachna vigintioctopunctata"
+  ]
+ ],
+ "longhorn2": [
+  [
+   "en",
+   "Apriona germari"
+  ],
+  [
+   "en",
+   "Apriona"
+  ]
+ ],
+ "jewel": [
+  [
+   "en",
+   "Chrysochroa fulgidissima"
+  ],
+  [
+   "ko",
+   "비단벌레과"
+  ]
+ ],
+ "click": [
+  [
+   "ko",
+   "방아벌레과"
+  ],
+  [
+   "en",
+   "Click beetle"
+  ]
+ ],
+ "darkling": [
+  [
+   "en",
+   "Tenebrio molitor"
+  ],
+  [
+   "en",
+   "Darkling beetle"
+  ]
+ ],
+ "skipper": [
+  [
+   "ko",
+   "팔랑나비과"
+  ],
+  [
+   "en",
+   "Skipper (butterfly)"
+  ]
+ ],
+ "tiger_moth": [
+  [
+   "ko",
+   "불나방과"
+  ],
+  [
+   "en",
+   "Arctia caja"
+  ],
+  [
+   "en",
+   "Arctiinae"
+  ]
+ ],
+ "mantis_brown": [
+  [
+   "en",
+   "Tenodera angustipennis"
+  ],
+  [
+   "ko",
+   "사마귀"
+  ]
+ ],
+ "stinkbug": [
+  [
+   "en",
+   "Nezara antennata"
+  ],
+  [
+   "en",
+   "Nezara viridula"
+  ]
+ ],
+ "jewel_bug": [
+  [
+   "en",
+   "Poecilocoris lewisi"
+  ],
+  [
+   "en",
+   "Scutelleridae"
+  ]
+ ],
+ "stonefly": [
+  [
+   "ko",
+   "강도래목"
+  ],
+  [
+   "en",
+   "Plecoptera"
+  ]
+ ],
+ "jumping_spider": [
+  [
+   "ko",
+   "깡충거미과"
+  ],
+  [
+   "en",
+   "Jumping spider"
+  ]
+ ],
+ "stag_mini": [
+  [
+   "en",
+   "Aegus laevicollis"
+  ],
+  [
+   "en",
+   "Aegus"
+  ],
+  [
+   "ko",
+   "넓적사슴벌레"
+  ]
+ ],
+ "sea_skater": [
+  [
+   "en",
+   "Halobates"
+  ]
+ ],
+ "kelp_fly": [
+  [
+   "en",
+   "Coelopidae"
+  ],
+  [
+   "en",
+   "Coelopa frigida"
+  ]
+ ],
+ "sand_darkling": [
+  [
+   "en",
+   "Phaleria"
+  ],
+  [
+   "en",
+   "Tenebrionidae"
+  ]
+ ],
+ "coast_tiger": [
+  [
+   "en",
+   "Cicindela"
+  ],
+  [
+   "en",
+   "Tiger beetle"
+  ]
+ ],
+ "beach_flea": [
+  [
+   "en",
+   "Talitridae"
+  ],
+  [
+   "en",
+   "Sand hopper"
+  ]
+ ],
+ "mud_crab": [
+  [
+   "en",
+   "Macrophthalmus japonicus"
+  ],
+  [
+   "en",
+   "Macrophthalmus"
+  ]
+ ],
+ "fiddler_crab": [
+  [
+   "ko",
+   "농게과"
+  ],
+  [
+   "en",
+   "Fiddler crab"
+  ]
+ ],
+ "lugworm": [
+  [
+   "en",
+   "Arenicola marina"
+  ],
+  [
+   "en",
+   "Lugworm"
+  ]
+ ],
+ "starfish": [
+  [
+   "ko",
+   "불가사리류"
+  ],
+  [
+   "en",
+   "Starfish"
+  ]
+ ],
+ "silver_frit": [
+  [
+   "en",
+   "Argynnis paphia"
+  ]
+ ],
+ "red_ring": [
+  [
+   "en",
+   "Hestina assimilis"
+  ]
+ ],
+ "luna_long": [
+  [
+   "en",
+   "Actias artemis"
+  ],
+  [
+   "en",
+   "Actias"
+  ]
+ ],
+ "striped_bug": [
+  [
+   "en",
+   "Graphosoma rubrolineatum"
+  ],
+  [
+   "en",
+   "Graphosoma"
+  ]
+ ],
+ "orb_spider": [
+  [
+   "en",
+   "Araneus ventricosus"
+  ],
+  [
+   "ko",
+   "왕거미과"
+  ]
+ ],
+ "giant_isopod": [
+  [
+   "ko",
+   "대왕등각류"
+  ],
+  [
+   "en",
+   "Bathynomus giganteus"
+  ]
+ ],
+ "sea_spider": [
+  [
+   "ko",
+   "바다거미"
+  ],
+  [
+   "en",
+   "Sea spider"
+  ]
+ ],
+ "deep_shrimp": [
+  [
+   "en",
+   "Rimicaris exoculata"
+  ],
+  [
+   "en",
+   "Alvinocarididae"
+  ]
+ ],
+ "tube_worm": [
+  [
+   "ko",
+   "관벌레"
+  ],
+  [
+   "en",
+   "Riftia pachyptila"
+  ]
+ ],
+ "jellyfish": [
+  [
+   "ko",
+   "해파리"
+  ]
+ ],
+ "anglerfish": [
+  [
+   "ko",
+   "초롱아귀"
+  ],
+  [
+   "en",
+   "Anglerfish"
+  ]
+ ],
+ "giant_squid": [
+  [
+   "ko",
+   "대왕오징어"
+  ]
+ ],
+ "crinoid": [
+  [
+   "ko",
+   "바다나리"
+  ],
+  [
+   "en",
+   "Crinoid"
+  ]
+ ],
+ "sea_pig": [
+  [
+   "ko",
+   "바다돼지"
+  ],
+  [
+   "en",
+   "Scotoplanes"
+  ]
+ ],
+ "grub": [
+  [
+   "ko",
+   "굼벵이"
+  ],
+  [
+   "en",
+   "Scarabaeiform larva"
+  ]
+ ],
+ "cicada_nymph": [
+  [
+   "ko",
+   "매미"
+  ]
+ ],
+ "antlion_larva": [
+  [
+   "ko",
+   "개미귀신"
+  ],
+  [
+   "ko",
+   "명주잠자리"
+  ]
+ ],
+ "wireworm": [
+  [
+   "en",
+   "Wireworm"
+  ],
+  [
+   "ko",
+   "방아벌레과"
+  ]
+ ],
+ "springtail": [
+  [
+   "ko",
+   "톡토기"
+  ],
+  [
+   "en",
+   "Springtail"
+  ]
+ ],
+ "queen_ant": [
+  [
+   "ko",
+   "여왕개미"
+  ],
+  [
+   "en",
+   "Queen ant"
+  ]
+ ],
+ "purse_spider": [
+  [
+   "ko",
+   "땅거미"
+  ],
+  [
+   "en",
+   "Atypus"
+  ]
+ ],
+ "mole": [
+  [
+   "ko",
+   "두더지과"
+  ],
+  [
+   "ko",
+   "유럽두더지"
+  ],
+  [
+   "en",
+   "Mole (animal)"
+  ],
+  [
+   "en",
+   "Talpidae"
+  ]
+ ],
+ "burrow_bug": [
+  [
+   "ko",
+   "땅노린재"
+  ],
+  [
+   "en",
+   "Cydnidae"
+  ]
+ ],
+ "red_worm": [
+  [
+   "ko",
+   "줄지렁이"
+  ],
+  [
+   "en",
+   "Eisenia fetida"
+  ]
+ ]
 }
