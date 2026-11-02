@@ -33,7 +33,7 @@ img.px{image-rendering:pixelated}
 .scene .label{position:absolute;top:10px;left:12px;font-family:var(--display);font-size:20px;color:#FFF;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 10px rgba(0,0,0,.3);pointer-events:none}
 .scene .label small{display:block;font-family:var(--body);font-size:12px;font-weight:700;opacity:.9}
 .scene .daynight{position:absolute;top:10px;right:10px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.9);font-weight:900;font-size:13px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
-.scene .hint{position:absolute;left:50%;bottom:34px;max-width:94%;white-space:normal;text-align:center;transform:translateX(-50%);background:rgba(255,255,255,.9);padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink);pointer-events:none;white-space:nowrap;transition:opacity 1s}
+.scene .hint{position:absolute;left:50%;bottom:34px;width:max-content;max-width:92%;white-space:normal;text-align:center;line-height:1.35;transform:translateX(-50%);background:rgba(255,255,255,.9);padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink);pointer-events:none;transition:opacity 1s}
 .scene .map{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:140px;height:14px;border-radius:7px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.5);pointer-events:none}
 .scene .map i{position:absolute;top:1px;bottom:1px;border-radius:6px;background:rgba(255,255,255,.65)}
 .scene .map b{position:absolute;top:4px;width:5px;height:5px;border-radius:50%;background:#FFD54A;box-shadow:0 0 3px #000}
@@ -131,12 +131,12 @@ img.px{image-rendering:pixelated}
 .confetti{position:absolute;inset:0;pointer-events:none;z-index:25}
 /* ---- 가로 모드 (태블릿·스마트폰 눕혔을 때): 왼쪽 탐험+키패드, 오른쪽 맵·도감 ---- */
 .side{display:contents}
-@media (orientation: landscape) and (min-width: 640px) and (max-height: 900px) {
+@media (orientation: landscape) and (min-width: 560px) {
   body{align-items:stretch}
   .phone{max-width:none;max-height:none;height:100dvh;border-radius:0;border:0;box-shadow:none}
   .scroller{display:grid;grid-template-columns:auto minmax(300px,1fr);grid-template-rows:auto 1fr auto;grid-template-areas:"hud hud" "scene side" "pad side";column-gap:12px;overflow:hidden;scroll-behavior:auto}
   .hud{grid-area:hud;padding:8px 16px 4px}
-  .scene{grid-area:scene;height:calc(100dvh - 176px);width:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
+  .scene{grid-area:scene;height:min(calc(100dvh - 176px),760px);width:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
   .pad{grid-area:pad;padding:8px 12px 10px;margin-left:12px;justify-content:space-between}
   .side{display:flex;flex-direction:column;grid-area:side;min-height:0;overflow:auto;padding-right:12px;overscroll-behavior:contain}
   .places{padding:0 0 4px;grid-template-columns:repeat(4,1fr)}
@@ -147,7 +147,7 @@ img.px{image-rendering:pixelated}
   .modal .box{max-width:560px}
   .modal .hero.photo img.ph{height:clamp(120px,32dvh,220px)}
 }
-@media (orientation: landscape) and (min-width: 640px) and (max-height: 520px) {
+@media (orientation: landscape) and (min-width: 560px) and (max-height: 520px) {
   /* 스마트폰 가로: 탐험 화면을 세로로 꽉 채우고 키패드는 오른쪽 아래에 */
   .scroller{grid-template-rows:auto 1fr;grid-template-areas:"hud hud" "scene side"}
   .scene{height:calc(100dvh - 62px)}
@@ -156,7 +156,7 @@ img.px{image-rendering:pixelated}
   .dpad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,36px)}
   .catch{width:70px;height:70px;font-size:16px}.jumpb{width:50px;height:50px;font-size:13px}
   .hud{padding:6px 14px 2px}.hud h1{font-size:18px}
-  .scene .hint{font-size:11px}
+  .scene .hint{font-size:11px;line-height:1.3}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -240,6 +240,12 @@ const svgCache = new Map(), imgCache = new Map();
 const BUG = Object.fromEntries(BUGS.map(b => [b.id, b]));
 function bugURL(id) { if (!svgCache.has(id)) { const b = BUG[id]; svgCache.set(id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(T[b.tpl](b.opt))); } return svgCache.get(id); }
 function bugImg(id) { if (!imgCache.has(id)) { const im = new Image(); im.src = bugURL(id); imgCache.set(id, im); } return imgCache.get(id); }
+const bmpCache = new Map();
+function bugBitmap(id) { // 조명 필터 SVG 를 좌우 반전해 그리면 크롬이 검게 칠하므로, 변형 없이 한 번 비트맵으로 구운 뒤 그 비트맵을 변형해 그린다
+  if (bmpCache.has(id)) return bmpCache.get(id);
+  const im = bugImg(id); if (!(im.complete && im.naturalWidth)) return null;
+  const c = document.createElement('canvas'); c.width = c.height = 256; c.getContext('2d').drawImage(im, 0, 0, 256, 256); bmpCache.set(id, c); return c;
+}
 const BIG = new Set(['giant_squid', 'anglerfish', 'jellyfish', 'mole', 'giant_isopod', 'sea_spider', 'tube_worm', 'grub', 'queen_ant', 'golden_ring', 'great_purple', 'mt_swallow', 'blue_band', 'giant_hornet', 'luna_long', 'starfish', 'lugworm', 'rhino', 'rhino_f', 'stag', 'stag_saw', 'stag_king', 'stag_true', 'swallowtail', 'swallowtail2', 'black_sw', 'monarch', 'peacock', 'mantis', 'mantis_big', 'mantis_brown', 'stick', 'waterbug', 'emperor', 'luna', 'locust', 'katydid', 'centipede', 'earthworm', 'hornet', 'hawkmoth', 'cicada_black', 'silkworm', 'swallow_cat']);
 const SMALL = new Set(['springtail', 'wireworm', 'burrow_bug', 'purse_spider', 'sea_skater', 'kelp_fly', 'beach_flea', 'barnacle', 'striped_bug', 'hairy_cicada', 'coast_tiger', 'sand_darkling', 'stag_small', 'stag_mini', 'whirligig', 'backswimmer', 'ant', 'ant_red', 'termite', 'ladybug', 'ladybug2', 'ladybug28', 'firefly', 'firefly2', 'strider', 'damselfly', 'mayfly', 'aphid', 'fruitfly', 'mosquito', 'weevil', 'pillbug', 'jumping_spider', 'blue_bf', 'housefly', 'click', 'darkling', 'lacewing']);
 const sizeOf = id => BIG.has(id) ? 112 : SMALL.has(id) ? 72 : 94;
@@ -432,7 +438,7 @@ function drawActors() {
   const fy = feetY(); let playerDrawn = false;
   [...bugs].sort((a, b) => a.y - b.y).forEach(u => {
     if (!playerDrawn && (u.y + u.hop) >= fy) { drawPlayer(); playerDrawn = true; }
-    const img = bugImg(u.b.id), w = u.sc * (0.5 + u.pop * .5), h = w, x = u.x - cam;
+    const img = bugBitmap(u.b.id), w = u.sc * (0.5 + u.pop * .5), h = w, x = u.x - cam;
     if (x < -80 || x > W + 80) return;
     const bob = u.b.move === 'fly' ? Math.sin(t * 12 + u.ph) * 3 : 0;
     ctx.save(); ctx.translate(x, u.y + u.hop + bob);
@@ -442,12 +448,12 @@ function drawActors() {
     if (SIDE.has(u.b.tpl)) { if (u.dir < 0) ctx.scale(-1, 1); }
     else if (u.b.move === 'fly' || u.b.move === 'glide') { ctx.rotate(u.dir * .22 + Math.sin(t * 2 + u.ph) * .12); } // 나는 곤충은 머리를 위로 두고 살짝 기울어진다
     else { ctx.rotate(u.dir > 0 ? Math.PI / 2 : -Math.PI / 2); } // 기어가는 곤충은 가는 방향으로 머리를 돌린다
-    if (img.complete && img.naturalWidth) ctx.drawImage(img, -w / 2, -h / 2, w, h);
+    if (img) ctx.drawImage(img, -w / 2, -h / 2, w, h);
     ctx.restore();
   });
   if (!playerDrawn) drawPlayer();
   // 화면 밖 곤충 화살표
-  for (const u of bugs) { if (u.leave) continue; const x = u.x - cam; if (x >= -20 && x <= W + 20) continue; const left = x < 0, ex = left ? 14 : W - 14; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.moveTo(left ? ex - 8 : ex + 8, u.y); ctx.lineTo(left ? ex + 6 : ex - 6, u.y - 9); ctx.lineTo(left ? ex + 6 : ex - 6, u.y + 9); ctx.fill(); ctx.strokeStyle = OL; ctx.lineWidth = 2; ctx.stroke(); const im = bugImg(u.b.id); if (im.complete && im.naturalWidth) ctx.drawImage(im, (left ? ex + 8 : ex - 36), u.y - 14, 28, 28); }
+  for (const u of bugs) { if (u.leave) continue; const x = u.x - cam; if (x >= -20 && x <= W + 20) continue; const left = x < 0, ex = left ? 14 : W - 14; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.moveTo(left ? ex - 8 : ex + 8, u.y); ctx.lineTo(left ? ex + 6 : ex - 6, u.y - 9); ctx.lineTo(left ? ex + 6 : ex - 6, u.y + 9); ctx.fill(); ctx.strokeStyle = OL; ctx.lineWidth = 2; ctx.stroke(); const im = bugBitmap(u.b.id); if (im) ctx.drawImage(im, (left ? ex + 8 : ex - 36), u.y - 14, 28, 28); }
   drawAlerts();
   for (const p of puffs) { ctx.globalAlpha = 1 - p.t / p.life; ctx.fillStyle = p.c; ctx.fillRect(p.x - cam, p.y, p.s, p.s); } ctx.globalAlpha = 1;
   for (const m of misses) { ctx.globalAlpha = 1 - m.t / .7; ctx.font = '20px "Jua",sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText('휙~', m.x - cam, m.y - m.t * 40); ctx.fillStyle = '#FFF'; ctx.fillText('휙~', m.x - cam, m.y - m.t * 40); } ctx.globalAlpha = 1;
@@ -647,6 +653,10 @@ function showView(v) { document.querySelectorAll('.view').forEach(x => x.hidden 
 const scroller = $('scroller');
 function setPH() { document.documentElement.style.setProperty('--ph', $('phone').clientHeight + 'px'); }
 new ResizeObserver(setPH).observe($('phone')); setPH();
+const landscapeMQ = matchMedia('(orientation: landscape) and (min-width: 560px)');
+function onOrient() { if (landscapeMQ.matches) scroller.scrollTo({ top: 0, behavior: 'auto' }); setTimeout(() => { resize(); setPH(); }, 120); }
+landscapeMQ.addEventListener ? landscapeMQ.addEventListener('change', onOrient) : landscapeMQ.addListener(onOrient);
+window.addEventListener('orientationchange', onOrient);
 
 // ======================= 시작 =======================
 load();
