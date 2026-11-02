@@ -15,7 +15,17 @@ const L = (d, w, col, extra) => `<path d="${d}" fill="none" stroke="${col || OL}
 const SHINE = (cx, cy, rx, ry, rot, op) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" opacity="${op == null ? .32 : op}" transform="rotate(${rot == null ? -30 : rot} ${cx} ${cy})"/>`;
 const mirror = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => `${(200 - x).toFixed(1)} ${y}`);
 const both = (d, fn) => fn(d) + fn(mirror(d));
-const wrap = (defs, body, shift) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs>${FACET}${HAIR}${defs}<filter id="sh" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000" flood-opacity=".28"/></filter></defs><g filter="url(#sh)"${shift ? ` transform="translate(0 ${shift})"` : ''}>${body}</g></svg>`;
+// 입체 조명: 알파를 부풀려 법선을 만든 뒤 확산광(왼쪽 위)과 반사광을 곱·더하고, 마지막에 바닥 그림자
+const LIT = `<filter id="sh" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+<feGaussianBlur in="SourceAlpha" stdDeviation="2.6" result="bump"/>
+<feDiffuseLighting in="bump" surfaceScale="7" diffuseConstant="1.25" lighting-color="#fff" result="diff"><feDistantLight azimuth="230" elevation="52"/></feDiffuseLighting>
+<feComposite in="SourceGraphic" in2="diff" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="lit"/>
+<feSpecularLighting in="bump" surfaceScale="7" specularConstant=".75" specularExponent="22" lighting-color="#fff" result="spec"><fePointLight x="55" y="30" z="170"/></feSpecularLighting>
+<feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"/>
+<feComposite in="specIn" in2="lit" operator="arithmetic" k1="0" k2=".55" k3="1" k4="0" result="out"/>
+<feDropShadow in="out" dx="0" dy="5" stdDeviation="4" flood-color="#000" flood-opacity=".3"/>
+</filter>`;
+const wrap = (defs, body, shift) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs>${FACET}${HAIR}${defs}${LIT}</defs><g filter="url(#sh)"${shift ? ` transform="translate(0 ${shift})"` : ''}>${body}</g></svg>`;
 // 겹눈: 그라데이션 + 낱눈 패턴 + 하이라이트
 function ceye(cx, cy, rx, ry, col, rot) {
   const tr = rot ? `transform="rotate(${rot} ${cx} ${cy})"` : '';
