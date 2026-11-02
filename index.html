@@ -68,6 +68,8 @@ img.px{image-rendering:pixelated}
 .strip .mini{flex:none;width:calc((100% - 32px) / 5);text-align:center;font-size:11px;font-weight:700}
 .strip .mini .b{width:100%;aspect-ratio:1;border-radius:14px;background:var(--cream);border:2px solid var(--line);display:grid;place-items:center}
 .strip .mini img{width:80%;height:80%}
+.strip .mini .b.photo{overflow:hidden}
+.strip .mini .b.photo img{width:100%;height:100%;object-fit:cover;border-radius:12px}
 .empty{color:var(--dim);font-size:13px;text-align:center;padding:18px 0;font-weight:700}
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{padding:5px 11px;border-radius:999px;background:#F2EBD6;font-size:12px;font-weight:900;color:var(--dim);border:2px solid transparent}
@@ -76,6 +78,10 @@ img.px{image-rendering:pixelated}
 .card{position:relative;background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:8px 4px 6px;text-align:center;box-shadow:0 3px 0 #E8DFC3;transition:transform .05s}
 .card:active{transform:translateY(2px);box-shadow:0 1px 0 #E8DFC3}
 .card img{width:64px;height:64px}
+.card .pw{position:relative;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#EFE6CB}
+.card .pw img.ph{width:100%;height:100%;object-fit:cover;display:block}
+.card .pw .mini{position:absolute;right:3px;bottom:3px;width:26px;height:26px;border-radius:7px;background:rgba(255,248,230,.92);border:1.5px solid #fff;display:grid;place-items:center}
+.card .pw .mini img{width:22px;height:22px}
 .card .nm{font-weight:900;font-size:12px;margin-top:2px;line-height:1.2}
 .card.unknown img{filter:brightness(0) opacity(.22)}
 .card.unknown .nm{color:#B5AA8E}
@@ -1360,6 +1366,11 @@ function caught(b) {
   beep(first ? SND.new : SND.catch); if (first) confetti();
   showCard(b, first ? 'new' : 'again');
 }
+function photoThumb(b, cls) {
+  const ph = PHOTOS[b.id];
+  if (!ph || !ph.img) return `<img src="${bugURL(b.id)}" alt="">`;
+  return `<div class="pw ${cls || ''}"><img class="ph" src="${ph.img}" alt="${b.name}" loading="lazy" onerror="this.parentElement.outerHTML='<img src=&quot;${bugURL(b.id)}&quot; alt=&quot;&quot;>'"><span class="mini"><img src="${bugURL(b.id)}" alt=""></span></div>`;
+}
 window.photoFail = img => { const hero = img.parentElement, ins = hero.querySelector('.inset'); hero.className = 'hero'; if (ins) { const il = ins.querySelector('img'); ins.remove(); img.replaceWith(il); } else img.remove(); const cr = hero.nextElementSibling; if (cr && cr.classList.contains('credit')) cr.remove(); };
 function showCard(b, mode) {
   const box = $('mbox'); const n = S.caught[b.id] || 0, ph = PHOTOS[b.id];
@@ -1409,7 +1420,7 @@ function renderPlaces() {
 function renderScene() { const p = placeOf(); $('placeName').textContent = (S.night && !p.dark ? '밤의 ' : '') + p.name; $('placeHint').textContent = p.hint; $('dayBtn').textContent = S.night ? '🌙 밤' : '☀️ 낮'; $('dayBtn').hidden = !!p.dark; $('btnJ').hidden = !!p.free; }
 function renderStrip() {
   const st = $('strip'); st.innerHTML = ''; $('stripEmpty').hidden = S.recent.length > 0;
-  S.recent.forEach(id => { const b = BUG[id]; if (!b) return; const d = document.createElement('button'); d.className = 'mini'; d.innerHTML = `<div class="b"><img src="${bugURL(id)}" alt=""></div>${b.name}`; d.addEventListener('click', () => showCard(b, 'view')); st.appendChild(d); });
+  S.recent.forEach(id => { const b = BUG[id]; if (!b) return; const d = document.createElement('button'); d.className = 'mini'; const ph = PHOTOS[id]; d.innerHTML = `<div class="b${ph && ph.img ? ' photo' : ''}">${ph && ph.img ? `<img src="${ph.img}" alt="${b.name}" loading="lazy" onerror="this.src='${bugURL(id)}';this.parentElement.classList.remove('photo')">` : `<img src="${bugURL(id)}" alt="">`}</div>${b.name}`; d.addEventListener('click', () => showCard(b, 'view')); st.appendChild(d); });
 }
 let filter = 'all';
 function renderGrid() {
@@ -1419,7 +1430,7 @@ function renderGrid() {
   const list = BUGS.filter(b => filter === 'all' || (filter === 'night' ? b.time !== 'day' : filter === 'rare' ? b.rare === 2 : filter === 'not' ? b.notInsect : filter === 'got' ? S.caught[b.id] : b.place.includes(filter)));
   const grid = $('grid'); grid.innerHTML = '';
   list.forEach(b => { const n = S.caught[b.id] || 0, known = n > 0; const c = document.createElement('button'); c.className = 'card' + (known ? '' : ' unknown') + (known && S.recent[0] === b.id && n === 1 ? ' new' : '');
-    c.innerHTML = `${b.rare === 2 ? '<span class="rare">⭐</span>' : ''}${known ? `<span class="cnt">${n}</span>` : ''}<img src="${bugURL(b.id)}" alt="" loading="lazy"><div class="nm">${known ? b.name : '???'}</div>`;
+    c.innerHTML = `${b.rare === 2 ? '<span class="rare">⭐</span>' : ''}${known ? `<span class="cnt">${n}</span>` : ''}${known ? photoThumb(b) : `<img src="${bugURL(b.id)}" alt="" loading="lazy">`}<div class="nm">${known ? b.name : '???'}</div>`;
     c.addEventListener('click', () => { if (known) showCard(b, 'view'); else { toast(`${b.place.map(p => PLACES.find(x => x.id === p).name).join('·')}에서 ${b.time === 'night' ? '밤에 ' : b.time === 'day' ? '낮에 ' : ''}찾아보세요!`); beep(SND.tap); } });
     grid.appendChild(c); });
 }
