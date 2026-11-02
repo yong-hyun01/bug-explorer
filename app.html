@@ -129,6 +129,35 @@ img.px{image-rendering:pixelated}
 .toast[hidden]{display:none}
 @keyframes tin{from{transform:translate(-50%,-12px);opacity:0}}
 .confetti{position:absolute;inset:0;pointer-events:none;z-index:25}
+/* ---- 가로 모드 (태블릿·스마트폰 눕혔을 때): 왼쪽 탐험+키패드, 오른쪽 맵·도감 ---- */
+.side{display:contents}
+@media (orientation: landscape) and (min-width: 640px) and (max-height: 900px) {
+  body{align-items:stretch}
+  .phone{max-width:none;max-height:none;height:100dvh;border-radius:0;border:0;box-shadow:none}
+  .scroller{display:grid;grid-template-columns:auto minmax(300px,1fr);grid-template-rows:auto 1fr auto;grid-template-areas:"hud hud" "scene side" "pad side";column-gap:12px;overflow:hidden;scroll-behavior:auto}
+  .hud{grid-area:hud;padding:8px 16px 4px}
+  .scene{grid-area:scene;height:calc(100dvh - 176px);width:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
+  .pad{grid-area:pad;padding:8px 12px 10px;margin-left:12px;justify-content:space-between}
+  .side{display:flex;flex-direction:column;grid-area:side;min-height:0;overflow:auto;padding-right:12px;overscroll-behavior:contain}
+  .places{padding:0 0 4px;grid-template-columns:repeat(4,1fr)}
+  .place{padding:4px 2px;font-size:12px}.place img{width:22px;height:22px}.place small{font-size:10px}
+  .tabs{padding:8px 0 0}
+  .sheet{min-height:0;flex:1 1 auto;margin:0 0 10px}
+  .scene .map{width:110px}
+  .modal .box{max-width:560px}
+  .modal .hero.photo img.ph{height:clamp(120px,32dvh,220px)}
+}
+@media (orientation: landscape) and (min-width: 640px) and (max-height: 520px) {
+  /* 스마트폰 가로: 탐험 화면을 세로로 꽉 채우고 키패드는 오른쪽 아래에 */
+  .scroller{grid-template-rows:auto 1fr;grid-template-areas:"hud hud" "scene side"}
+  .scene{height:calc(100dvh - 62px)}
+  .pad{grid-area:side;align-self:end;z-index:3;margin:0;padding:6px 10px 8px;background:linear-gradient(180deg,rgba(255,248,230,0),var(--cream) 30%)}
+  .side{padding-bottom:96px}
+  .dpad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,36px)}
+  .catch{width:70px;height:70px;font-size:16px}.jumpb{width:50px;height:50px;font-size:13px}
+  .hud{padding:6px 14px 2px}.hud h1{font-size:18px}
+  .scene .hint{font-size:11px}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -149,6 +178,7 @@ img.px{image-rendering:pixelated}
     <div class="dpad"><button class="l" data-k="l">◀</button><button class="u" data-k="u" id="btnU">▲</button><button class="d" data-k="d" id="btnD">▼</button><button class="r" data-k="r">▶</button></div>
     <div class="acts"><button class="jumpb" data-k="j" id="btnJ">점프</button><button class="catch" data-k="a" id="btnA">잡기<small>휘두르기</small></button></div>
   </div>
+  <div class="side" id="side">
   <div class="places" id="places"></div>
   <div class="tabs">
     <button class="tab on" data-v="ex"><img class="px" alt="" data-ico="net">탐험</button>
@@ -164,6 +194,7 @@ img.px{image-rendering:pixelated}
       <div class="filters" id="filters"></div>
       <div class="grid" id="grid"></div>
     </div>
+  </div>
   </div>
  </div>
   <div class="modal" id="modal" hidden><div class="box" id="mbox"></div></div>
