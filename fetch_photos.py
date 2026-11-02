@@ -25,6 +25,23 @@ def summary(lang, title):
     # 썸네일을 640px 로
     th = re.sub(r'\?.*$', '', re.sub(r'/(\d+)px-', '/500px-', th)).replace('thumb.wikimedia.org', 'upload.wikimedia.org')  # 허용 폭: 250/330/500/960/1280
     return {'title': d.get('title'), 'img': th, 'extract': d.get('extract', ''), 'url': d.get('content_urls', {}).get('desktop', {}).get('page'), 'lang': lang, 'sci': d.get('description', '')}
+def commons(q):
+    """위키미디어 공용 파일 검색 → 첫 이미지 (jpg/png) 의 500px 썸네일"""
+    try:
+        url = 'https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=8&srsearch=' + urllib.parse.quote(q)
+        with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=20) as r: hits = json.load(r)['query']['search']
+        for h in hits:
+            t = h['title']
+            if not t.lower().endswith(('.jpg', '.jpeg', '.png')): continue
+            url2 = 'https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=500&titles=' + urllib.parse.quote(t)
+            with urllib.request.urlopen(urllib.request.Request(url2, headers=UA), timeout=20) as r: pages = json.load(r)['query']['pages']
+            ii = list(pages.values())[0].get('imageinfo', [{}])[0]
+            if not ii.get('thumburl'): continue
+            return {'title': t.replace('File:', ''), 'img': re.sub(r'\?.*$', '', ii['thumburl']), 'extract': '', 'url': ii.get('descriptionurl'), 'lang': 'commons', 'sci': ''}
+    except Exception as e:
+        return None
+    return None
+
 miss = []
 for sid, name, grp in rows:
     if sid in out and out[sid]: continue
@@ -34,7 +51,7 @@ for sid, name, grp in rows:
     res = None
     for c in cands:
         lang, title = c if isinstance(c, (list, tuple)) else ('ko', c)
-        res = summary(lang, title)
+        res = commons(title) if lang == 'commons' else summary(lang, title)
         if res: break
         time.sleep(1.0)
     out[sid] = res

@@ -47,8 +47,8 @@
    "Tenebrio molitor"
   ],
   [
-   "en",
-   "Darkling beetle"
+   "commons",
+   "Tenebrio molitor adult"
   ]
  ],
  "skipper": [
@@ -77,12 +77,12 @@
  ],
  "mantis_brown": [
   [
-   "en",
-   "Tenodera angustipennis"
+   "commons",
+   "Statilia maculata"
   ],
   [
-   "ko",
-   "사마귀"
+   "en",
+   "Statilia maculata"
   ]
  ],
  "stinkbug": [
@@ -127,16 +127,12 @@
  ],
  "stag_mini": [
   [
-   "en",
+   "commons",
    "Aegus laevicollis"
   ],
   [
-   "en",
-   "Aegus"
-  ],
-  [
-   "ko",
-   "넓적사슴벌레"
+   "commons",
+   "Aegus beetle"
   ]
  ],
  "sea_skater": [
@@ -157,8 +153,12 @@
  ],
  "sand_darkling": [
   [
+   "commons",
+   "Phaleria beetle"
+  ],
+  [
    "en",
-   "Phaleria"
+   "Phaleria (beetle)"
   ],
   [
    "en",
@@ -351,38 +351,70 @@
  ],
  "grub": [
   [
-   "ko",
-   "굼벵이"
+   "commons",
+   "Allomyrina dichotoma larva"
   ],
   [
-   "en",
-   "Scarabaeiform larva"
+   "commons",
+   "Trypoxylus dichotomus larvae"
+  ],
+  [
+   "commons",
+   "Melolontha larva grub"
+  ],
+  [
+   "commons",
+   "Scarabaeidae larva"
   ]
  ],
  "cicada_nymph": [
   [
-   "ko",
-   "매미"
+   "commons",
+   "cicada emerging from nymph"
+  ],
+  [
+   "commons",
+   "cicada molting nymph"
+  ],
+  [
+   "commons",
+   "Cryptotympana facialis nymph"
+  ],
+  [
+   "commons",
+   "cicada nymph"
   ]
  ],
  "antlion_larva": [
   [
-   "ko",
-   "개미귀신"
+   "commons",
+   "Myrmeleon larva"
   ],
   [
-   "ko",
-   "명주잠자리"
+   "commons",
+   "antlion larva"
+  ],
+  [
+   "en",
+   "Antlion"
   ]
  ],
  "wireworm": [
   [
-   "en",
-   "Wireworm"
+   "commons",
+   "Drahtwurm"
   ],
   [
-   "ko",
-   "방아벌레과"
+   "commons",
+   "wireworm soil"
+  ],
+  [
+   "commons",
+   "Elateridae larva"
+  ],
+  [
+   "commons",
+   "Agriotes larva wireworm"
   ]
  ],
  "springtail": [
@@ -407,8 +439,12 @@
  ],
  "purse_spider": [
   [
-   "ko",
-   "땅거미"
+   "commons",
+   "Atypus karschi"
+  ],
+  [
+   "commons",
+   "Atypus affinis"
   ],
   [
    "en",
@@ -451,6 +487,96 @@
   [
    "en",
    "Eisenia fetida"
+  ]
+ ],
+ "striped_hopper": [
+  [
+   "commons",
+   "Mongolotettix japonicus"
+  ],
+  [
+   "en",
+   "Mongolotettix japonicus"
+  ],
+  [
+   "commons",
+   "Omocestus grasshopper"
+  ]
+ ],
+ "cabbage_cat": [
+  [
+   "commons",
+   "Pieris rapae larvae"
+  ],
+  [
+   "commons",
+   "Pieris rapae caterpillar"
+  ],
+  [
+   "commons",
+   "Small white caterpillar Pieris"
+  ],
+  [
+   "commons",
+   "Pieris rapae larva"
+  ]
+ ],
+ "swallow_cat": [
+  [
+   "commons",
+   "Papilio xuthus larva"
+  ],
+  [
+   "commons",
+   "Papilio xuthus caterpillar"
+  ]
+ ],
+ "moth": [
+  [
+   "commons",
+   "Bombyx mori adult moth"
+  ],
+  [
+   "en",
+   "Bombyx mori"
+  ]
+ ],
+ "rhino_f": [
+  [
+   "commons",
+   "Trypoxylus dichotomus female"
+  ],
+  [
+   "commons",
+   "Japanese rhinoceros beetle female"
+  ],
+  [
+   "commons",
+   "Allomyrina dichotoma female"
+  ],
+  [
+   "commons",
+   "Trypoxylus dichotomus ♀"
+  ]
+ ],
+ "stag_f": [
+  [
+   "commons",
+   "Lucanus maculifemoratus female"
+  ],
+  [
+   "commons",
+   "Dorcus titanus female"
+  ]
+ ],
+ "stag_small": [
+  [
+   "commons",
+   "Dorcus rectus"
+  ],
+  [
+   "en",
+   "Dorcus rectus"
   ]
  ]
 }
