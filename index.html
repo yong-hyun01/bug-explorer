@@ -1619,8 +1619,9 @@ function caught(b) {
   S.recent = [b.id, ...S.recent.filter(x => x !== b.id)].slice(0, 30);
   if (first) S.seen.push(b.id);
   save(); renderHud(); renderStrip(); renderGrid(); renderPlaces();
-  beep(first ? SND.new : SND.catch); if (first) confetti();
-  setTimeout(() => showCard(b, first ? 'new' : 'again'), 380);
+  beep(first ? SND.new : SND.catch);
+  if (first) { confetti(); setTimeout(() => showCard(b, 'new'), 380); }
+  else toast(`${b.name} ${S.caught[b.id]}마리째! 도감에서 다시 볼 수 있어요`);
 }
 function photoThumb(b, cls) {
   const ph = PHOTOS[b.id];
