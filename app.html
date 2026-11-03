@@ -74,6 +74,18 @@ img.px{image-rendering:pixelated}
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{padding:5px 11px;border-radius:999px;background:#F2EBD6;font-size:12px;font-weight:900;color:var(--dim);border:2px solid transparent}
 .chip.on{background:#FFF1E3;color:var(--accent-2);border-color:var(--accent)}
+.dexFoot{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 8px;padding-top:14px;border-top:2px dashed #E6DCC0}
+.dexFoot small{font-size:11px;color:var(--dim);font-weight:700}
+.resetBtn{padding:9px 16px;border-radius:999px;background:#FFF;border:2px solid #E6DCC0;color:var(--dim);font-size:13px;font-weight:900}
+.resetBtn:active{background:#FFF1E3}
+.modal .confirm{text-align:center;padding:6px 2px}
+.modal .confirm .big{font-size:44px;line-height:1;margin-bottom:6px}
+.modal .confirm h3{margin:0 0 6px;font-family:var(--display);font-size:20px;color:var(--ink);font-weight:400}
+.modal .confirm p{margin:0 0 10px;font-size:13px;color:var(--dim);font-weight:700;line-height:1.5}
+.modal .row2{display:flex;gap:8px}
+.modal .row2 .close{margin-top:0;width:auto;flex:1 1 0;min-width:0}
+.modal .close.ghost{background:#F2EBD6;color:var(--dim);box-shadow:0 4px 0 #D8CEB0}
+.modal .close.danger{background:var(--red);box-shadow:0 4px 0 #9A2A26}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .card{position:relative;background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:8px 4px 6px;text-align:center;box-shadow:0 3px 0 #E8DFC3;transition:transform .05s}
 .card:active{transform:translateY(2px);box-shadow:0 1px 0 #E8DFC3}
@@ -192,6 +204,7 @@ img.px{image-rendering:pixelated}
     <div class="view dex" id="v-dex" hidden>
       <div class="filters" id="filters"></div>
       <div class="grid" id="grid"></div>
+      <div class="dexFoot"><button class="resetBtn" id="resetBtn">🗑️ 잡은 곤충 모두 지우기</button><small>도감을 처음부터 다시 채울 수 있어요</small></div>
     </div>
   </div>
   </div>
@@ -709,6 +722,19 @@ function renderGrid() {
     c.addEventListener('click', () => { if (known) showCard(b, 'view'); else { toast(`${b.place.map(p => PLACES.find(x => x.id === p).name).join('·')}에서 ${b.time === 'night' ? '밤에 ' : b.time === 'day' ? '낮에 ' : ''}찾아보세요!`); beep(SND.tap); } });
     grid.appendChild(c); });
 }
+function askReset() {
+  const n = S.seen.length, t = S.total;
+  $('mbox').innerHTML = `<div class="confirm"><div class="big">🗑️</div><h3>잡은 곤충을 모두 지울까요?</h3>
+    <p>${n ? `도감에 넣은 <b>${n}종</b>, 지금까지 잡은 <b>${t}마리</b> 기록이 모두 사라져요.<br>지우고 나면 되돌릴 수 없어요.` : '아직 잡은 곤충이 없어요.'}</p>
+    <div class="row2"><button class="close ghost" id="rNo">취소</button>${n ? '<button class="close danger" id="rYes">모두 지우기</button>' : ''}</div></div>`;
+  modalOpenedAt = performance.now(); $('modal').hidden = false; beep(SND.tap);
+  $('rNo').onclick = () => { $('modal').hidden = true; beep(SND.tap); };
+  const y = $('rYes'); if (y) y.onclick = () => { if (performance.now() - modalOpenedAt < 300) return; resetProgress(); $('modal').hidden = true; };
+}
+function resetProgress() {
+  S.caught = {}; S.seen = []; S.recent = []; S.total = 0; S.done = false; save();
+  renderHud(); renderStrip(); renderGrid(); renderPlaces(); beep(SND.tap); toast('🧹 도감을 깨끗하게 비웠어요. 다시 모아 볼까요?');
+}
 function showView(v) { document.querySelectorAll('.view').forEach(x => x.hidden = x.id !== 'v-' + v); document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.v === v)); }
 const scroller = $('scroller');
 function setPH() { document.documentElement.style.setProperty('--ph', $('phone').clientHeight + 'px'); }
@@ -725,6 +751,7 @@ BUGS.forEach(b => bugImg(b.id));
 function preloadFrames() { BUGS.filter(b => b.place.includes(S.place)).forEach(b => { bugImg(b.id, 1); bugImg(b.id, 3); }); }
 preloadFrames();
 renderHud(); renderPlaces(); renderScene(); renderStrip(); renderGrid();
+$('resetBtn').addEventListener('click', askReset);
 $('dayBtn').addEventListener('click', () => { S.night = !S.night; bugs = []; spawnT = .3; save(); renderScene(); beep(SND.tap); toast(S.night ? '🌙 밤이 되었어요. 밤에만 나오는 곤충을 찾아보세요!' : '☀️ 아침이 밝았어요!'); });
 $('sndBtn').addEventListener('click', () => { S.sound = !S.sound; save(); renderHud(); beep(SND.tap); });
 document.querySelectorAll('.tab').forEach(tb => tb.addEventListener('click', () => { const same = tb.classList.contains('on'); showView(tb.dataset.v); beep(SND.tap); if (tb.dataset.v === 'ex' && same) scroller.scrollTo({ top: 0 }); else if (tb.dataset.v === 'dex') scroller.scrollTo({ top: tb.parentElement.offsetTop }); }));
