@@ -704,5 +704,691 @@
    "en",
    "Tetramorium caespitum"
   ]
+ ],
+ "bronze_chafer": [
+  [
+   "en",
+   "Anomala albopilosa"
+  ],
+  [
+   "commons",
+   "Anomala albopilosa"
+  ]
+ ],
+ "purple_dor": [
+  [
+   "en",
+   "Phelotrupes auratus"
+  ],
+  [
+   "commons",
+   "Phelotrupes auratus"
+  ]
+ ],
+ "pointy_hopper": [
+  [
+   "en",
+   "Atractomorpha lata"
+  ],
+  [
+   "commons",
+   "Atractomorpha lata"
+  ]
+ ],
+ "painted_lady": [
+  [
+   "ko",
+   "작은멋쟁이나비"
+  ],
+  [
+   "en",
+   "Painted lady"
+  ]
+ ],
+ "leafhopper": [
+  [
+   "en",
+   "Nephotettix cincticeps"
+  ],
+  [
+   "commons",
+   "Nephotettix cincticeps"
+  ]
+ ],
+ "leaf_beetle": [
+  [
+   "en",
+   "Chrysolina virgata"
+  ],
+  [
+   "commons",
+   "Chrysolina virgata"
+  ]
+ ],
+ "cranefly": [
+  [
+   "ko",
+   "각다귀"
+  ],
+  [
+   "en",
+   "Crane fly"
+  ]
+ ],
+ "oak_longhorn": [
+  [
+   "en",
+   "Massicus raddei"
+  ],
+  [
+   "commons",
+   "Massicus raddei"
+  ]
+ ],
+ "antler_chafer": [
+  [
+   "en",
+   "Dicranocephalus adamsi"
+  ],
+  [
+   "commons",
+   "Dicranocephalus adamsi"
+  ]
+ ],
+ "ink_butterfly": [
+  [
+   "en",
+   "Dichorragia nesimachus"
+  ],
+  [
+   "commons",
+   "Dichorragia nesimachus"
+  ]
+ ],
+ "small_mantis": [
+  [
+   "en",
+   "Statilia maculata"
+  ],
+  [
+   "commons",
+   "Statilia maculata"
+  ]
+ ],
+ "small_cicada": [
+  [
+   "en",
+   "Meimuna opalifera"
+  ],
+  [
+   "commons",
+   "Meimuna opalifera"
+  ]
+ ],
+ "ailanthus_moth": [
+  [
+   "en",
+   "Samia cynthia"
+  ],
+  [
+   "commons",
+   "Samia cynthia"
+  ]
+ ],
+ "treehopper": [
+  [
+   "ko",
+   "뿔매미"
+  ],
+  [
+   "en",
+   "Treehopper"
+  ]
+ ],
+ "leaf_roller": [
+  [
+   "ko",
+   "거위벌레"
+  ],
+  [
+   "en",
+   "Attelabidae"
+  ]
+ ],
+ "asian_damsel": [
+  [
+   "en",
+   "Ischnura asiatica"
+  ],
+  [
+   "commons",
+   "Ischnura asiatica"
+  ]
+ ],
+ "butterfly_dragon": [
+  [
+   "en",
+   "Rhyothemis fuliginosa"
+  ],
+  [
+   "commons",
+   "Rhyothemis fuliginosa"
+  ]
+ ],
+ "water_boatman": [
+  [
+   "ko",
+   "물벌레"
+  ],
+  [
+   "en",
+   "Corixidae"
+  ]
+ ],
+ "small_firefly": [
+  [
+   "commons",
+   "Aquatica lateralis"
+  ],
+  [
+   "commons",
+   "Luciola lateralis"
+  ]
+ ],
+ "midge": [
+  [
+   "ko",
+   "깔따구"
+  ],
+  [
+   "en",
+   "Chironomidae"
+  ]
+ ],
+ "pond_snail": [
+  [
+   "en",
+   "Radix auricularia"
+  ],
+  [
+   "commons",
+   "Radix auricularia"
+  ],
+  [
+   "en",
+   "Lymnaeidae"
+  ]
+ ],
+ "leech": [
+  [
+   "ko",
+   "거머리"
+  ],
+  [
+   "en",
+   "Leech"
+  ]
+ ],
+ "dragon_nymph": [
+  [
+   "commons",
+   "Aeshna nymph"
+  ],
+  [
+   "commons",
+   "Anax larva"
+  ],
+  [
+   "commons",
+   "Libellulidae larva"
+  ]
+ ],
+ "marmalade_fly": [
+  [
+   "en",
+   "Episyrphus balteatus"
+  ]
+ ],
+ "inchworm": [
+  [
+   "commons",
+   "Geometridae larva inchworm"
+  ],
+  [
+   "commons",
+   "inchworm caterpillar"
+  ],
+  [
+   "en",
+   "Geometer moth"
+  ]
+ ],
+ "webworm_moth": [
+  [
+   "en",
+   "Hyphantria cunea"
+  ]
+ ],
+ "cucumber_beetle": [
+  [
+   "en",
+   "Aulacophora femoralis"
+  ],
+  [
+   "commons",
+   "Aulacophora femoralis"
+  ],
+  [
+   "commons",
+   "Aulacophora indica"
+  ]
+ ],
+ "cellar_spider": [
+  [
+   "ko",
+   "유령거미"
+  ],
+  [
+   "en",
+   "Pholcus phalangioides"
+  ]
+ ],
+ "brown_wing_bug": [
+  [
+   "en",
+   "Plautia stali"
+  ],
+  [
+   "commons",
+   "Plautia stali"
+  ]
+ ],
+ "german_roach": [
+  [
+   "ko",
+   "독일바퀴"
+  ],
+  [
+   "en",
+   "German cockroach"
+  ]
+ ],
+ "bagworm": [
+  [
+   "commons",
+   "Bagworm Moth (Psychidae) Larva in Case Guelph"
+  ]
+ ],
+ "ghost_crab": [
+  [
+   "ko",
+   "달랑게"
+  ],
+  [
+   "en",
+   "Ocypode stimpsoni"
+  ],
+  [
+   "commons",
+   "Ocypode stimpsoni"
+  ]
+ ],
+ "shore_crab": [
+  [
+   "ko",
+   "방게"
+  ],
+  [
+   "en",
+   "Helice tridens"
+  ],
+  [
+   "commons",
+   "Helice tridens"
+  ]
+ ],
+ "amur_star": [
+  [
+   "ko",
+   "아무르불가사리"
+  ],
+  [
+   "en",
+   "Asterias amurensis"
+  ]
+ ],
+ "periwinkle": [
+  [
+   "ko",
+   "총알고둥"
+  ],
+  [
+   "en",
+   "Littorina brevicula"
+  ],
+  [
+   "commons",
+   "Littorina brevicula"
+  ]
+ ],
+ "moon_jelly": [
+  [
+   "ko",
+   "보름달물해파리"
+  ],
+  [
+   "en",
+   "Aurelia aurita"
+  ]
+ ],
+ "kuruma_prawn": [
+  [
+   "ko",
+   "보리새우"
+  ],
+  [
+   "en",
+   "Marsupenaeus japonicus"
+  ]
+ ],
+ "turban_shell": [
+  [
+   "en",
+   "Turbo sazae"
+  ],
+  [
+   "ko",
+   "소라"
+  ],
+  [
+   "commons",
+   "Turbo sazae"
+  ]
+ ],
+ "mantis_shrimp": [
+  [
+   "ko",
+   "갯가재"
+  ],
+  [
+   "en",
+   "Mantis shrimp"
+  ]
+ ],
+ "longtail_sw": [
+  [
+   "en",
+   "Papilio macilentus"
+  ],
+  [
+   "commons",
+   "Papilio macilentus"
+  ]
+ ],
+ "large_copper": [
+  [
+   "en",
+   "Lycaena dispar"
+  ]
+ ],
+ "bombardier": [
+  [
+   "ko",
+   "폭탄먼지벌레"
+  ],
+  [
+   "en",
+   "Pheropsophus jessoensis"
+  ],
+  [
+   "en",
+   "Bombardier beetle"
+  ]
+ ],
+ "blue_longhorn": [
+  [
+   "en",
+   "Agapanthia pilicornis"
+  ],
+  [
+   "commons",
+   "Agapanthia pilicornis"
+  ]
+ ],
+ "meadow_katydid": [
+  [
+   "ko",
+   "쌕쌔기"
+  ],
+  [
+   "en",
+   "Conocephalus"
+  ]
+ ],
+ "owl_moth": [
+  [
+   "en",
+   "Brahmaea certhia"
+  ],
+  [
+   "commons",
+   "Brahmaea certhia"
+  ]
+ ],
+ "giant_horsefly": [
+  [
+   "en",
+   "Tabanus chrysurus"
+  ],
+  [
+   "commons",
+   "Tabanus chrysurus"
+  ]
+ ],
+ "wasp_spider": [
+  [
+   "ko",
+   "긴호랑거미"
+  ],
+  [
+   "en",
+   "Argiope bruennichi"
+  ]
+ ],
+ "vampire_squid": [
+  [
+   "ko",
+   "흡혈오징어"
+  ],
+  [
+   "en",
+   "Vampire squid"
+  ]
+ ],
+ "firefly_squid": [
+  [
+   "ko",
+   "반딧불오징어"
+  ],
+  [
+   "en",
+   "Firefly squid"
+  ]
+ ],
+ "atolla": [
+  [
+   "en",
+   "Atolla"
+  ],
+  [
+   "commons",
+   "Atolla wyvillei"
+  ]
+ ],
+ "krill": [
+  [
+   "ko",
+   "크릴"
+  ],
+  [
+   "en",
+   "Antarctic krill"
+  ]
+ ],
+ "giant_amphipod": [
+  [
+   "en",
+   "Alicella gigantea"
+  ],
+  [
+   "commons",
+   "Alicella gigantea"
+  ]
+ ],
+ "brittle_star": [
+  [
+   "ko",
+   "거미불가사리"
+  ],
+  [
+   "en",
+   "Brittle star"
+  ]
+ ],
+ "bone_worm": [
+  [
+   "en",
+   "Osedax"
+  ],
+  [
+   "commons",
+   "Osedax"
+  ]
+ ],
+ "pot_worm": [
+  [
+   "en",
+   "Enchytraeidae"
+  ],
+  [
+   "commons",
+   "Enchytraeidae"
+  ]
+ ],
+ "cutworm": [
+  [
+   "en",
+   "Cutworm"
+  ],
+  [
+   "en",
+   "Agrotis ipsilon"
+  ]
+ ],
+ "horned_dung": [
+  [
+   "en",
+   "Copris ochus"
+  ],
+  [
+   "commons",
+   "Copris ochus"
+  ]
+ ],
+ "velvet_mite": [
+  [
+   "ko",
+   "털진드기"
+  ],
+  [
+   "en",
+   "Trombidiidae"
+  ]
+ ],
+ "pseudoscorpion": [
+  [
+   "en",
+   "Pseudoscorpion"
+  ]
+ ],
+ "soil_centipede": [
+  [
+   "en",
+   "Geophilomorpha"
+  ]
+ ],
+ "harvestman": [
+  [
+   "ko",
+   "장님거미"
+  ],
+  [
+   "en",
+   "Opiliones"
+  ]
+ ],
+ "rove_beetle": [
+  [
+   "ko",
+   "반날개"
+  ],
+  [
+   "en",
+   "Rove beetle"
+  ]
+ ],
+ "bristletail": [
+  [
+   "ko",
+   "돌좀"
+  ],
+  [
+   "en",
+   "Archaeognatha"
+  ]
+ ],
+ "huntsman": [
+  [
+   "ko",
+   "농발거미"
+  ],
+  [
+   "en",
+   "Heteropoda venatoria"
+  ]
+ ],
+ "pygmy_hopper": [
+  [
+   "ko",
+   "모메뚜기"
+  ],
+  [
+   "en",
+   "Tetrix japonica"
+  ],
+  [
+   "en",
+   "Tetrigidae"
+  ]
+ ],
+ "field_roach": [
+  [
+   "en",
+   "Blattella nipponica"
+  ],
+  [
+   "commons",
+   "Blattella nipponica"
+  ]
+ ],
+ "potter_wasp": [
+  [
+   "ko",
+   "호리병벌"
+  ],
+  [
+   "en",
+   "Potter wasp"
+  ]
  ]
 }
