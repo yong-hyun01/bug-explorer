@@ -1293,13 +1293,19 @@ const grassBlades = Array.from({ length: 120 }, (_, i) => ({ x: seeded(i + 300) 
 const trees = Array.from({ length: 16 }, (_, i) => ({ x: i * 80 + 20 }));
 const pads = Array.from({ length: 12 }, (_, i) => ({ x: 40 + i * 100, y: WATER + 30 + (i % 2) * 60 }));
 
-function wary(b) { return [.12, .3, .55][b.rare]; }
+function wary(b) { return [.12, .24, .38][b.rare]; }
 function flee(u) { if (u.leave) return; u.leave = true; u.dir = (u.x - player.x) >= 0 ? 1 : -1; u.vx *= 1.6; u.alert = false; }
 function spawnable() { const dk = placeOf().dark; return BUGS.filter(b => b.place.includes(S.place) && (dk || b.time === 'both' || (S.night ? b.time === 'night' : b.time === 'day'))); }
+// 출현 가중치: 희귀해도 너무 안 나오지 않게, 아직 못 잡은 곤충은 더 자주 나오게
+function spawnWeight(b) {
+  const base = [3, 2.2, 1.6][b.rare], n = S.caught[b.id] || 0;
+  return base * (n === 0 ? 2.2 : n < 3 ? 1.2 : n < 8 ? .85 : .6);
+}
 function spawn() {
   const pool = spawnable(); if (!pool.length) return;
-  const weighted = []; pool.forEach(b => { for (let i = 0; i < [6, 3, 1][b.rare]; i++) weighted.push(b); });
-  const b = pick(weighted);
+  let tot = 0; const ws = pool.map(b => { const w = spawnWeight(b); tot += w; return w; });
+  let r = Math.random() * tot, b = pool[pool.length - 1];
+  for (let i = 0; i < pool.length; i++) { r -= ws[i]; if (r <= 0) { b = pool[i]; break; } }
   let y; if (isFree()) y = (b.move === 'crawl' || b.move === 'still') ? rnd(GROUND + 30, GROUND + 60) : rnd(90, 330); else if (b.move === 'fly') y = rnd(110, 230); else if (b.move === 'swim') y = S.place === 'sea' ? rnd(170, 248) : rnd(WATER + 10, 330); else if (b.move === 'glide') y = rnd(120, 200); else if (b.move === 'still') y = rnd(GROUND + 10, GROUND + 50); else y = rnd(GROUND - 20, GROUND + 40);
   let x = clamp(rnd(cam + 50, cam + W - 50), 40, WW - 40); // 지금 보이는 화면 안, 탐험가와는 조금 떨어진 곳에 나타난다
   if (Math.abs(x - player.x) < 110) x = clamp(player.x + (x < player.x ? -110 : 110), 40, WW - 40);
@@ -1330,7 +1336,7 @@ function tick() {
   if (keys.a && player.cd <= 0) swingNet();
   cam += (camTarget - cam) * Math.min(1, dt * 10);
   spawnT -= dt;
-  if (spawnT <= 0 && bugs.filter(x => !x.leave).length < 5) { spawn(); spawnT = rnd(1.2, 2.8); }
+  if (spawnT <= 0 && bugs.filter(x => !x.leave).length < 6) { spawn(); spawnT = rnd(1.0, 2.2); }
   for (let i = bugs.length - 1; i >= 0; i--) {
     const u = bugs[i]; u.t += dt; u.pop = Math.min(1, u.pop + dt * 3);
     if (u.t > u.life && !u.leave) { u.leave = true; u.dir = u.x < WW / 2 ? -1 : 1; }
