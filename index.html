@@ -170,7 +170,7 @@ img.px{image-rendering:pixelated}
     <canvas id="cv"></canvas>
     <div class="label"><span id="placeName">풀밭</span><small id="placeHint"></small></div>
     <button class="daynight" id="dayBtn">☀️ 낮</button>
-    <div class="hint" id="hint">키패드로 살금살금 다가가서 잡기 버튼으로 휘둘러요. 빨리 가면 도망가요!</div>
+    <div class="hint" id="hint">키패드를 짧게 톡톡 눌러 살금살금 다가간 뒤 잡기 버튼! 오래 달리면 도망가요</div>
     <div class="map" id="map"><i id="mapView"></i></div>
   </div>
   <div class="pad" id="pad">
@@ -1177,12 +1177,13 @@ new ResizeObserver(resize).observe(cv); resize();
 let bugs = [], spawnT = .5, net = null, t = 0, last = performance.now() / 1000, puffs = [], misses = [], sparkles = [];
 let cam = (WW - W) / 2, camTarget = cam;
 // 탐험가 (심해에서는 잠수부). 키패드로 움직이고 잠자리채를 휘둘러 잡는다.
-const player = { x: WW / 2, y: 0, vy: 0, py: 220, gy: GROUND + 8, dir: 1, moving: false, swing: 0, cd: 0, walk: 0, happy: 0, oops: 0, land: 0, blink: 0, blinkT: 2.5, dustT: 0, air: false };
+const player = { x: WW / 2, y: 0, vy: 0, py: 220, gy: GROUND + 8, dir: 1, moving: false, runT: 0, swing: 0, cd: 0, walk: 0, happy: 0, oops: 0, land: 0, blink: 0, blinkT: 2.5, dustT: 0, air: false };
 const keys = { l: false, r: false, u: false, d: false, a: false, j: false };
 const isFree = () => !!placeOf().free;
 const feetY = () => isFree() ? player.py + 30 : player.gy + player.y;
 const netPos = () => isFree() ? [player.x + player.dir * 50, player.py - 10] : [player.x + player.dir * 50, player.gy + player.y - 86];
-const NET_R = 54;
+const NET_RX = 66, NET_RY = 74; // 잠자리채가 휩쓰는 범위(타원): 발밑부터 머리 위까지
+const netCenter = () => isFree() ? [player.x + player.dir * 48, player.py - 4] : [player.x + player.dir * 46, player.gy + player.y - 50];
 const placeOf = () => PLACES.find(p => p.id === S.place);
 // 장소별 장식물 위치(고정 난수)
 function seeded(n) { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
@@ -1191,7 +1192,7 @@ const grassBlades = Array.from({ length: 120 }, (_, i) => ({ x: seeded(i + 300) 
 const trees = Array.from({ length: 16 }, (_, i) => ({ x: i * 80 + 20 }));
 const pads = Array.from({ length: 12 }, (_, i) => ({ x: 40 + i * 100, y: WATER + 30 + (i % 2) * 60 }));
 
-function wary(b) { return [.35, .8, 1.3][b.rare]; }
+function wary(b) { return [.12, .3, .55][b.rare]; }
 function flee(u) { if (u.leave) return; u.leave = true; u.dir = (u.x - player.x) >= 0 ? 1 : -1; u.vx *= 1.6; u.alert = false; }
 function spawnable() { const dk = placeOf().dark; return BUGS.filter(b => b.place.includes(S.place) && (dk || b.time === 'both' || (S.night ? b.time === 'night' : b.time === 'day'))); }
 function spawn() {
@@ -1219,6 +1220,7 @@ function tick() {
     if (player.y < 0 || player.vy) { player.vy += 1150 * dt; player.y = Math.min(0, player.y + player.vy * dt); if (player.y === 0) { player.vy = 0; if (player.air) { player.air = false; player.land = .18; for (let i = 0; i < 8; i++) puffs.push({ x: player.x + rnd(-16, 16), y: player.gy, vx: rnd(-80, 80), vy: rnd(-40, 0), t: 0, life: .45, s: 3, c: 'rgba(120,90,60,.5)' }); } } if (player.vy) player.moving = true; }
     if (vx && player.y === 0) { player.dustT -= dt; if (player.dustT <= 0) { player.dustT = .16; puffs.push({ x: player.x - player.dir * 10, y: player.gy, vx: -player.dir * 30, vy: -20, t: 0, life: .4, s: 3, c: 'rgba(120,90,60,.4)' }); } }
   }
+  player.runT = player.moving ? player.runT + dt : 0;
   player.happy = Math.max(0, player.happy - dt); player.oops = Math.max(0, player.oops - dt); player.land = Math.max(0, player.land - dt);
   player.blinkT -= dt; if (player.blinkT <= 0) { player.blink = .12; player.blinkT = rnd(2, 4.5); } player.blink = Math.max(0, player.blink - dt);
   if (free && player.moving && Math.random() < .25) puffs.push({ x: player.x - player.dir * 8, y: player.py - 40, vx: rnd(-10, 10), vy: -50, t: 0, life: 1.1, s: rnd(2, 5), c: 'rgba(200,230,255,.75)' });
@@ -1232,7 +1234,7 @@ function tick() {
     const u = bugs[i]; u.t += dt; u.pop = Math.min(1, u.pop + dt * 3);
     if (u.t > u.life && !u.leave) { u.leave = true; u.dir = u.x < WW / 2 ? -1 : 1; }
     // 경계: 탐험가가 가까우면 '!' 가 뜨고, 움직이며 다가오면 도망간다
-    if (!u.leave && u.b.move !== 'still') { const dd = Math.hypot(u.x - player.x, (u.y + u.hop) - feetY() + 30); u.alert = dd < 130; if (player.moving && dd < 105 && Math.random() < wary(u.b) * dt * 2.2) flee(u); }
+    if (!u.leave && u.b.move !== 'still') { const dd = Math.hypot(u.x - player.x, (u.y + u.hop) - feetY() + 30); u.alert = dd < 130; if (player.runT > .5 && dd < 90 && Math.random() < wary(u.b) * dt * 1.3) flee(u); }
     const m = u.b.move, sp = u.vx * (u.leave ? 2.2 : 1);
     const bounce = () => { if (!u.leave && (u.x < 40 || u.x > WW - 40)) u.dir *= -1; };
     if (m === 'fly') { u.x += u.dir * sp * dt; u.y += Math.sin(t * 3 + u.ph) * 40 * dt; bounce(); }
@@ -1389,15 +1391,17 @@ function drawPlayer() {
     else if (mv) { const c = Math.sin(ph + (sd > 0 ? 0 : Math.PI)); thigh = c * .38; knee = c < 0 ? -.75 * -c : -.06; }
     else { thigh = sd * .06; knee = -.05; }
     const [kx, ky, ax, ay] = limb2(sd * 5, HIP, thigh, 22, knee, 22, 7.5, pants);
+    ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.arc(kx, ky, 3.2, 0, 6.3); ctx.fill(); // 무릎
+    if (!free) { ctx.strokeStyle = sh(pants, .55); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sd * 5 + 2, HIP + 4); ctx.lineTo(kx + 2, ky); ctx.stroke(); ctx.strokeStyle = '#F3EFE4'; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(kx + (ax - kx) * .82, ky + (ay - ky) * .82); ctx.lineTo(ax, ay); ctx.stroke(); } // 바지 솔기·양말
     // 발/오리발
     ctx.save(); ctx.translate(ax, ay); ctx.rotate(free ? thigh + knee - .2 : (player.y < 0 ? -.4 : 0));
     if (free) { ctx.fillStyle = shoe; ctx.beginPath(); ctx.ellipse(8, 2, 14, 4.5, 0, 0, 6.3); ctx.fill(); ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.stroke(); }
-    else { ctx.fillStyle = shoe; ctx.strokeStyle = dark; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-5, -3, 17, 8, [3, 5, 5, 3]); ctx.fill(); ctx.stroke(); ctx.fillStyle = sh(shoe, 1.6); ctx.fillRect(-2, -2, 6, 2); }
+    else { ctx.fillStyle = shoe; ctx.strokeStyle = dark; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-5, -3, 17, 8, [3, 5, 5, 3]); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F3EFE4'; ctx.fillRect(-5, 3, 17, 2); ctx.strokeStyle = '#F3EFE4'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -1); ctx.lineTo(4, 1); ctx.moveTo(2, -1); ctx.lineTo(6, 1); ctx.stroke(); }
     ctx.restore();
   }
   // ---- 뒤 팔 (어깨 y=-74): 다리와 반대 위상, 팔꿈치 약간 굽힘 ----
   const armB = mv ? Math.sin(ph + Math.PI) * .42 : -.08 + breath * .03;
-  { const [ex, ey, hx, hy] = limb2(-9, -74, Math.PI + armB, 17, -.5, 16, 6, sh(shirt, .9)); ctx.fillStyle = sh(skin, .85); ctx.beginPath(); ctx.arc(hx, hy + 1, 4, 0, 6.3); ctx.fill(); }
+  { const [ex, ey, hx, hy] = limb2(-9, -74, Math.PI + armB, 17, -.5, 16, 6, sh(shirt, .9)); ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.arc(ex, ey, 2.6, 0, 6.3); ctx.fill(); ctx.fillStyle = sh(skin, .85); ctx.strokeStyle = dark; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(hx, hy + 2, 4, 5, 0, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.strokeStyle = sh(skin, .6); ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(hx - 2, hy + 3); ctx.lineTo(hx - 2, hy + 6); ctx.moveTo(hx, hy + 3); ctx.lineTo(hx, hy + 7); ctx.moveTo(hx + 2, hy + 3); ctx.lineTo(hx + 2, hy + 6); ctx.stroke(); }
   // ---- 몸통: 어깨가 넓고 허리가 들어간 모양, 숨쉬기 ----
   ctx.save(); ctx.translate(0, -60); ctx.scale(1 + breath * .012, 1 + breath * .02); ctx.translate(0, 60);
   const sg = ctx.createLinearGradient(-15, 0, 15, 0); sg.addColorStop(0, sh(shirt, 1.15)); sg.addColorStop(.5, shirt); sg.addColorStop(1, sh(shirt, .62));
@@ -1406,7 +1410,13 @@ function drawPlayer() {
   ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.beginPath(); ctx.roundRect(-11, -73, 5, 22, 2.5); ctx.fill();
   ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.roundRect(-13, -52, 26, 6, 3); ctx.fill();
   if (free) { ctx.fillStyle = '#C8CCD6'; ctx.strokeStyle = dark; ctx.beginPath(); ctx.roundRect(-16, -75, 8, 26, 3); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F2B233'; ctx.fillRect(-12, -60, 24, 4); }
-  else { ctx.fillStyle = '#E8793A'; ctx.beginPath(); ctx.moveTo(-15, -70); ctx.lineTo(15, -70); ctx.lineTo(14, -64); ctx.lineTo(-14, -64); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.roundRect(-13, -50, 26, 5, 2); ctx.fill(); ctx.fillStyle = '#FFD54A'; ctx.fillRect(-2.5, -50, 5, 5); }
+  else {
+    ctx.fillStyle = '#E8793A'; ctx.beginPath(); ctx.moveTo(-15, -70); ctx.lineTo(15, -70); ctx.lineTo(14, -64); ctx.lineTo(-14, -64); ctx.fill();
+    ctx.strokeStyle = '#6B4A2B'; ctx.lineWidth = 3.2; ctx.beginPath(); ctx.moveTo(-9, -77); ctx.lineTo(-7, -52); ctx.moveTo(9, -77); ctx.lineTo(7, -52); ctx.stroke(); ctx.strokeStyle = '#9A7A4A'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-9, -77); ctx.lineTo(-7, -52); ctx.moveTo(9, -77); ctx.lineTo(7, -52); ctx.stroke(); // 배낭 끈
+    ctx.fillStyle = sh(shirt, 1.12); ctx.beginPath(); ctx.moveTo(-6, -78); ctx.lineTo(0, -72); ctx.lineTo(6, -78); ctx.lineTo(4, -80); ctx.lineTo(0, -76); ctx.lineTo(-4, -80); ctx.closePath(); ctx.fill(); ctx.strokeStyle = dark; ctx.lineWidth = 1.2; ctx.stroke(); // 옷깃
+    ctx.strokeStyle = 'rgba(0,0,0,.18)'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(-10, -60); ctx.quadraticCurveTo(-6, -58, -9, -54); ctx.moveTo(10, -62); ctx.quadraticCurveTo(7, -59, 10, -55); ctx.stroke(); // 주름
+    ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.roundRect(-13, -50, 26, 5, 2); ctx.fill(); ctx.fillStyle = '#FFD54A'; ctx.fillRect(-3, -50.5, 6, 6); ctx.fillStyle = '#B88A12'; ctx.fillRect(-1.5, -49, 3, 3);
+  }
   // 목
   ctx.strokeStyle = dark; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(0, -78); ctx.lineTo(0, -84); ctx.stroke(); ctx.strokeStyle = sh(skin, .9); ctx.lineWidth = 6.5; ctx.beginPath(); ctx.moveTo(0, -78); ctx.lineTo(0, -85); ctx.stroke();
   ctx.restore();
@@ -1433,8 +1443,13 @@ function drawPlayer() {
   ctx.fillStyle = '#3B2A1E'; ctx.beginPath(); ctx.moveTo(-12, -4); ctx.quadraticCurveTo(-10, -14, 2, -14); ctx.quadraticCurveTo(12, -14, 13, -3); ctx.quadraticCurveTo(10, -8, 4, -9); ctx.quadraticCurveTo(-6, -9, -12, -4); ctx.fill();
   ctx.fillStyle = 'rgba(247,150,140,.55)'; ctx.beginPath(); ctx.ellipse(8, 4, 3, 2, 0, 0, 6.3); ctx.fill();
   // 눈썹·눈·코·입
-  ctx.strokeStyle = '#3B2A1E'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(3, -6.5); ctx.quadraticCurveTo(6, -8, 9, -6.5); ctx.stroke();
-  ctx.fillStyle = dark; if (player.blink > 0) { ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(3.5, -2.5); ctx.lineTo(8.5, -2.5); ctx.stroke(); } else { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(6, -2.5, 3, happy ? 3.2 : 2.6, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#2B2B33'; ctx.beginPath(); ctx.ellipse(6.6, -2.3, 1.7, 2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(7.2, -3.2, .7, 0, 6.3); ctx.fill(); }
+  ctx.strokeStyle = '#3B2A1E'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(3, -6.5); ctx.quadraticCurveTo(6, -8, 9, -6.5); ctx.moveTo(-6, -6); ctx.quadraticCurveTo(-4, -7.5, -1.5, -6.6); ctx.stroke();
+  ctx.fillStyle = 'rgba(0,0,0,.08)'; ctx.beginPath(); ctx.ellipse(-4, 6, 6, 4, 0, 0, 6.3); ctx.fill(); // 턱 음영
+  ctx.fillStyle = dark; if (player.blink > 0) { ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(3.5, -2.5); ctx.lineTo(8.5, -2.5); ctx.moveTo(-5, -2.5); ctx.lineTo(-2, -2.5); ctx.stroke(); } else {
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(6, -2.5, 3, happy ? 3.2 : 2.6, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.ellipse(6.6, -2.3, 1.9, 2.2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#1E1A26'; ctx.beginPath(); ctx.ellipse(6.8, -2.2, 1.1, 1.3, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(7.3, -3.2, .7, 0, 6.3); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-3.5, -2.3, 1.6, 2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.ellipse(-3, -2.2, 1, 1.5, 0, 0, 6.3); ctx.fill(); // 먼 쪽 눈
+    ctx.strokeStyle = '#3B2A1E'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(2.8, -4.8); ctx.quadraticCurveTo(6, -6.4, 9.2, -4.6); ctx.stroke(); // 속눈썹선
+  }
   ctx.strokeStyle = sh(skin, .7); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(10, 0); ctx.quadraticCurveTo(12, 2.5, 10, 3.5); ctx.stroke();
   ctx.strokeStyle = '#8E4A3A'; ctx.lineWidth = 1.6; ctx.beginPath();
   if (happy) { ctx.fillStyle = '#B23A3A'; ctx.moveTo(2, 6); ctx.quadraticCurveTo(6, 12, 10, 6); ctx.closePath(); ctx.fill(); ctx.stroke(); }
@@ -1442,7 +1457,7 @@ function drawPlayer() {
   else { ctx.moveTo(3, 6); ctx.quadraticCurveTo(6, 8.5, 9.5, 6); ctx.stroke(); }
   // 모자 / 잠수 마스크
   if (free) { ctx.fillStyle = 'rgba(159,216,255,.5)'; ctx.strokeStyle = '#1E4FB0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(-8, -9, 20, 13, 4); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-8, -3); ctx.lineTo(-14, -3); ctx.lineTo(-14, 14); ctx.stroke(); ctx.fillStyle = '#1E4FB0'; ctx.beginPath(); ctx.ellipse(0, -11, 13, 6, 0, Math.PI, 0); ctx.fill(); }
-  else { const cg = ctx.createRadialGradient(-5, -14, 2, 0, -9, 16); cg.addColorStop(0, '#FF7B6B'); cg.addColorStop(.6, '#E53935'); cg.addColorStop(1, '#8E1E1E'); ctx.fillStyle = cg; ctx.strokeStyle = dark; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(-13, -5); ctx.quadraticCurveTo(-12, -20, 0, -20); ctx.quadraticCurveTo(13, -20, 13, -5); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#B82A2A'; ctx.beginPath(); ctx.roundRect(-14, -7, 32, 4.5, 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.arc(2, -13, 2.6, 0, 6.3); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.ellipse(-5, -14, 4.5, 2, -.5, 0, 6.3); ctx.fill(); }
+  else { const cg = ctx.createRadialGradient(-5, -14, 2, 0, -9, 16); cg.addColorStop(0, '#FF7B6B'); cg.addColorStop(.6, '#E53935'); cg.addColorStop(1, '#8E1E1E'); ctx.fillStyle = cg; ctx.strokeStyle = dark; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(-13, -5); ctx.quadraticCurveTo(-12, -20, 0, -20); ctx.quadraticCurveTo(13, -20, 13, -5); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#B82A2A'; ctx.beginPath(); ctx.roundRect(-14, -7, 32, 4.5, 2); ctx.fill(); ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(-10, -18); ctx.quadraticCurveTo(0, -22, 10, -18); ctx.moveTo(0, -20); ctx.lineTo(0, -8); ctx.stroke(); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.arc(2, -13, 2.6, 0, 6.3); ctx.fill(); ctx.fillStyle = '#8E1E1E'; ctx.beginPath(); ctx.arc(0, -20.5, 1.6, 0, 6.3); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.ellipse(-5, -14, 4.5, 2, -.5, 0, 6.3); ctx.fill(); }
   ctx.restore();
   if (happy && Math.random() < .3) puffs.push({ x: player.x + rnd(-24, 24), y: baseY - 112 - hop, vx: rnd(-30, 30), vy: rnd(-80, -30), t: 0, life: .6, s: rnd(3, 5), c: pick(['#FFD54A', '#FFF', '#FF8FB1']) });
   if (free && player.moving && Math.random() < .2) puffs.push({ x: player.x - d * 6, y: baseY - 104, vx: rnd(-10, 10), vy: -50, t: 0, life: 1.1, s: rnd(2, 5), c: 'rgba(200,230,255,.75)' });
@@ -1479,11 +1494,11 @@ function renderMap() {
 
 // 입력: 키패드(터치) + 키보드
 function swingNet() {
-  player.swing = .32; player.cd = .5; const [nx, ny] = netPos(); net = { x: nx, y: ny + 20, t: 0 };
+  player.swing = .32; player.cd = .5; const [nx, ny] = netCenter(); net = { x: nx, y: ny + 20, t: 0 };
   let best = null, bd = 1e9;
-  for (const u of bugs) { const d = Math.hypot(u.x - nx, u.y + u.hop - ny); if (d < NET_R && d < bd) { bd = d; best = u; } }
-  if (!best) { player.oops = .7; misses.push({ x: nx, y: ny, t: 0 }); beep(SND.miss); for (const u of bugs) if (!u.leave && u.b.move !== 'still' && Math.hypot(u.x - nx, u.y + u.hop - ny) < 120) flee(u); return; }
-  bugs.splice(bugs.indexOf(best), 1); player.happy = 1.2;
+  for (const u of bugs) { const dx = (u.x - nx) / NET_RX, dy = (u.y + u.hop - ny) / NET_RY, d = dx * dx + dy * dy; if (d <= 1 && d < bd) { bd = d; best = u; } }
+  if (!best) { player.oops = .7; misses.push({ x: nx, y: ny, t: 0 }); beep(SND.miss); for (const u of bugs) if (!u.leave && u.b.move !== 'still' && Math.hypot(u.x - nx, u.y + u.hop - ny) < 110 && Math.random() < .5) flee(u); return; }
+  bugs.splice(bugs.indexOf(best), 1); player.happy = 1.2; keys.a = false;
   for (let i = 0; i < 16; i++) puffs.push({ x: best.x, y: best.y, vx: rnd(-120, 120), vy: rnd(-200, -40), t: 0, life: rnd(.4, .8), s: rnd(3, 6), c: pick(['#FFD54A', '#FF8A3D', '#FF8FB1', '#7CC24A', '#5ED3F3', '#FFF']) });
   caught(best.b);
 }
@@ -1504,7 +1519,7 @@ function caught(b) {
   if (first) S.seen.push(b.id);
   save(); renderHud(); renderStrip(); renderGrid(); renderPlaces();
   beep(first ? SND.new : SND.catch); if (first) confetti();
-  showCard(b, first ? 'new' : 'again');
+  setTimeout(() => showCard(b, first ? 'new' : 'again'), 380);
 }
 function photoThumb(b, cls) {
   const ph = PHOTOS[b.id];
@@ -1532,9 +1547,11 @@ function showCard(b, mode) {
     <div class="cnt">지금까지 ${n}마리 잡았어요</div>
     </div>
     <button class="close" id="mClose">${mode === 'new' ? '도감에 넣기!' : '좋아요!'}</button>`;
-  $('modal').hidden = false; $('mClose').onclick = () => { $('modal').hidden = true; beep(SND.tap); };
+  modalOpenedAt = performance.now(); for (const k in keys) keys[k] = false; document.querySelectorAll('#pad .on').forEach(b => b.classList.remove('on'));
+  $('modal').hidden = false; $('mClose').onclick = () => { if (performance.now() - modalOpenedAt < 300) return; $('modal').hidden = true; beep(SND.tap); };
 }
-$('modal').addEventListener('click', e => { if (e.target === $('modal')) $('modal').hidden = true; });
+let modalOpenedAt = 0;
+$('modal').addEventListener('click', e => { if (e.target === $('modal') && performance.now() - modalOpenedAt > 600) $('modal').hidden = true; });
 function confetti() {
   const c = $('confetti'), x = c.getContext('2d'); const r = c.getBoundingClientRect(); c.width = r.width; c.height = r.height;
   const ps = Array.from({ length: 90 }, () => ({ x: rnd(0, c.width), y: rnd(-c.height * .3, 0), vx: rnd(-40, 40), vy: rnd(80, 220), s: rnd(5, 10), c: pick(['#FFD54A', '#FF8A3D', '#FF8FB1', '#7CC24A', '#5ED3F3', '#B48CFF']), rot: rnd(0, 6.3), vr: rnd(-4, 4) }));
