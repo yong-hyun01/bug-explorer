@@ -1,6 +1,8 @@
 // ======================= 곤충 삽화 템플릿 (도감 삽화풍 SVG) =======================
 // 겹눈, 마디 다리, 체절, 날개맥을 갖춘 사실적 구조. 옵션(o)으로 색·무늬를 바꾼다. 옆모습은 오른쪽을 본다.
 const OL = '#241C2A';
+// 동작 프레임: 0 중립, 1 앞, 3 뒤. 다리·몸 꿈틀거림에 쓰인다
+let FRAME = 0; const setFrame = f => { FRAME = f; }; const PH = () => FRAME * Math.PI / 2; const WAVE = () => Math.sin(PH());
 const dark = (hex, k) => { if (hex[0] !== '#') return hex; const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; };
 const G = (id, a, b, cx, cy, r) => `<radialGradient id="${id}" cx="${cx == null ? .38 : cx}" cy="${cy == null ? .32 : cy}" r="${r || .8}"><stop offset="0" stop-color="${dark(a, 1.12)}"/><stop offset=".55" stop-color="${a}"/><stop offset="1" stop-color="${b || dark(a, .5)}"/></radialGradient>`;
 const LG = (id, a, b, v) => `<linearGradient id="${id}" x1="0" y1="0" x2="${v ? 0 : 1}" y2="${v ? 1 : 0}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
@@ -32,8 +34,10 @@ function ceye(cx, cy, rx, ry, col, rot) {
   return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${col}" stroke="${OL}" stroke-width="1.6" ${tr}/><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#fc)" ${tr}/><ellipse cx="${cx - rx * .3}" cy="${cy - ry * .35}" rx="${rx * .3}" ry="${ry * .2}" fill="#fff" opacity=".55" ${tr}/>`;
 }
 // 마디 다리: 점 배열을 따라 굵기가 줄어드는 마디 + 관절 + 발톱
-function leg(pts, col, w0) {
+function leg(pts0, col, w0) {
   const w = w0 || 5; let s = '', inner = '';
+  const par = (Math.round((pts0[0][0] + pts0[0][1] * 3) / 11) % 2) ? 1 : -1, off = WAVE() * 3.5 * par;
+  const pts = pts0.map((p, i) => (i === 0 || i === pts0.length - 1) ? p : [p[0] + off, p[1] + (i === pts0.length - 2 ? off * .6 : 0)]);
   for (let i = 0; i < pts.length - 1; i++) { const [x1, y1] = pts[i], [x2, y2] = pts[i + 1], wi = Math.max(1.4, w - i * 1.3); s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${OL}" stroke-width="${wi + 2}" stroke-linecap="round"/>`; inner += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${wi}" stroke-linecap="round"/>`; }
   for (let i = 1; i < pts.length - 1; i++) inner += C(pts[i][0], pts[i][1], 1.4, dark(col, .6));
   const [ex, ey] = pts[pts.length - 1], [px, py] = pts[pts.length - 2], ang = Math.atan2(ey - py, ex - px);
@@ -377,13 +381,15 @@ const T = {
     const a = o.a || '#8CCB4A', b = dark(a, .55), col = dark(a, .7);
     let s = '';
     const xs = [40, 62, 84, 106, 128, 150];
-    xs.forEach((x, i) => { const y = 120 - Math.sin(i / 5 * Math.PI) * 14; if (i >= 2 && i <= 4) s += P(`M${x - 7} ${y + 14} C${x - 9} ${y + 26} ${x + 9} ${y + 26} ${x + 7} ${y + 14} Z`, dark(a, .85), 'stroke-width="1.6"'); });
+    const yof = i => 120 - Math.sin(i / 5 * Math.PI) * 14 - Math.sin(i * 1.3 + PH()) * 5;
+    xs.forEach((x, i) => { const y = yof(i); if (i >= 2 && i <= 4) s += P(`M${x - 7} ${y + 14} C${x - 9} ${y + 26} ${x + 9} ${y + 26} ${x + 7} ${y + 14} Z`, dark(a, .85), 'stroke-width="1.6"'); });
     s += leg([[150, 130], [146, 142], [150, 150]], col, 2.5) + leg([[162, 128], [162, 142], [168, 150]], col, 2.5) + leg([[172, 126], [176, 140], [182, 146]], col, 2.5);
-    xs.forEach((x, i) => { const y = 120 - Math.sin(i / 5 * Math.PI) * 14; s += C(x, y, 20, 'url(#cp)', `stroke="${OL}" stroke-width="2"`); s += L(`M${x - 18} ${y - 6} Q${x} ${y - 14} ${x + 18} ${y - 6}`, 1, dark(a, .5), 'opacity=".5"'); s += C(x, y + 8, 1.8, dark(a, .45)); if (o.dots) s += C(x, y - 6, 3.5, o.dots); if (o.bands) s += L(`M${x} ${y - 20} L${x} ${y + 20}`, 3, o.bands); for (let k = 0; k < 3; k++) s += L(`M${x - 10 + k * 10} ${y - 18} l${k - 1} -5`, 1, col, 'opacity=".7"'); });
-    s += C(170, 118, 20, o.head || dark(a, .9), `stroke="${OL}" stroke-width="2"`) + L('M170 100 L170 136', 1.2, dark(a, .5), 'opacity=".6"') + SHINE(60, 104, 8, 4);
+    xs.forEach((x, i) => { const y = yof(i); s += C(x, y, 20, 'url(#cp)', `stroke="${OL}" stroke-width="2"`); s += L(`M${x - 18} ${y - 6} Q${x} ${y - 14} ${x + 18} ${y - 6}`, 1, dark(a, .5), 'opacity=".5"'); s += C(x, y + 8, 1.8, dark(a, .45)); if (o.dots) s += C(x, y - 6, 3.5, o.dots); if (o.bands) s += L(`M${x} ${y - 20} L${x} ${y + 20}`, 3, o.bands); for (let k = 0; k < 3; k++) s += L(`M${x - 10 + k * 10} ${y - 18} l${k - 1} -5`, 1, col, 'opacity=".7"'); });
+    const hy = 118 - Math.sin(6 * 1.3 + PH()) * 5;
+    s += C(170, hy, 20, o.head || dark(a, .9), `stroke="${OL}" stroke-width="2"`) + L(`M170 ${hy - 18} L170 ${hy + 18}`, 1.2, dark(a, .5), 'opacity=".6"') + SHINE(60, 104, 8, 4);
     if (o.eyespot) s += C(150, 98, 8, '#FFD54A') + C(150, 98, 4, OL) + C(130, 96, 6, '#FFD54A') + C(130, 96, 3, OL);
     if (o.horn) s += L('M40 100 L30 80', 5, o.horn);
-    s += [0, 1, 2].map(k => C(178 + k * 2, 112 + k * 4, 1.4, OL)).join('') + L('M176 124 Q182 130 188 126', 2, OL) + antenna('M180 102 L188 92', col, 1.4) + P('M186 124 C190 128 190 132 186 134 L184 126 Z', dark(a, .5));
+    s += `<g transform="translate(0 ${(hy - 118).toFixed(1)})">` + [0, 1, 2].map(k => C(178 + k * 2, 112 + k * 4, 1.4, OL)).join('') + L('M176 124 Q182 130 188 126', 2, OL) + antenna('M180 102 L188 92', col, 1.4) + P('M186 124 C190 128 190 132 186 134 L184 126 Z', dark(a, .5)) + '</g>';
     return wrap(G('cp', a, b, .35, .3), s);
   },
   // ====== 집게벌레 (옆) ======
@@ -450,7 +456,8 @@ const T = {
   // ====== 지렁이 (옆) ======
   worm: o => {
     const a = o.a || '#D88C8C', b = dark(a, .65);
-    let s = P('M20 140 C40 100 70 100 90 130 C110 160 140 160 160 120 C170 104 182 100 190 108 L184 118 C176 114 170 120 164 130 C140 170 100 170 80 136 C66 114 50 114 32 146 Z', 'url(#wm)');
+    const w = WAVE() * 10;
+    let s = P(`M20 ${140 + w} C40 ${100 - w} 70 ${100 - w} 90 ${130 + w} C110 ${160 - w} 140 ${160 - w} 160 ${120 + w} C170 104 182 100 190 108 L184 118 C176 114 170 120 164 ${130 + w} C140 ${170 - w} 100 ${170 - w} 80 ${136 + w} C66 ${114 - w} 50 ${114 - w} 32 ${146 + w} Z`, 'url(#wm)');
     for (let i = 0; i < 26; i++) { const k = i / 26, x = 24 + 160 * k; const y = x < 90 ? 128 - Math.sin((x - 20) / 70 * Math.PI) * 24 : 142 + Math.sin((x - 90) / 80 * Math.PI) * 18; s += L(`M${x} ${y - 6} l0 12`, 1, b, 'opacity=".55"'); }
     s += P('M128 150 C134 140 146 140 152 150 C146 162 134 162 128 150 Z', dark(a, .85), 'stroke-width="1.4"') + SHINE(60, 112, 10, 4, -40, .3);
     return wrap(G('wm', a, b), s);
@@ -568,9 +575,10 @@ Object.assign(T, {
   jellyfish: o => {
     const a = o.a || '#9FD8FF', b = dark(a, .7);
     let s = '';
-    for (let i = 0; i < 7; i++) { const x = 58 + i * 14, len = 70 + ((i * 37) % 40); s += L(`M${x} 118 C${x - 8} ${118 + len * .4} ${x + 10} ${118 + len * .7} ${x - 2} ${118 + len}`, 2.2, a, 'opacity=".8"'); }
+    for (let i = 0; i < 7; i++) { const x = 58 + i * 14, len = 70 + ((i * 37) % 40), sw = WAVE() * 8 * (i % 2 ? 1 : -1); s += L(`M${x} 118 C${x - 8 + sw} ${118 + len * .4} ${x + 10 - sw} ${118 + len * .7} ${x - 2 + sw} ${118 + len}`, 2.2, a, 'opacity=".8"'); }
     for (let i = 0; i < 4; i++) { const x = 76 + i * 16; s += L(`M${x} 120 C${x - 12} 150 ${x + 12} 170 ${x} 196`, 5, dark(a, .9), 'opacity=".6"'); }
-    s += P('M30 112 C30 50 170 50 170 112 C140 124 60 124 30 112 Z', 'url(#jf)', 'fill-opacity=".85"') + P('M44 108 C44 70 156 70 156 108 C130 102 70 102 44 108 Z', '#fff', 'fill-opacity=".18" stroke="none"');
+    const k = 1 + WAVE() * .07;
+    s += P(`M${100 - 70 * k} 112 C${100 - 70 * k} ${112 - 62 / k} ${100 + 70 * k} ${112 - 62 / k} ${100 + 70 * k} 112 C140 124 60 124 ${100 - 70 * k} 112 Z`, 'url(#jf)', 'fill-opacity=".85"') + P('M44 108 C44 70 156 70 156 108 C130 102 70 102 44 108 Z', '#fff', 'fill-opacity=".18" stroke="none"');
     for (let i = 0; i < 5; i++) s += L(`M${52 + i * 24} 112 C${54 + i * 24} 90 ${58 + i * 24} 80 ${62 + i * 24} 70`, 1.2, '#fff', 'opacity=".5"');
     s += SHINE(70, 76, 18, 8, -20, .45);
     return wrap(G('jf', a, b, .45, .35), s);
@@ -607,7 +615,7 @@ Object.assign(T, {
   grub: o => {
     const a = o.a || '#F3E7C3', b = dark(a, .7), col = dark(a, .6);
     let s = '';
-    const pts = []; for (let i = 0; i < 9; i++) { const ang = -1.2 + i * .42; pts.push([110 + Math.cos(ang) * 56, 100 + Math.sin(ang) * 56]); }
+    const pts = []; const sq2 = 1 + WAVE() * .06; for (let i = 0; i < 9; i++) { const ang = -1.2 + i * (.42 * sq2); pts.push([110 + Math.cos(ang) * 56 / sq2, 100 + Math.sin(ang) * 56]); }
     for (let i = pts.length - 1; i >= 0; i--) { const [x, y] = pts[i]; s += C(x, y, 20 - (i > 6 ? (i - 6) * 3 : 0), 'url(#gb)', `stroke="${OL}" stroke-width="2"`); if (i < 7) s += C(x + 8, y - 6, 2, '#8A6A4A', 'opacity=".8"'); }
     s += leg([[pts[0][0] + 6, pts[0][1] + 14], [pts[0][0] + 2, pts[0][1] + 28]], col, 3) + leg([[pts[1][0] + 10, pts[1][1] + 10], [pts[1][0] + 12, pts[1][1] + 26]], col, 3) + leg([[pts[2][0] + 10, pts[2][1] + 4], [pts[2][0] + 18, pts[2][1] + 18]], col, 3);
     s += C(pts[0][0] - 12, pts[0][1] - 10, 15, '#A86E3A', `stroke="${OL}" stroke-width="2"`) + L(`M${pts[0][0] - 18} ${pts[0][1] - 2} l-6 8 M${pts[0][0] - 8} ${pts[0][1] + 2} l-2 9`, 2.5, OL) + C(pts[0][0] - 18, pts[0][1] - 14, 2, OL) + SHINE(pts[4][0] - 6, pts[4][1] - 8, 7, 4, -20, .3);
@@ -674,7 +682,8 @@ Object.assign(T, {
   },
   slug: o => { // 민달팽이 (옆)
     const a = o.a || '#8A7A5A', b = dark(a, .55);
-    let s = P('M20 150 C30 118 70 104 120 106 C156 108 178 120 186 134 C190 142 184 150 170 152 C120 160 60 160 20 154 Z', 'url(#sl)') + P('M80 118 C100 100 150 100 170 118 C150 112 100 112 80 118 Z', dark(a, .85), 'stroke-width="1.4"');
+    const w = WAVE() * 8;
+    let s = P(`M${20 + w} 150 C${30 + w} 118 70 104 120 106 C156 108 178 120 186 134 C190 142 184 150 170 152 C120 160 60 160 ${20 + w} 154 Z`, 'url(#sl)') + P('M80 118 C100 100 150 100 170 118 C150 112 100 112 80 118 Z', dark(a, .85), 'stroke-width="1.4"');
     for (let i = 0; i < 10; i++) { const x = 30 + i * 14; s += L(`M${x} ${150 - Math.sin(i / 10 * Math.PI) * 34} l0 10`, 1.2, b, 'opacity=".5"'); }
     s += C(150, 128, 4, dark(a, .6), 'opacity=".8"') + L('M172 128 L180 108 M178 132 L190 118', 3, dark(a, .8)) + C(180, 106, 4, dark(a, 1.1), `stroke="${OL}" stroke-width="2"`) + C(190, 116, 4, dark(a, 1.1), `stroke="${OL}" stroke-width="2"`) + C(181, 105, 1.8, OL) + C(191, 115, 1.8, OL) + L('M170 140 L160 146 M172 144 L164 150', 2, dark(a, .8)) + SHINE(100, 118, 26, 5, -8, .3);
     return wrap(G('sl', a, b), s);

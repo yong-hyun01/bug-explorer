@@ -238,14 +238,16 @@ function icon(name) {
 // 곤충 그림 캐시
 const svgCache = new Map(), imgCache = new Map();
 const BUG = Object.fromEntries(BUGS.map(b => [b.id, b]));
-function bugURL(id) { if (!svgCache.has(id)) { const b = BUG[id]; svgCache.set(id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(T[b.tpl](b.opt))); } return svgCache.get(id); }
-function bugImg(id) { if (!imgCache.has(id)) { const im = new Image(); im.src = bugURL(id); imgCache.set(id, im); } return imgCache.get(id); }
+function bugURL(id, frame) { const k = id + '#' + (frame || 0); if (!svgCache.has(k)) { const b = BUG[id]; setFrame(frame || 0); svgCache.set(k, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(T[b.tpl](b.opt))); setFrame(0); } return svgCache.get(k); }
+function bugImg(id, frame) { const k = id + '#' + (frame || 0); if (!imgCache.has(k)) { const im = new Image(); im.src = bugURL(id, frame); imgCache.set(k, im); } return imgCache.get(k); }
 const bmpCache = new Map();
-function bugBitmap(id) { // 조명 필터 SVG 를 좌우 반전해 그리면 크롬이 검게 칠하므로, 변형 없이 한 번 비트맵으로 구운 뒤 그 비트맵을 변형해 그린다
-  if (bmpCache.has(id)) return bmpCache.get(id);
-  const im = bugImg(id); if (!(im.complete && im.naturalWidth)) return null;
-  const c = document.createElement('canvas'); c.width = c.height = 256; c.getContext('2d').drawImage(im, 0, 0, 256, 256); bmpCache.set(id, c); return c;
+function bugBitmap(id, frame) { // 조명 필터 SVG 를 좌우 반전해 그리면 크롬이 검게 칠하므로, 변형 없이 비트맵으로 구운 뒤 그 비트맵을 변형해 그린다
+  const k = id + '#' + (frame || 0);
+  if (bmpCache.has(k)) return bmpCache.get(k);
+  const im = bugImg(id, frame); if (!(im.complete && im.naturalWidth)) return frame ? bugBitmap(id, 0) : null;
+  const c = document.createElement('canvas'); c.width = c.height = 224; c.getContext('2d').drawImage(im, 0, 0, 224, 224); bmpCache.set(k, c); return c;
 }
+const FRAMES = [0, 1, 0, 3]; // 중립 → 앞 → 중립 → 뒤
 const BIG = new Set(['scorpion', 'slug', 'giant_squid', 'anglerfish', 'jellyfish', 'mole', 'giant_isopod', 'sea_spider', 'tube_worm', 'grub', 'queen_ant', 'golden_ring', 'great_purple', 'mt_swallow', 'blue_band', 'giant_hornet', 'luna_long', 'starfish', 'lugworm', 'rhino', 'rhino_f', 'stag', 'stag_saw', 'stag_king', 'stag_true', 'swallowtail', 'swallowtail2', 'black_sw', 'monarch', 'peacock', 'mantis', 'mantis_big', 'mantis_brown', 'stick', 'waterbug', 'emperor', 'luna', 'locust', 'katydid', 'centipede', 'earthworm', 'hornet', 'hawkmoth', 'cicada_black', 'silkworm', 'swallow_cat']);
 const SMALL = new Set(['pavement_ant', 'silverfish', 'woodlouse', 'stone_centipede', 'springtail', 'wireworm', 'burrow_bug', 'purse_spider', 'sea_skater', 'kelp_fly', 'beach_flea', 'barnacle', 'striped_bug', 'hairy_cicada', 'coast_tiger', 'sand_darkling', 'stag_small', 'stag_mini', 'whirligig', 'backswimmer', 'ant', 'ant_red', 'termite', 'ladybug', 'ladybug2', 'ladybug28', 'firefly', 'firefly2', 'strider', 'damselfly', 'mayfly', 'aphid', 'fruitfly', 'mosquito', 'weevil', 'pillbug', 'jumping_spider', 'blue_bf', 'housefly', 'click', 'darkling', 'lacewing']);
 const sizeOf = id => BIG.has(id) ? 112 : SMALL.has(id) ? 72 : 94;
@@ -297,9 +299,9 @@ const player = { x: WW / 2, y: 0, vy: 0, py: 220, gy: GROUND + 8, dir: 1, moving
 const keys = { l: false, r: false, u: false, d: false, a: false, j: false };
 const isFree = () => !!placeOf().free;
 const feetY = () => isFree() ? player.py + 30 : player.gy + player.y;
-const netPos = () => isFree() ? [player.x + player.dir * 50, player.py - 10] : [player.x + player.dir * 50, player.gy + player.y - 86];
+const netPos = () => isFree() ? [player.x + player.dir * 50, player.py - 10] : [player.x + player.dir * 50, player.gy + player.y - 100];
 const NET_RX = 66, NET_RY = 74; // 잠자리채가 휩쓰는 범위(타원): 발밑부터 머리 위까지
-const netCenter = () => isFree() ? [player.x + player.dir * 48, player.py - 4] : [player.x + player.dir * 46, player.gy + player.y - 50];
+const netCenter = () => isFree() ? [player.x + player.dir * 48, player.py - 4] : [player.x + player.dir * 46, player.gy + player.y - 58];
 const placeOf = () => PLACES.find(p => p.id === S.place);
 // 장소별 장식물 위치(고정 난수)
 function seeded(n) { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
@@ -450,7 +452,8 @@ function drawActors() {
   const fy = feetY(); let playerDrawn = false;
   [...bugs].sort((a, b) => a.y - b.y).forEach(u => {
     if (!playerDrawn && (u.y + u.hop) >= fy) { drawPlayer(); playerDrawn = true; }
-    const img = bugBitmap(u.b.id), w = u.sc * (0.5 + u.pop * .5), h = w, x = u.x - cam;
+    const still = u.b.move === 'still', fr = still ? 0 : FRAMES[Math.floor(t * (u.b.move === 'fly' ? 10 : 7) + u.ph * 2) & 3];
+    const img = bugBitmap(u.b.id, fr), w = u.sc * (0.5 + u.pop * .5), h = w, x = u.x - cam;
     if (x < -80 || x > W + 80) return;
     const bob = u.b.move === 'fly' ? Math.sin(t * 12 + u.ph) * 3 : 0;
     ctx.save(); ctx.translate(x, u.y + u.hop + bob);
@@ -475,108 +478,109 @@ function finishDraw() {}
 function drawAlerts() {
   for (const u of bugs) { if (!u.alert || u.leave) continue; const x = u.x - cam, y = u.y + u.hop - u.sc * .55 - 6; ctx.font = '900 18px "Noto Sans KR",sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText('!', x, y); ctx.fillStyle = '#FFD54A'; ctx.fillText('!', x, y); }
 }
-// 탐험가 / 잠수부 — 사람 비율(머리·목·어깨·팔꿈치·무릎)과 자연스러운 걷기, 숨쉬기, 깜빡임, 착지, 만세·땀 반응
+// 탐험가 / 잠수부 — 6등신 비율, 반팔·긴바지, 관절이 있는 팔다리, 손가락, 얼굴 세부, 자연스러운 걷기
 function drawPlayer() {
   const free = isFree(), x = player.x - cam, d = player.dir;
   const baseY = free ? player.py + 30 : player.gy + player.y;
   const mv = player.moving, ph = player.walk, breath = Math.sin(t * 2.4) * (mv ? 0 : 1);
   const happy = player.happy > 0, oops = player.oops > 0 && !happy, hop = happy ? Math.abs(Math.sin(t * 12)) * 8 : 0;
-  const sq = player.land > 0 ? 1 + player.land * 1.2 : (player.y < 0 ? 0.96 : 1);
+  const sq = player.land > 0 ? 1 + player.land * 1.1 : (player.y < 0 ? 0.97 : 1);
   const sh = (hex, k) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; };
-  const skin = '#F1C6A0', dark = '#2E2520', shirt = free ? '#2E8BD6' : '#F2B233', pants = free ? '#1E4FB0' : '#4E6FB8', shoe = free ? '#143A8A' : '#4A3220';
-  // 2관절 팔다리: 어깨/엉덩이 → 관절 → 끝. 두 톤 + 외곽선
-  const limb2 = (x0, y0, a1, l1, a2, l2, w, col) => {
+  const skin = '#F0C8A4', dark = '#2E2520', shirt = free ? '#2E8BD6' : '#F2B233', pants = free ? '#1E4FB0' : '#4A6AB0', shoe = free ? '#143A8A' : '#4A3220', hair = '#3B2A1E';
+  // 관절 팔다리: 마디별 굵기·색 (첫 마디=위팔/허벅지, 둘째=아래팔/정강이)
+  const limb = (x0, y0, a1, l1, a2, l2, w1, w2, c1, c2) => {
     const kx = x0 + Math.sin(a1) * l1, ky = y0 + Math.cos(a1) * l1, ex = kx + Math.sin(a1 + a2) * l2, ey = ky + Math.cos(a1 + a2) * l2;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.strokeStyle = dark; ctx.lineWidth = w + 2.4; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(kx, ky); ctx.lineTo(ex, ey); ctx.stroke();
-    ctx.strokeStyle = sh(col, .72); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(kx, ky); ctx.lineTo(ex, ey); ctx.stroke();
-    ctx.strokeStyle = sh(col, 1.06); ctx.lineWidth = w * .45; ctx.beginPath(); ctx.moveTo(x0 - w * .2, y0); ctx.lineTo(kx - w * .2, ky); ctx.lineTo(ex - w * .2, ey); ctx.stroke();
+    const seg = (ax, ay, bx, by, w, c) => { ctx.strokeStyle = dark; ctx.lineWidth = w + 2.2; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.strokeStyle = sh(c, .74); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.strokeStyle = sh(c, 1.05); ctx.lineWidth = w * .42; ctx.beginPath(); ctx.moveTo(ax - w * .22, ay); ctx.lineTo(bx - w * .22, by); ctx.stroke(); };
+    seg(kx, ky, ex, ey, w2, c2); seg(x0, y0, kx, ky, w1, c1);
+    ctx.fillStyle = 'rgba(0,0,0,.13)'; ctx.beginPath(); ctx.arc(kx, ky, w2 * .38, 0, 6.3); ctx.fill();
     return [kx, ky, ex, ey];
   };
+  const hand = (hx, hy, ang, col) => { ctx.save(); ctx.translate(hx, hy); ctx.rotate(ang); ctx.fillStyle = col; ctx.strokeStyle = dark; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(0, 3, 4, 5.5, 0, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.ellipse(-4, 1, 1.8, 3, .5, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.strokeStyle = sh(col, .62); ctx.lineWidth = .8; ctx.beginPath(); for (const fx of [-2, 0, 2]) { ctx.moveTo(fx, 4); ctx.lineTo(fx, 8); } ctx.stroke(); ctx.restore(); };
   ctx.save(); ctx.translate(x, baseY - hop);
-  if (!free) { ctx.globalAlpha = .28 * (player.y < 0 ? .6 : 1); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(0, hop + 2 - player.y, 20 - player.y * .05, 5.5, 0, 0, 6.3); ctx.fill(); ctx.globalAlpha = 1; }
+  if (!free) { ctx.globalAlpha = .28 * (player.y < 0 ? .6 : 1); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(0, hop + 2 - player.y, 19 - player.y * .05, 5, 0, 0, 6.3); ctx.fill(); ctx.globalAlpha = 1; }
   if (d < 0) ctx.scale(-1, 1);
   ctx.scale(sq, 1 / sq);
-  const lean = mv ? .06 : 0; ctx.rotate(lean);
-  // ---- 다리 (엉덩이 y=-44): 걷기 주기 — 허벅지 앞뒤, 무릎은 뒤로 접힘 ----
-  const HIP = -44;
+  ctx.rotate(mv ? .05 : 0);
+  const bob = mv ? Math.abs(Math.sin(ph)) * -2.2 : 0; // 걸을 때 몸이 살짝 들썩
+  const HIP = -50 + bob, SH = -92 + bob; // 엉덩이·어깨 높이
+  // ---- 다리: 허벅지(앞뒤) + 정강이(무릎 접힘) ----
   for (const sd of [-1, 1]) {
     let thigh, knee;
-    if (free) { thigh = Math.sin(ph + (sd > 0 ? 0 : Math.PI)) * .35 + .9; knee = -.25 + Math.sin(ph * 2) * .1; }
-    else if (player.y < 0) { thigh = .55 * sd + .25; knee = -.9; }
-    else if (mv) { const c = Math.sin(ph + (sd > 0 ? 0 : Math.PI)); thigh = c * .38; knee = c < 0 ? -.75 * -c : -.06; }
-    else { thigh = sd * .06; knee = -.05; }
-    const [kx, ky, ax, ay] = limb2(sd * 5, HIP, thigh, 22, knee, 22, 7.5, pants);
-    ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.arc(kx, ky, 3.2, 0, 6.3); ctx.fill(); // 무릎
-    if (!free) { ctx.strokeStyle = sh(pants, .55); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sd * 5 + 2, HIP + 4); ctx.lineTo(kx + 2, ky); ctx.stroke(); ctx.strokeStyle = '#F3EFE4'; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(kx + (ax - kx) * .82, ky + (ay - ky) * .82); ctx.lineTo(ax, ay); ctx.stroke(); } // 바지 솔기·양말
-    // 발/오리발
+    if (free) { thigh = Math.sin(ph + (sd > 0 ? 0 : Math.PI)) * .32 + .95; knee = -.22 + Math.sin(ph * 2) * .08; }
+    else if (player.y < 0) { thigh = .5 * sd + .2; knee = -.95; }
+    else if (mv) { const c = Math.sin(ph + (sd > 0 ? 0 : Math.PI)); thigh = c * .36; knee = c < 0 ? -.8 * -c : -.05; }
+    else { thigh = sd * .05; knee = -.04; }
+    const [kx, ky, ax, ay] = limb(sd * 5, HIP, thigh, 24, knee, 24, 9, 7.5, pants, pants);
+    if (!free) { ctx.strokeStyle = sh(pants, .8); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(kx + (ax - kx) * .9 - 3, ky + (ay - ky) * .9); ctx.lineTo(kx + (ax - kx) * .9 + 3, ky + (ay - ky) * .9); ctx.stroke(); }
     ctx.save(); ctx.translate(ax, ay); ctx.rotate(free ? thigh + knee - .2 : (player.y < 0 ? -.4 : 0));
-    if (free) { ctx.fillStyle = shoe; ctx.beginPath(); ctx.ellipse(8, 2, 14, 4.5, 0, 0, 6.3); ctx.fill(); ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.stroke(); }
-    else { ctx.fillStyle = shoe; ctx.strokeStyle = dark; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-5, -3, 17, 8, [3, 5, 5, 3]); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F3EFE4'; ctx.fillRect(-5, 3, 17, 2); ctx.strokeStyle = '#F3EFE4'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -1); ctx.lineTo(4, 1); ctx.moveTo(2, -1); ctx.lineTo(6, 1); ctx.stroke(); }
+    if (free) { ctx.fillStyle = shoe; ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(8, 2, 14, 4.5, 0, 0, 6.3); ctx.fill(); ctx.stroke(); }
+    else { ctx.fillStyle = shoe; ctx.strokeStyle = dark; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.roundRect(-5, -2, 18, 8, [3, 6, 6, 3]); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F3EFE4'; ctx.fillRect(-5, 4, 18, 2); ctx.strokeStyle = '#F3EFE4'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(1, 0); ctx.lineTo(5, 2); ctx.moveTo(3, 0); ctx.lineTo(7, 2); ctx.stroke(); }
     ctx.restore();
   }
-  // ---- 뒤 팔 (어깨 y=-74): 다리와 반대 위상, 팔꿈치 약간 굽힘 ----
-  const armB = mv ? Math.sin(ph + Math.PI) * .42 : -.08 + breath * .03;
-  { const [ex, ey, hx, hy] = limb2(-9, -74, Math.PI + armB, 17, -.5, 16, 6, sh(shirt, .9)); ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.arc(ex, ey, 2.6, 0, 6.3); ctx.fill(); ctx.fillStyle = sh(skin, .85); ctx.strokeStyle = dark; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(hx, hy + 2, 4, 5, 0, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.strokeStyle = sh(skin, .6); ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(hx - 2, hy + 3); ctx.lineTo(hx - 2, hy + 6); ctx.moveTo(hx, hy + 3); ctx.lineTo(hx, hy + 7); ctx.moveTo(hx + 2, hy + 3); ctx.lineTo(hx + 2, hy + 6); ctx.stroke(); }
-  // ---- 몸통: 어깨가 넓고 허리가 들어간 모양, 숨쉬기 ----
-  ctx.save(); ctx.translate(0, -60); ctx.scale(1 + breath * .012, 1 + breath * .02); ctx.translate(0, 60);
-  const sg = ctx.createLinearGradient(-15, 0, 15, 0); sg.addColorStop(0, sh(shirt, 1.15)); sg.addColorStop(.5, shirt); sg.addColorStop(1, sh(shirt, .62));
+  // ---- 뒤 팔 (반팔: 위팔은 소매, 아래팔은 피부) ----
+  const armB = mv ? Math.sin(ph + Math.PI) * .5 : .08 + breath * .03;
+  { const [ex, ey, hx, hy] = limb(-10, SH, armB, 18, .35, 17, 8, 6, sh(shirt, .85), sh(skin, .88)); hand(hx, hy, armB + .35, sh(skin, .85)); }
+  // ---- 몸통: 가슴·허리 곡선, 반팔 티셔츠, 조끼 ----
+  ctx.save(); ctx.translate(0, -70); ctx.scale(1 + breath * .012, 1 + breath * .02); ctx.translate(0, 70);
+  const sg = ctx.createLinearGradient(-16, 0, 16, 0); sg.addColorStop(0, sh(shirt, 1.15)); sg.addColorStop(.5, shirt); sg.addColorStop(1, sh(shirt, .62));
   ctx.fillStyle = sg; ctx.strokeStyle = dark; ctx.lineWidth = 2.2;
-  ctx.beginPath(); ctx.moveTo(-15, -76); ctx.quadraticCurveTo(-17, -60, -12, -46); ctx.lineTo(12, -46); ctx.quadraticCurveTo(17, -60, 15, -76); ctx.quadraticCurveTo(0, -80, -15, -76); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.beginPath(); ctx.roundRect(-11, -73, 5, 22, 2.5); ctx.fill();
-  ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.roundRect(-13, -52, 26, 6, 3); ctx.fill();
-  if (free) { ctx.fillStyle = '#C8CCD6'; ctx.strokeStyle = dark; ctx.beginPath(); ctx.roundRect(-16, -75, 8, 26, 3); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F2B233'; ctx.fillRect(-12, -60, 24, 4); }
+  ctx.beginPath(); ctx.moveTo(-16, SH - 2); ctx.quadraticCurveTo(-19, SH + 20, -13, HIP + 2); ctx.lineTo(13, HIP + 2); ctx.quadraticCurveTo(19, SH + 20, 16, SH - 2); ctx.quadraticCurveTo(0, SH - 7, -16, SH - 2); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,.2)'; ctx.beginPath(); ctx.roundRect(-12, SH + 2, 5, 24, 2.5); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.15)'; ctx.beginPath(); ctx.roundRect(-14, HIP - 6, 28, 7, 3); ctx.fill();
+  if (free) { ctx.fillStyle = '#C8CCD6'; ctx.beginPath(); ctx.roundRect(-17, SH, 8, 28, 3); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F2B233'; ctx.fillRect(-12, SH + 16, 24, 4); }
   else {
-    ctx.fillStyle = '#E8793A'; ctx.beginPath(); ctx.moveTo(-15, -70); ctx.lineTo(15, -70); ctx.lineTo(14, -64); ctx.lineTo(-14, -64); ctx.fill();
-    ctx.strokeStyle = '#6B4A2B'; ctx.lineWidth = 3.2; ctx.beginPath(); ctx.moveTo(-9, -77); ctx.lineTo(-7, -52); ctx.moveTo(9, -77); ctx.lineTo(7, -52); ctx.stroke(); ctx.strokeStyle = '#9A7A4A'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-9, -77); ctx.lineTo(-7, -52); ctx.moveTo(9, -77); ctx.lineTo(7, -52); ctx.stroke(); // 배낭 끈
-    ctx.fillStyle = sh(shirt, 1.12); ctx.beginPath(); ctx.moveTo(-6, -78); ctx.lineTo(0, -72); ctx.lineTo(6, -78); ctx.lineTo(4, -80); ctx.lineTo(0, -76); ctx.lineTo(-4, -80); ctx.closePath(); ctx.fill(); ctx.strokeStyle = dark; ctx.lineWidth = 1.2; ctx.stroke(); // 옷깃
-    ctx.strokeStyle = 'rgba(0,0,0,.18)'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(-10, -60); ctx.quadraticCurveTo(-6, -58, -9, -54); ctx.moveTo(10, -62); ctx.quadraticCurveTo(7, -59, 10, -55); ctx.stroke(); // 주름
-    ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.roundRect(-13, -50, 26, 5, 2); ctx.fill(); ctx.fillStyle = '#FFD54A'; ctx.fillRect(-3, -50.5, 6, 6); ctx.fillStyle = '#B88A12'; ctx.fillRect(-1.5, -49, 3, 3);
+    ctx.fillStyle = '#E07A3A'; ctx.strokeStyle = dark; ctx.lineWidth = 1.6; // 조끼
+    ctx.beginPath(); ctx.moveTo(-15, SH + 1); ctx.lineTo(-7, SH + 1); ctx.lineTo(-6, HIP - 2); ctx.lineTo(-13, HIP - 2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(15, SH + 1); ctx.lineTo(7, SH + 1); ctx.lineTo(6, HIP - 2); ctx.lineTo(13, HIP - 2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = sh('#E07A3A', .8); ctx.fillRect(-13, SH + 18, 6, 7); ctx.fillRect(7, SH + 18, 6, 7); // 주머니
+    ctx.strokeStyle = 'rgba(0,0,0,.2)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-3, SH + 10); ctx.quadraticCurveTo(0, SH + 14, 2, SH + 22); ctx.stroke(); // 주름
+    ctx.fillStyle = sh(shirt, 1.12); ctx.strokeStyle = dark; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-6, SH - 4); ctx.lineTo(0, SH + 2); ctx.lineTo(6, SH - 4); ctx.lineTo(4, SH - 6); ctx.lineTo(0, SH - 2); ctx.lineTo(-4, SH - 6); ctx.closePath(); ctx.fill(); ctx.stroke(); // 옷깃
+    ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.roundRect(-13, HIP - 4, 26, 5, 2); ctx.fill(); ctx.fillStyle = '#FFD54A'; ctx.fillRect(-3, HIP - 4.5, 6, 6); ctx.fillStyle = '#B88A12'; ctx.fillRect(-1.5, HIP - 3, 3, 3); // 벨트
   }
   // 목
-  ctx.strokeStyle = dark; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(0, -78); ctx.lineTo(0, -84); ctx.stroke(); ctx.strokeStyle = sh(skin, .9); ctx.lineWidth = 6.5; ctx.beginPath(); ctx.moveTo(0, -78); ctx.lineTo(0, -85); ctx.stroke();
+  ctx.strokeStyle = dark; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(0, SH - 4); ctx.lineTo(0, SH - 10); ctx.stroke(); ctx.strokeStyle = sh(skin, .9); ctx.lineWidth = 6.5; ctx.beginPath(); ctx.moveTo(0, SH - 4); ctx.lineTo(0, SH - 11); ctx.stroke();
   ctx.restore();
   // ---- 앞 팔 + 잠자리채 ----
   const sw = player.swing > 0 ? 1 - player.swing / .32 : 0;
-  const armF = happy ? -2.6 + Math.sin(t * 10) * .12 : player.swing > 0 ? -1.9 + sw * 2.3 : (mv ? -.55 + Math.sin(ph) * .35 : -.5 + breath * .03);
-  const fore = happy ? -.3 : player.swing > 0 ? -.35 : -1.1;
-  const [ex, ey, hx, hy] = limb2(9, -74, Math.PI + armF, 17, fore, 15, 6.5, shirt);
-  const netAng = Math.PI + armF + fore + Math.PI / 2;
+  const armF = happy ? 2.9 + Math.sin(t * 10) * .12 : player.swing > 0 ? 1.5 - sw * 2.4 : (mv ? -.55 + Math.sin(ph) * .4 : -.5 + breath * .03);
+  const fore = happy ? .2 : player.swing > 0 ? -.3 : -1.25;
+  const [ex, ey, hx, hy] = limb(10, SH, armF, 18, fore, 17, 8, 6, shirt, skin);
+  const netAng = armF + fore + Math.PI / 2; // 잠자리채가 앞쪽을 향하도록
   if (player.swing > 0) { ctx.globalAlpha = .22 * (1 - sw); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.arc(hx, hy, 92, netAng - 1.6, netAng); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
   ctx.save(); ctx.translate(hx, hy); ctx.rotate(netAng);
   ctx.strokeStyle = '#4A2E14'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(58, 0); ctx.stroke(); ctx.strokeStyle = '#A8743B'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(-6, -1.2); ctx.lineTo(56, -1.2); ctx.stroke();
   ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.beginPath(); ctx.ellipse(78, 0, 22, 16, 0, 0, 6.3); ctx.fill(); ctx.strokeStyle = '#2E2A33'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(78, 0, 22, 16, 0, 0, 6.3); ctx.stroke();
   ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(78 + i * 7, -14); ctx.lineTo(78 + i * 7, 14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(58, i * 5); ctx.lineTo(98, i * 5); ctx.stroke(); }
   ctx.restore();
-  ctx.fillStyle = skin; ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(hx, hy, 4.5, 0, 6.3); ctx.fill(); ctx.stroke();
-  // ---- 머리: 타원형, 귀, 머리카락, 눈썹, 코, 입 ----
-  const hb = mv ? Math.abs(Math.cos(ph)) * 1.5 : breath * 1;
-  ctx.save(); ctx.translate(0, -98 - hb); ctx.rotate(mv ? Math.sin(ph) * .04 : (happy ? Math.sin(t * 10) * .07 : 0));
-  const hg = ctx.createRadialGradient(-4, -6, 2, 0, 0, 16); hg.addColorStop(0, sh(skin, 1.07)); hg.addColorStop(.7, skin); hg.addColorStop(1, sh(skin, .74));
-  ctx.fillStyle = hg; ctx.strokeStyle = dark; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.ellipse(0, 0, 12.5, 14, 0, 0, 6.3); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = sh(skin, .95); ctx.beginPath(); ctx.ellipse(-12, 1, 3, 4, 0, 0, 6.3); ctx.fill(); ctx.stroke();
-  // 머리카락 (모자 아래)
-  ctx.fillStyle = '#3B2A1E'; ctx.beginPath(); ctx.moveTo(-12, -4); ctx.quadraticCurveTo(-10, -14, 2, -14); ctx.quadraticCurveTo(12, -14, 13, -3); ctx.quadraticCurveTo(10, -8, 4, -9); ctx.quadraticCurveTo(-6, -9, -12, -4); ctx.fill();
-  ctx.fillStyle = 'rgba(247,150,140,.55)'; ctx.beginPath(); ctx.ellipse(8, 4, 3, 2, 0, 0, 6.3); ctx.fill();
-  // 눈썹·눈·코·입
-  ctx.strokeStyle = '#3B2A1E'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(3, -6.5); ctx.quadraticCurveTo(6, -8, 9, -6.5); ctx.moveTo(-6, -6); ctx.quadraticCurveTo(-4, -7.5, -1.5, -6.6); ctx.stroke();
-  ctx.fillStyle = 'rgba(0,0,0,.08)'; ctx.beginPath(); ctx.ellipse(-4, 6, 6, 4, 0, 0, 6.3); ctx.fill(); // 턱 음영
-  ctx.fillStyle = dark; if (player.blink > 0) { ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(3.5, -2.5); ctx.lineTo(8.5, -2.5); ctx.moveTo(-5, -2.5); ctx.lineTo(-2, -2.5); ctx.stroke(); } else {
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(6, -2.5, 3, happy ? 3.2 : 2.6, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.ellipse(6.6, -2.3, 1.9, 2.2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#1E1A26'; ctx.beginPath(); ctx.ellipse(6.8, -2.2, 1.1, 1.3, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(7.3, -3.2, .7, 0, 6.3); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-3.5, -2.3, 1.6, 2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.ellipse(-3, -2.2, 1, 1.5, 0, 0, 6.3); ctx.fill(); // 먼 쪽 눈
-    ctx.strokeStyle = '#3B2A1E'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(2.8, -4.8); ctx.quadraticCurveTo(6, -6.4, 9.2, -4.6); ctx.stroke(); // 속눈썹선
+  hand(hx, hy, netAng, skin);
+  // ---- 머리 (턱이 좁은 달걀형) ----
+  const hb = mv ? Math.abs(Math.cos(ph)) * 1.2 : breath * .9;
+  ctx.save(); ctx.translate(0, SH - 22 - hb); ctx.rotate(mv ? Math.sin(ph) * .03 : (happy ? Math.sin(t * 10) * .06 : 0));
+  const hg = ctx.createRadialGradient(-3, -5, 2, 0, 0, 14); hg.addColorStop(0, sh(skin, 1.06)); hg.addColorStop(.72, skin); hg.addColorStop(1, sh(skin, .76));
+  ctx.fillStyle = hg; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(-11, -4); ctx.quadraticCurveTo(-12, -16, 0, -16); ctx.quadraticCurveTo(12, -16, 11, -4); ctx.quadraticCurveTo(10, 8, 0, 12); ctx.quadraticCurveTo(-10, 8, -11, -4); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = sh(skin, .95); ctx.beginPath(); ctx.ellipse(-11, 0, 2.6, 3.6, 0, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.strokeStyle = sh(skin, .6); ctx.lineWidth = .8; ctx.beginPath(); ctx.arc(-11, 0, 1.6, .5, 2.8); ctx.stroke(); // 귀
+  ctx.fillStyle = hair; ctx.beginPath(); ctx.moveTo(-11, -5); ctx.quadraticCurveTo(-9, -15, 2, -15); ctx.quadraticCurveTo(12, -15, 12, -5); ctx.quadraticCurveTo(9, -9, 4, -10); ctx.quadraticCurveTo(-4, -10, -11, -5); ctx.fill(); ctx.strokeStyle = sh(hair, .7); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-8, -7); ctx.lineTo(-6, -11); ctx.moveTo(-3, -9); ctx.lineTo(-2, -12); ctx.moveTo(8, -7); ctx.lineTo(7, -11); ctx.stroke(); // 머리카락·가닥
+  ctx.fillStyle = 'rgba(0,0,0,.07)'; ctx.beginPath(); ctx.ellipse(-3, 7, 6, 3.5, 0, 0, 6.3); ctx.fill(); // 턱 음영
+  ctx.fillStyle = 'rgba(247,150,140,.5)'; ctx.beginPath(); ctx.ellipse(7, 3, 2.8, 1.8, 0, 0, 6.3); ctx.fill(); // 볼
+  ctx.strokeStyle = hair; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(2.5, -6.5); ctx.quadraticCurveTo(5.5, -8, 8.5, -6.5); ctx.moveTo(-6.5, -6); ctx.quadraticCurveTo(-4.5, -7.4, -2, -6.6); ctx.stroke(); // 눈썹
+  if (player.blink > 0) { ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(3, -2.5); ctx.lineTo(8, -2.5); ctx.moveTo(-6, -2.5); ctx.lineTo(-3, -2.5); ctx.stroke(); }
+  else { // 눈: 흰자·홍채·동공·하이라이트·윗눈꺼풀
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(5.5, -2.5, 2.9, happy ? 3 : 2.4, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.ellipse(6.1, -2.3, 1.8, 2.1, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#17131A'; ctx.beginPath(); ctx.ellipse(6.3, -2.2, 1, 1.2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(6.8, -3.1, .7, 0, 6.3); ctx.fill(); ctx.strokeStyle = hair; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(2.6, -4.6); ctx.quadraticCurveTo(5.5, -6.2, 8.4, -4.4); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-4.5, -2.3, 1.6, 2, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#5A3A1E'; ctx.beginPath(); ctx.ellipse(-4, -2.2, 1, 1.5, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#17131A'; ctx.beginPath(); ctx.ellipse(-3.9, -2.1, .55, .85, 0, 0, 6.3); ctx.fill();
   }
-  ctx.strokeStyle = sh(skin, .7); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(10, 0); ctx.quadraticCurveTo(12, 2.5, 10, 3.5); ctx.stroke();
-  ctx.strokeStyle = '#8E4A3A'; ctx.lineWidth = 1.6; ctx.beginPath();
-  if (happy) { ctx.fillStyle = '#B23A3A'; ctx.moveTo(2, 6); ctx.quadraticCurveTo(6, 12, 10, 6); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  ctx.strokeStyle = sh(skin, .66); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(9.5, -.5); ctx.quadraticCurveTo(11.5, 2.5, 9.2, 3.6); ctx.stroke(); ctx.fillStyle = sh(skin, .8); ctx.beginPath(); ctx.arc(9.6, 3.2, .7, 0, 6.3); ctx.fill(); // 코·콧구멍
+  ctx.strokeStyle = '#8E4A3A'; ctx.lineWidth = 1.5; ctx.beginPath();
+  if (happy) { ctx.fillStyle = '#B23A3A'; ctx.moveTo(2, 6); ctx.quadraticCurveTo(6, 12, 10, 6); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#fff'; ctx.fillRect(3.5, 6.2, 5.5, 1.6); }
   else if (oops) { ctx.moveTo(3, 8); ctx.quadraticCurveTo(6, 5.5, 9, 8); ctx.stroke(); ctx.fillStyle = '#5ED3F3'; ctx.beginPath(); ctx.moveTo(-9, -8); ctx.quadraticCurveTo(-13, -1, -9, 1); ctx.quadraticCurveTo(-5, -1, -9, -8); ctx.fill(); }
-  else { ctx.moveTo(3, 6); ctx.quadraticCurveTo(6, 8.5, 9.5, 6); ctx.stroke(); }
+  else { ctx.moveTo(3, 6); ctx.quadraticCurveTo(6, 8.6, 9.5, 6); ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(3.5, 5.3); ctx.quadraticCurveTo(6, 6.2, 9, 5.3); ctx.stroke(); }
   // 모자 / 잠수 마스크
-  if (free) { ctx.fillStyle = 'rgba(159,216,255,.5)'; ctx.strokeStyle = '#1E4FB0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(-8, -9, 20, 13, 4); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-8, -3); ctx.lineTo(-14, -3); ctx.lineTo(-14, 14); ctx.stroke(); ctx.fillStyle = '#1E4FB0'; ctx.beginPath(); ctx.ellipse(0, -11, 13, 6, 0, Math.PI, 0); ctx.fill(); }
-  else { const cg = ctx.createRadialGradient(-5, -14, 2, 0, -9, 16); cg.addColorStop(0, '#FF7B6B'); cg.addColorStop(.6, '#E53935'); cg.addColorStop(1, '#8E1E1E'); ctx.fillStyle = cg; ctx.strokeStyle = dark; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(-13, -5); ctx.quadraticCurveTo(-12, -20, 0, -20); ctx.quadraticCurveTo(13, -20, 13, -5); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#B82A2A'; ctx.beginPath(); ctx.roundRect(-14, -7, 32, 4.5, 2); ctx.fill(); ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(-10, -18); ctx.quadraticCurveTo(0, -22, 10, -18); ctx.moveTo(0, -20); ctx.lineTo(0, -8); ctx.stroke(); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.arc(2, -13, 2.6, 0, 6.3); ctx.fill(); ctx.fillStyle = '#8E1E1E'; ctx.beginPath(); ctx.arc(0, -20.5, 1.6, 0, 6.3); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.ellipse(-5, -14, 4.5, 2, -.5, 0, 6.3); ctx.fill(); }
+  if (free) { ctx.fillStyle = 'rgba(159,216,255,.5)'; ctx.strokeStyle = '#1E4FB0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(-7, -9, 19, 13, 4); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-7, -3); ctx.lineTo(-13, -3); ctx.lineTo(-13, 14); ctx.stroke(); ctx.fillStyle = '#1E4FB0'; ctx.beginPath(); ctx.ellipse(0, -12, 12, 6, 0, Math.PI, 0); ctx.fill(); }
+  else { const cg = ctx.createRadialGradient(-4, -15, 2, 0, -10, 15); cg.addColorStop(0, '#FF7B6B'); cg.addColorStop(.6, '#E53935'); cg.addColorStop(1, '#8E1E1E'); ctx.fillStyle = cg; ctx.strokeStyle = dark; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-12, -6); ctx.quadraticCurveTo(-11, -21, 0, -21); ctx.quadraticCurveTo(12, -21, 12, -6); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(-8, -19); ctx.quadraticCurveTo(0, -23, 8, -19); ctx.moveTo(0, -21); ctx.lineTo(0, -8); ctx.stroke(); ctx.fillStyle = '#B82A2A'; ctx.beginPath(); ctx.roundRect(-13, -8, 31, 4.5, 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.arc(2, -14, 2.4, 0, 6.3); ctx.fill(); ctx.fillStyle = '#8E1E1E'; ctx.beginPath(); ctx.arc(0, -21.5, 1.5, 0, 6.3); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.ellipse(-5, -15, 4.5, 2, -.5, 0, 6.3); ctx.fill(); }
   ctx.restore();
-  if (happy && Math.random() < .3) puffs.push({ x: player.x + rnd(-24, 24), y: baseY - 112 - hop, vx: rnd(-30, 30), vy: rnd(-80, -30), t: 0, life: .6, s: rnd(3, 5), c: pick(['#FFD54A', '#FFF', '#FF8FB1']) });
-  if (free && player.moving && Math.random() < .2) puffs.push({ x: player.x - d * 6, y: baseY - 104, vx: rnd(-10, 10), vy: -50, t: 0, life: 1.1, s: rnd(2, 5), c: 'rgba(200,230,255,.75)' });
+  if (happy && Math.random() < .3) puffs.push({ x: player.x + rnd(-24, 24), y: baseY - 124 - hop, vx: rnd(-30, 30), vy: rnd(-80, -30), t: 0, life: .6, s: rnd(3, 5), c: pick(['#FFD54A', '#FFF', '#FF8FB1']) });
+  if (free && player.moving && Math.random() < .2) puffs.push({ x: player.x - d * 6, y: baseY - 116, vx: rnd(-10, 10), vy: -50, t: 0, life: 1.1, s: rnd(2, 5), c: 'rgba(200,230,255,.75)' });
   ctx.restore();
 }
 // 심해 배경
@@ -618,9 +622,11 @@ function swingNet() {
   for (let i = 0; i < 16; i++) puffs.push({ x: best.x, y: best.y, vx: rnd(-120, 120), vy: rnd(-200, -40), t: 0, life: rnd(.4, .8), s: rnd(3, 6), c: pick(['#FFD54A', '#FF8A3D', '#FF8FB1', '#7CC24A', '#5ED3F3', '#FFF']) });
   caught(best.b);
 }
-const KEYMAP = { ArrowLeft: 'l', ArrowRight: 'r', ArrowUp: 'u', ArrowDown: 'd', ' ': 'j', Enter: 'a', z: 'a', Z: 'a', x: 'j', X: 'j', a: 'l', d: 'r', w: 'u', s: 'd' };
-window.addEventListener('keydown', e => { const k = KEYMAP[e.key]; if (!k || !$('modal').hidden) return; e.preventDefault(); keys[k] = true; document.querySelector(`[data-k="${k}"]`)?.classList.add('on'); });
-window.addEventListener('keyup', e => { const k = KEYMAP[e.key]; if (!k) return; keys[k] = false; document.querySelector(`[data-k="${k}"]`)?.classList.remove('on'); });
+const KEYMAP = { ArrowLeft: 'l', ArrowRight: 'r', ArrowUp: 'u', ArrowDown: 'd', KeyA: 'l', KeyD: 'r', KeyW: 'u', KeyS: 'd', Space: 'j', KeyX: 'j', Enter: 'a', KeyZ: 'a', KeyJ: 'a', KeyK: 'j', NumpadEnter: 'a' };
+const keyOf = e => KEYMAP[e.code] || ({ ' ': 'j', Enter: 'a', z: 'a', Z: 'a', x: 'j', X: 'j', a: 'l', d: 'r', w: 'u', s: 'd', A: 'l', D: 'r', W: 'u', S: 'd', 'ㅁ': 'l', 'ㅇ': 'r', 'ㅈ': 'u', 'ㄴ': 'd', 'ㅋ': 'a', 'ㅌ': 'j' })[e.key];
+window.addEventListener('keydown', e => { const k = keyOf(e); if (!k || !$('modal').hidden) return; e.preventDefault(); keys[k] = true; document.querySelector(`[data-k="${k}"]`)?.classList.add('on'); });
+window.addEventListener('keyup', e => { const k = keyOf(e); if (!k) return; keys[k] = false; document.querySelector(`[data-k="${k}"]`)?.classList.remove('on'); });
+window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 document.querySelectorAll('#pad [data-k]').forEach(btn => {
   const k = btn.dataset.k, on = e => { e.preventDefault(); keys[k] = true; btn.classList.add('on'); try { btn.setPointerCapture(e.pointerId); } catch (_) {} }, off = () => { keys[k] = false; btn.classList.remove('on'); };
   btn.addEventListener('pointerdown', on); btn.addEventListener('pointerup', off); btn.addEventListener('pointercancel', off); btn.addEventListener('lostpointercapture', off); btn.addEventListener('contextmenu', e => e.preventDefault());
@@ -688,7 +694,7 @@ function renderHud() {
 function renderPlaces() {
   const box = $('places'); box.innerHTML = '';
   PLACES.forEach(p => { const b = document.createElement('button'); b.className = 'place' + (p.id === S.place ? ' on' : ''); const got = BUGS.filter(x => x.place.includes(p.id) && S.caught[x.id]).length, all = BUGS.filter(x => x.place.includes(p.id)).length;
-    b.innerHTML = `<img class="px" src="${icon(p.id)}" alt="">${p.name}<small>${got}/${all}</small>`; b.addEventListener('click', () => { if (S.place !== p.id) { S.place = p.id; bugs = []; spawnT = .3; player.x = WW / 2; player.y = 0; player.vy = 0; player.py = 220; player.gy = GROUND + 8; cam = camTarget = clamp(player.x - W / 2, 0, WW - W); save(); renderPlaces(); renderScene(); beep(SND.tap); } }); box.appendChild(b); });
+    b.innerHTML = `<img class="px" src="${icon(p.id)}" alt="">${p.name}<small>${got}/${all}</small>`; b.addEventListener('click', () => { if (S.place !== p.id) { S.place = p.id; bugs = []; spawnT = .3; player.x = WW / 2; player.y = 0; player.vy = 0; player.py = 220; player.gy = GROUND + 8; cam = camTarget = clamp(player.x - W / 2, 0, WW - W); save(); renderPlaces(); renderScene(); preloadFrames(); beep(SND.tap); } }); box.appendChild(b); });
 }
 function renderScene() { const p = placeOf(); $('placeName').textContent = (S.night && !p.dark ? '밤의 ' : '') + p.name; $('placeHint').textContent = p.hint; $('dayBtn').textContent = S.night ? '🌙 밤' : '☀️ 낮'; $('dayBtn').hidden = !!p.dark; $('btnJ').hidden = !!p.free; }
 function renderStrip() {
@@ -720,6 +726,8 @@ window.addEventListener('orientationchange', onOrient);
 load();
 $('logo').src = icon('bug'); document.querySelectorAll('[data-ico]').forEach(img => img.src = icon(img.dataset.ico));
 BUGS.forEach(b => bugImg(b.id));
+function preloadFrames() { BUGS.filter(b => b.place.includes(S.place)).forEach(b => { bugImg(b.id, 1); bugImg(b.id, 3); }); }
+preloadFrames();
 renderHud(); renderPlaces(); renderScene(); renderStrip(); renderGrid();
 $('dayBtn').addEventListener('click', () => { S.night = !S.night; bugs = []; spawnT = .3; save(); renderScene(); beep(SND.tap); toast(S.night ? '🌙 밤이 되었어요. 밤에만 나오는 곤충을 찾아보세요!' : '☀️ 아침이 밝았어요!'); });
 $('sndBtn').addEventListener('click', () => { S.sound = !S.sound; save(); renderHud(); beep(SND.tap); });
