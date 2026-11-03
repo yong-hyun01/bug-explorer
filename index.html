@@ -74,9 +74,10 @@ img.px{image-rendering:pixelated}
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{padding:5px 11px;border-radius:999px;background:#F2EBD6;font-size:12px;font-weight:900;color:var(--dim);border:2px solid transparent}
 .chip.on{background:#FFF1E3;color:var(--accent-2);border-color:var(--accent)}
-.dexFoot{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 8px;padding-top:14px;border-top:2px dashed #E6DCC0}
-.dexFoot small{font-size:11px;color:var(--dim);font-weight:700}
-.resetBtn{padding:9px 16px;border-radius:999px;background:#FFF;border:2px solid #E6DCC0;color:var(--dim);font-size:13px;font-weight:900}
+.dexHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.dexHead h4{margin:0}
+.dexHead h4 span{font-family:var(--body);font-size:12px;font-weight:700;margin-left:6px}
+.resetBtn{flex:none;padding:6px 12px;border-radius:999px;background:#FFF;border:2px solid #E6DCC0;color:var(--dim);font-size:12px;font-weight:900}
 .resetBtn:active{background:#FFF1E3}
 .modal .confirm{text-align:center;padding:6px 2px}
 .modal .confirm .big{font-size:44px;line-height:1;margin-bottom:6px}
@@ -202,9 +203,9 @@ img.px{image-rendering:pixelated}
       <div class="empty" id="stripEmpty">아직 잡은 곤충이 없어요. 키패드로 다가가서 잡아 보세요!</div>
     </div>
     <div class="view dex" id="v-dex" hidden>
+      <div class="dexHead"><h4>곤충 도감 <span id="dexCnt"></span></h4><button class="resetBtn" id="resetBtn">🗑️ 초기화</button></div>
       <div class="filters" id="filters"></div>
       <div class="grid" id="grid"></div>
-      <div class="dexFoot"><button class="resetBtn" id="resetBtn">🗑️ 잡은 곤충 모두 지우기</button><small>도감을 처음부터 다시 채울 수 있어요</small></div>
     </div>
   </div>
   </div>
@@ -1666,7 +1667,7 @@ let toastT;
 function toast(msg) { const el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 2500); }
 function renderHud() {
   const n = S.seen.length; $('progText').textContent = `${n}/${BUGS.length}`; $('progBar').style.width = (n / BUGS.length * 100) + '%';
-  $('sndBtn').textContent = S.sound ? '🔊' : '🔇'; $('todayCnt').textContent = S.total ? `모두 ${S.total}마리` : '';
+  $('sndBtn').textContent = S.sound ? '🔊' : '🔇'; $('todayCnt').textContent = S.total ? `모두 ${S.total}마리` : ''; $('dexCnt').textContent = `${n}/${BUGS.length}종`;
   if (n === BUGS.length && !S.done) { S.done = true; save(); setTimeout(() => { confetti(); toast('🏆 도감을 모두 채웠어요! 곤충 박사님!'); }, 600); }
 }
 function renderPlaces() {
