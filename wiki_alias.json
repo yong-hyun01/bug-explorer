@@ -578,5 +578,131 @@
    "en",
    "Dorcus rectus"
   ]
+ ],
+ "roach": [
+  [
+   "ko",
+   "바퀴벌레"
+  ],
+  [
+   "ko",
+   "바퀴목"
+  ],
+  [
+   "en",
+   "Cockroach"
+  ],
+  [
+   "en",
+   "Periplaneta americana"
+  ]
+ ],
+ "house_centipede": [
+  [
+   "ko",
+   "그리마"
+  ],
+  [
+   "en",
+   "Scutigera coleoptrata"
+  ]
+ ],
+ "woodlouse": [
+  [
+   "ko",
+   "쥐며느리"
+  ],
+  [
+   "en",
+   "Oniscus asellus"
+  ]
+ ],
+ "silverfish": [
+  [
+   "ko",
+   "좀 (곤충)"
+  ],
+  [
+   "en",
+   "Silverfish"
+  ]
+ ],
+ "ground_beetle": [
+  [
+   "ko",
+   "먼지벌레과"
+  ],
+  [
+   "en",
+   "Ground beetle"
+  ]
+ ],
+ "scorpion": [
+  [
+   "ko",
+   "극동전갈"
+  ],
+  [
+   "en",
+   "Mesobuthus martensii"
+  ]
+ ],
+ "slug": [
+  [
+   "ko",
+   "민달팽이"
+  ],
+  [
+   "en",
+   "Slug"
+  ]
+ ],
+ "funnel_spider": [
+  [
+   "ko",
+   "깔때기거미과"
+  ],
+  [
+   "en",
+   "Agelenidae"
+  ]
+ ],
+ "rock_cricket": [
+  [
+   "commons",
+   "Loxoblemmus doenitzi"
+  ],
+  [
+   "en",
+   "Loxoblemmus"
+  ],
+  [
+   "ko",
+   "귀뚜라미과"
+  ]
+ ],
+ "stone_centipede": [
+  [
+   "en",
+   "Lithobius forficatus"
+  ],
+  [
+   "en",
+   "Lithobiomorpha"
+  ]
+ ],
+ "pavement_ant": [
+  [
+   "ko",
+   "주름개미"
+  ],
+  [
+   "en",
+   "Tetramorium tsushimae"
+  ],
+  [
+   "en",
+   "Tetramorium caespitum"
+  ]
  ]
 }

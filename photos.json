@@ -752,12 +752,12 @@
 "sci": ""
 },
 "roach": {
-"title": "바퀴",
-"img": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Wheel_Iran.jpg",
-"extract": "바퀴는 굴대와 축받이에서 회전하도록 설계된 회전 부품(일반적으로 원형)이다. 바퀴는 6대 단순 기계 중 하나인 축바퀴의 핵심 구성 요소 중 하나이다. 바퀴는 축과 함께 사용되어 무거운 물체를 쉽게 이동시킬 수 있게 하며, 이를 통해 하중을 지지하거나 기계에서 작업을 수행하면서 이동이나 운송을 용이하게 한다. 바퀴는 또한 배의 타륜, 자동차의 운전대, 도예용 돌림판, 플라이휠 등 다른 목적으로도 사용된다.",
-"url": "https://ko.wikipedia.org/wiki/%EB%B0%94%ED%80%B4",
+"title": "바퀴벌레",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Blattella_germanica_1236168.jpg/500px-Blattella_germanica_1236168.jpg",
+"extract": "바퀴는 바퀴목(Blattodea)에 속하는 곤충의 총칭, 또는 독일바퀴(Blattella germanica) 한 종만을 부르는 말이다. 바퀴목에는 6과에 3500 여종의 바퀴가 있으며, 극지방과 해발 2000m 이상인 곳을 뺀 세계 전역에 분포하고 있다. 건물안에 있는 바퀴벌레는 해충으로 여긴다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%B0%94%ED%80%B4%EB%B2%8C%EB%A0%88",
 "lang": "ko",
-"sci": "굴대에 달린 동그란 물체로 굴림으로써 마찰을 줄이고 물체의 이동을 편리하게 하는 장치"
+"sci": "바퀴목에 속한 날개 있는 곤충들을 일컫는 말"
 },
 "caddisfly": {
 "title": "날도래목",
@@ -1309,6 +1309,86 @@
 "img": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Redwiggler1.jpg",
 "extract": "줄지렁이(학명: Eisenia fetida 에이세니아 페티다[*])는 썩어가는 유기물을 섭취하는 지렁이의 일종이다. 썩어가는 채소, 퇴비, 거름을 먹고 산다. 지표서식성이며, 드물게 흙 속에서 발견된다. 이러한 특성으로 붉은지렁이와 닮아있다.",
 "url": "https://ko.wikipedia.org/wiki/%EC%A4%84%EC%A7%80%EB%A0%81%EC%9D%B4",
+"lang": "ko",
+"sci": ""
+},
+"house_centipede": {
+"title": "그리마",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Scutigera_coleoptrata_MHNT.jpg/500px-Scutigera_coleoptrata_MHNT.jpg",
+"extract": "그리마(house centipede, 제주어: 돈버렝이)는 그리마과(Scutigeridae, 표준어: 그리맛과)에 속하는 절지동물의 총칭이다. 지네나 노래기와 같은 벌레와 생김새가 유사하며, 저작할 수 있는 턱이 있으나 대체로 사람을 물지는 않는다. 생김새와 움직이는 폼이 사람들의 혐오감을 유발하나, 실질적인 해를 끼치지는 않고 오히려 해충을 잡아먹는 익충이다. 그리마는 기동력이 뛰어나고 민첩한 포식성 절지동물로, 성체 바퀴벌레(Cockroach), 좀벌레, 파리, 빈대 등 실내 유해 해충을 능동적으로 사냥하여 식해한다. 기온이 내려가면 주택 내부에도 침입하는데 추운 집보다 따뜻한 집에서 많이 찾아볼 수 있다 하여 한국에서는 돈벌레 또는 \"쉰발이/신발이\"로 부르기도 한다. 한국에 서식하는 종류로는 집그리마·혹그리마·고려그리마·큰집게그리마 등이 있다. 그리마는 다른 곤충과 그 허물, 알을 주식으로 하며, 가정에서 바퀴벌레와 그 알을 먹기도 하나 주로 주택 밖에서 서식하는 동물이다. 천적으로는 포유류나 도마뱀, 뱀, 새, 두꺼비, 타란툴라 등이 있으며, 이 중 가장 무서운 천적은 자신을 마취시켜 애벌레의 먹이로 삼는 대모벌이 있다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%B7%B8%EB%A6%AC%EB%A7%88",
+"lang": "ko",
+"sci": ""
+},
+"woodlouse": {
+"title": "Oniscus asellus",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Common_Shiny_Woodlouse_%2830538333473%29.jpg/500px-Common_Shiny_Woodlouse_%2830538333473%29.jpg",
+"extract": "Oniscus asellus, the common woodlouse, is one of the largest and most common species of woodlouse native to the British Isles and Western and Northern Europe, growing to 16 millimetres (0.63 in) long and 6 millimetres (0.24 in) wide. Oniscus asellus was first described by Swedish biologist Carl Linnaeus in his Systema Naturae, and is a very common species, representing in Britain \"the archetypal 'woodlouse' familiar to the general public\". It lives in a great variety of habitats, but favours damp conditions, especially under rotting wood. O. asellus is also a successfully synanthropic species, dwelling in gardens, walls, and inside houses.",
+"url": "https://en.wikipedia.org/wiki/Oniscus_asellus",
+"lang": "en",
+"sci": "Species of woodlouse"
+},
+"silverfish": {
+"title": "Silverfish",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/LepismaSaccharina.jpg/500px-LepismaSaccharina.jpg",
+"extract": "The silverfish is a species of small, primitive, wingless insect in the order Zygentoma. Its common name derives from the insect's silvery light grey colour, combined with the fish-like appearance of its movements. The scientific name indicates that the silverfish's diet consists of carbohydrates such as sugar or starches. While the common name silverfish is used throughout the global literature to refer to various species of Zygentoma, the Entomological Society of America restricts use of the term solely to Lepisma saccharinum.",
+"url": "https://en.wikipedia.org/wiki/Silverfish",
+"lang": "en",
+"sci": "Small land insect in the order Zygentoma"
+},
+"ground_beetle": {
+"title": "Ground beetle",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Carabus_auratus_with_prey.jpg/500px-Carabus_auratus_with_prey.jpg",
+"extract": "Ground beetles are a large, cosmopolitan family of beetles, known as Carabidae, with more than 40,000 species worldwide, around 2,000 of which are found in North America and 2,700 in Europe. As of 2015, it is one of the 10 most species-rich animal families. They belong to the suborder Adephaga. Members of the family are primarily carnivorous, but some members are herbivorous or omnivorous.",
+"url": "https://en.wikipedia.org/wiki/Ground_beetle",
+"lang": "en",
+"sci": "Family of beetles"
+},
+"scorpion": {
+"title": "전갈 (종)",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Mesobuthus_martesnii.jpg/500px-Mesobuthus_martesnii.jpg",
+"extract": "전갈(全蠍)은 전갈목 전갈과에 속하는 절지동물의 일종이다. 극동전갈, 감갈이라고도 한다. 먹잇감이 나타나면 꼬리를 들고, 차분하게 기다린다. 만주 지역과 중국, 일본, 동남아시아 등지에 살며, 한반도에서는 북부 지역에만 살고 있는 것으로 알려져 있다. 남한에 자생하는 서식지는 없고, 북한에서는 황해도 사리원시 정방산에 있는 정방산전갈살이터가 천연기념물 171호로 보호되어 있다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%A0%84%EA%B0%88_(%EC%A2%85)",
+"lang": "ko",
+"sci": ""
+},
+"slug": {
+"title": "민달팽이",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Ambigolimax.jpg/500px-Ambigolimax.jpg",
+"extract": "민달팽이(영어: slug) 또는 괄태충(括胎蟲)은 복족류에 속하는 생물로, 달팽이 중에 패각이 없는 종류를 통칭한다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%AF%BC%EB%8B%AC%ED%8C%BD%EC%9D%B4",
+"lang": "ko",
+"sci": ""
+},
+"funnel_spider": {
+"title": "Agelenidae",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Grass_spider_%28Agelenopsis_naevia%29.JPG/500px-Grass_spider_%28Agelenopsis_naevia%29.JPG",
+"extract": "The Agelenidae are a large family of spiders in the suborder Araneomorphae. Well-known examples include the common \"grass spiders\" of the genus Agelenopsis. The most widely accepted common name for members of the family is funnel weaver.",
+"url": "https://en.wikipedia.org/wiki/Agelenidae",
+"lang": "en",
+"sci": "Family of spiders"
+},
+"rock_cricket": {
+"title": "Loxoblemmus doenitzi 439327514 (cropped, rotated).jpg",
+"img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Loxoblemmus_doenitzi_439327514_%28cropped%2C_rotated%29.jpg/500px-Loxoblemmus_doenitzi_439327514_%28cropped%2C_rotated%29.jpg",
+"extract": "",
+"url": "https://commons.wikimedia.org/wiki/File:Loxoblemmus_doenitzi_439327514_(cropped,_rotated).jpg",
+"lang": "commons",
+"sci": ""
+},
+"stone_centipede": {
+"title": "Lithobius forficatus",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Brown_Centipede%2C_Berlin%2C_Berlin%2C_Germany_imported_from_iNaturalist_photo_179402948.jpg/500px-Brown_Centipede%2C_Berlin%2C_Berlin%2C_Germany_imported_from_iNaturalist_photo_179402948.jpg",
+"extract": "Lithobius forficatus, most commonly known as the garden centipede, brown centipede or stone centipede, is a common centipede of the family Lithobiidae. It is found in Europe and North America.",
+"url": "https://en.wikipedia.org/wiki/Lithobius_forficatus",
+"lang": "en",
+"sci": "Species of centipede"
+},
+"pavement_ant": {
+"title": "주름개미",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tetramorium_tsushimae_casent0103103_profile_1.jpg/500px-Tetramorium_tsushimae_casent0103103_profile_1.jpg",
+"extract": "주름개미는 대한민국, 대만, 일본에 분포하는 종으로, 도시나 시골 주변 어디서나 쉽게 발견된다. 유럽의 T. caespitum이 학명으로 사용되었었지만, 여왕개미의 습성과 형태의 차이로 현재는 T. tsushimae로 구분되었다. 일개미의 평균 몸길이는 2~3mm의 크기를 가지고, 여왕개미는 약 7mm이다. 생김새가 짱구개미와 비슷하나, 짱구개미에 비해 크기가 작다. 주름개미는 주변 보도블럭틈, 돌 아래, 벽 틈 등 주변 어디서나 환경만 따른다면 서식할 수 있다. 혼인 비행은 6~7월이며, 여왕개미의 복수 군체 체제가 잘 발달되어있다. 잡식성으로 죽은 곤충, 과자부스러기, 과일 등 무엇이든 잘 먹는다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%A3%BC%EB%A6%84%EA%B0%9C%EB%AF%B8",
 "lang": "ko",
 "sci": ""
 }
