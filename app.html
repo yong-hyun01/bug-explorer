@@ -97,9 +97,9 @@ img.px{image-rendering:pixelated}
 .card .nm{font-weight:900;font-size:12px;margin-top:2px;line-height:1.2}
 .card.unknown img{filter:brightness(0) opacity(.22)}
 .card.unknown .nm{color:#B5AA8E}
-.card .cnt{position:absolute;top:6px;right:6px;background:var(--accent);color:#FFF;font-size:10px;font-weight:900;border-radius:999px;padding:2px 6px}
-.card .rare{position:absolute;top:6px;left:6px;font-size:12px}
-.card.new::after{content:"NEW";position:absolute;bottom:6px;right:6px;background:var(--red);color:#FFF;font-size:9px;font-weight:900;border-radius:6px;padding:1px 5px}
+.card .cnt{position:absolute;top:4px;right:4px;z-index:3;background:var(--accent);color:#FFF;font-size:11px;font-weight:900;border-radius:999px;padding:2px 7px;border:2px solid #FFF;box-shadow:0 2px 4px rgba(0,0,0,.35);line-height:1.2}
+.card .rare{position:absolute;top:4px;left:5px;z-index:3;font-size:13px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.card.new::after{content:"NEW";position:absolute;bottom:6px;right:6px;z-index:3;background:var(--red);color:#FFF;font-size:9px;font-weight:900;border-radius:6px;padding:1px 5px}
 
 .modal{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(31,58,26,.55);padding:12px}
 .modal[hidden]{display:none}
