@@ -1,6 +1,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>곤충 탐험대</title>
+<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
+<link rel="dns-prefetch" href="https://upload.wikimedia.org">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <style>
 :root{
@@ -660,10 +662,11 @@ function caught(b) {
   if (first) { confetti(); setTimeout(() => showCard(b, 'new'), 380); }
   else toast(`${b.name} ${S.caught[b.id]}마리째! 도감에서 다시 볼 수 있어요`);
 }
+const smallPhoto = u => u.replace(/\/\d+px-/, '/250px-'); // 목록 썸네일은 작은 판으로
 function photoThumb(b, cls) {
   const ph = PHOTOS[b.id];
   if (!ph || !ph.img) return `<img src="${bugURL(b.id)}" alt="">`;
-  return `<div class="pw ${cls || ''}"><img class="ph" src="${ph.img}" alt="${b.name}" loading="lazy" onerror="this.parentElement.outerHTML='<img src=&quot;${bugURL(b.id)}&quot; alt=&quot;&quot;>'"><span class="mini"><img src="${bugURL(b.id)}" alt=""></span></div>`;
+  return `<div class="pw ${cls || ''}"><img class="ph" width="250" height="250" decoding="async" src="${smallPhoto(ph.img)}" alt="${b.name}" loading="lazy" onerror="this.parentElement.outerHTML='<img src=&quot;${bugURL(b.id)}&quot; alt=&quot;&quot;>'"><span class="mini"><img src="${bugURL(b.id)}" alt=""></span></div>`;
 }
 window.photoFail = img => { const hero = img.parentElement, ins = hero.querySelector('.inset'); hero.className = 'hero'; if (ins) { const il = ins.querySelector('img'); ins.remove(); img.replaceWith(il); } else img.remove(); const cr = hero.nextElementSibling; if (cr && cr.classList.contains('credit')) cr.remove(); };
 function showCard(b, mode) {
@@ -716,7 +719,7 @@ function renderPlaces() {
 function renderScene() { const p = placeOf(); $('placeName').textContent = (S.night && !p.dark ? '밤의 ' : '') + p.name; $('placeHint').textContent = p.hint; $('dayBtn').textContent = S.night ? '🌙 밤' : '☀️ 낮'; $('dayBtn').hidden = !!p.dark; $('btnJ').hidden = !!p.free; }
 function renderStrip() {
   const st = $('strip'); st.innerHTML = ''; $('stripEmpty').hidden = S.recent.length > 0;
-  S.recent.forEach(id => { const b = BUG[id]; if (!b) return; const d = document.createElement('button'); d.className = 'mini'; const ph = PHOTOS[id]; d.innerHTML = `<div class="b${ph && ph.img ? ' photo' : ''}">${ph && ph.img ? `<img src="${ph.img}" alt="${b.name}" loading="lazy" onerror="this.src='${bugURL(id)}';this.parentElement.classList.remove('photo')">` : `<img src="${bugURL(id)}" alt="">`}</div>${b.name}`; d.addEventListener('click', () => showCard(b, 'view')); st.appendChild(d); });
+  S.recent.forEach(id => { const b = BUG[id]; if (!b) return; const d = document.createElement('button'); d.className = 'mini'; const ph = PHOTOS[id]; d.innerHTML = `<div class="b${ph && ph.img ? ' photo' : ''}">${ph && ph.img ? `<img src="${smallPhoto(ph.img)}" width="250" height="250" decoding="async" alt="${b.name}" loading="lazy" onerror="this.src='${bugURL(id)}';this.parentElement.classList.remove('photo')">` : `<img src="${bugURL(id)}" alt="">`}</div>${b.name}`; d.addEventListener('click', () => showCard(b, 'view')); st.appendChild(d); });
 }
 let filter = 'all';
 function renderGrid() {

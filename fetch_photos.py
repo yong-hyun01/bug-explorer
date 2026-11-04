@@ -23,7 +23,9 @@ def summary(lang, title):
     img = d.get('originalimage', {}).get('source') or d['thumbnail']['source']
     th = d['thumbnail']['source']
     # 썸네일을 640px 로
-    th = re.sub(r'\?.*$', '', re.sub(r'/(\d+)px-', '/500px-', th)).replace('thumb.wikimedia.org', 'upload.wikimedia.org')  # 허용 폭: 250/330/500/960/1280
+    th = re.sub(r'\?.*$', '', re.sub(r'/(\d+)px-', '/500px-', th)).replace('//thumb.wikimedia.org/', '//upload.wikimedia.org/')  # 허용 폭: 250/330/500/960/1280
+    m = re.match(r'^(https://upload\.wikimedia\.org/wikipedia/(?:commons|[a-z]{2}))/([0-9a-f])/([0-9a-f]{2})/([^/]+)$', th)
+    if m: th = f'{m.group(1)}/thumb/{m.group(2)}/{m.group(3)}/{m.group(4)}/500px-{m.group(4)}'  # 원본 대신 썸네일
     return {'title': d.get('title'), 'img': th, 'extract': d.get('extract', ''), 'url': d.get('content_urls', {}).get('desktop', {}).get('page'), 'lang': lang, 'sci': d.get('description', '')}
 def commons(q):
     """위키미디어 공용 파일 검색 → 첫 이미지 (jpg/png) 의 500px 썸네일"""
