@@ -1390,5 +1390,97 @@
    "en",
    "Potter wasp"
   ]
+ ],
+ "pelican_eel": [
+  [
+   "ko",
+   "풍선장어"
+  ],
+  [
+   "en",
+   "Pelican eel"
+  ],
+  [
+   "commons",
+   "Eurypharynx pelecanoides"
+  ]
+ ],
+ "bedbug": [
+  [
+   "ko",
+   "빈대"
+  ],
+  [
+   "en",
+   "Cimex lectularius"
+  ]
+ ],
+ "clothes_moth": [
+  [
+   "ko",
+   "옷좀나방"
+  ],
+  [
+   "en",
+   "Tineola bisselliella"
+  ]
+ ],
+ "booklouse": [
+  [
+   "ko",
+   "다듬이벌레"
+  ],
+  [
+   "en",
+   "Liposcelis bostrychophila"
+  ],
+  [
+   "en",
+   "Psocoptera"
+  ]
+ ],
+ "rice_weevil": [
+  [
+   "ko",
+   "쌀바구미"
+  ],
+  [
+   "en",
+   "Sitophilus oryzae"
+  ]
+ ],
+ "cat_flea": [
+  [
+   "ko",
+   "고양이벼룩"
+  ],
+  [
+   "en",
+   "Cat flea"
+  ],
+  [
+   "ko",
+   "벼룩"
+  ]
+ ],
+ "meal_moth": [
+  [
+   "ko",
+   "화랑곡나방"
+  ],
+  [
+   "en",
+   "Indian mealmoth"
+  ]
+ ],
+ "dust_mite": [
+  [
+   "ko",
+   "집먼지진드기"
+  ],
+  [
+   "en",
+   "House dust mite"
+  ]
  ]
 }
