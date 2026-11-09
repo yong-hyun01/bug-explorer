@@ -244,6 +244,7 @@ const ICO = {
   rocks: ['................','................','......ssss......','....ssssssss....','...sSssssssSs...','..ssssssssssss..','..sSsssSssssss..','.ssssssssssssss.','.sssssSssssssss.','ssssssssssssssss','ssssssssssSsssss','gGggGggGggGggGgg','gggggggggggggggg','................','................','................'],
   yard: ['................','.......r........','......rrr.......','.....rrrrr......','....rrrrrrr.....','...rrrrrrrrr....','...nnnnnnnnn....','...nnnnnnnnn....','...nnkknnkkn....','...nnkknnkkn....','...nnnnnnnnn....','...nnnnbbnnn....','gggnnnnbbnnnggg.','gggggggggggggggg','gGggGggGggGggGgg','................'],
   home: ['nnnnnnnnnnnnnnnn','nnnnnnnnnnnnnnnn','nnwwwwwwnnnnnnnn','nnwmmmmwnnnyyynn','nnwmmmmwnnyyyyyn','nnwwwwwwnnnnknnn','nnwmmmmwnnnnknnn','nnwmmmmwnnnnknnn','nnwwwwwwnnrrrrrr','nnnnnnnnnrrrrrrr','nnnnnnnnnrrrrrrr','bbbbbbbbbbbbbbbb','bBbbBbbBbbBbbBbb','bbbbbbbbbbbbbbbb','................','................'],
+  cave: ['................','....ssssssss....','..ssssssssssss..','.sssSssssssSsss.','.ssssseeeesssss.','ssssseeeeeesssss','ssssseeeeeesssss','sssseeeeeeeessss','sssseeeeeeeessss','sssseeeeeeeessss','sssseeeeeeeessss','sssseeeeeeeessss','gGggeeeeeeeeggGg','gggggggggggggggg','................','................'],
   bug: ['................','....e......e....','.....e....e.....','......eeee......','.....eeeeee.....','....rrrrrrrr....','...rrerrrrerr...','...rrrrrrrrrr...','...rrrrerrrrr...','..k.rrrrrrrr.k..','...krrerrerrk...','....rrrrrrrr....','.....rrrrrr.....','......rrrr......','................','................'],
 };
 function icon(name) {
@@ -286,6 +287,7 @@ const PLACES = [
   { id: 'deepsea', name: '심해', hint: '헤엄치며 빛을 따라가요', sky: ['#0B1E3A', '#03101F'], nightSky: ['#0B1E3A', '#03101F'], free: true, dark: true },
   { id: 'underground', name: '땅속', hint: '흙 속 굴을 살펴요', sky: ['#5A3E22', '#3A2614'], nightSky: ['#4A3218', '#2E1E10'], dark: true },
   { id: 'rocks', name: '바위틈', hint: '돌 밑과 틈 사이를 봐요', sky: ['#A8D0E8', '#E4F0F8'], nightSky: ['#121A32', '#263258'] },
+  { id: 'cave', name: '동굴', hint: '천장과 물웅덩이를 살펴요', sky: ['#1E2230', '#0C0E16'], nightSky: ['#1E2230', '#0C0E16'], dark: true },
 ];
 
 // ======================= 저장 =======================
@@ -403,6 +405,7 @@ function draw() {
   if (P.id === 'deepsea') { drawDeepSea(); drawActors(); return; }
   if (P.id === 'underground') { drawUnderground(); drawActors(); return; }
   if (P.id === 'home') { drawHome(N); drawActors(); return; }
+  if (P.id === 'cave') { drawCave(); drawActors(); return; }
   // 해/달/별 (카메라 0.1)
   const sx = 330 - cam * .1;
   if (N) { ctx.fillStyle = '#FFF'; for (let i = 0; i < 60; i++) { const px = ((i * 97 - cam * .05) % W + W) % W, py = (i * 53) % 200; ctx.globalAlpha = .4 + Math.sin(t * 2 + i) * .4; ctx.fillRect(px, py, 2, 2); } ctx.globalAlpha = 1; ctx.fillStyle = '#FFF4C2'; ctx.beginPath(); ctx.arc(sx, 60, 26, 0, 6.3); ctx.fill(); ctx.fillStyle = sky[0]; ctx.beginPath(); ctx.arc(sx + 12, 52, 22, 0, 6.3); ctx.fill(); }
@@ -656,6 +659,27 @@ function drawHome(N) {
   if (N) { ctx.fillStyle = 'rgba(10,15,40,.3)'; ctx.fillRect(0, 0, W, H); }
   else { const vg = ctx.createLinearGradient(0, 0, 0, 90); vg.addColorStop(0, 'rgba(60,30,10,.32)'); vg.addColorStop(1, 'rgba(60,30,10,0)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, 90); } // 밝은 벽지 위 장소 이름이 읽히도록
 }
+function drawCave() {
+  // 먼 벽 (0.4): 울퉁불퉁한 바위 벽
+  ctx.fillStyle = '#2A2E3E'; ctx.beginPath(); ctx.moveTo(0, H); for (let x = 0; x <= W; x += 8) { const wx = x + cam * .4; ctx.lineTo(x, 120 + Math.sin(wx * .02) * 30 + Math.sin(wx * .07) * 12); } ctx.lineTo(W, H); ctx.fill();
+  for (let i = 0; i < 50; i++) { const px = ((seeded(i + 3000) * WW - cam * .4) % (W + 40) + W + 40) % (W + 40) - 20, py = 140 + seeded(i + 3100) * 150, r = 6 + seeded(i + 3200) * 14; ctx.fillStyle = i % 4 ? '#353A4C' : '#20242F'; ctx.beginPath(); ctx.ellipse(px, py, r, r * .6, 0, 0, 6.3); ctx.fill(); }
+  // 종유석 (0.7): 천장에서 늘어진 돌고드름
+  for (let i = 0; i < 26; i++) { const px = ((i * 52 + 20 - cam * .7) % (W + 80) + W + 80) % (W + 80) - 40, h = 40 + (i * 37) % 70, w = 10 + (i * 13) % 12; ctx.fillStyle = i % 3 ? '#4A5064' : '#3A3F50'; ctx.beginPath(); ctx.moveTo(px - w, 0); ctx.lineTo(px + w, 0); ctx.quadraticCurveTo(px + w * .4, h * .6, px, h); ctx.quadraticCurveTo(px - w * .4, h * .6, px - w, 0); ctx.fill(); ctx.fillStyle = '#5A6078'; ctx.beginPath(); ctx.moveTo(px - w * .6, 0); ctx.lineTo(px - w * .2, 0); ctx.lineTo(px - w * .3, h * .45); ctx.fill(); }
+  ctx.fillStyle = '#3A3F50'; ctx.fillRect(0, 0, W, 14);
+  // 물방울 (천장에서 떨어짐)
+  ctx.fillStyle = 'rgba(160,200,255,.7)'; for (let i = 0; i < 8; i++) { const px = ((i * 151 + 60 - cam * .7) % (W + 80) + W + 80) % (W + 80) - 40, py = ((t * 90 + i * 53) % 300) + 40; ctx.beginPath(); ctx.ellipse(px, py, 1.5, 4, 0, 0, 6.3); ctx.fill(); }
+  // 반짝이는 수정 (0.7)
+  for (let i = 0; i < 9; i++) { const px = ((i * 137 + 90 - cam * .7) % (W + 80) + W + 80) % (W + 80) - 40, py = 180 + (i * 41) % 60, g = .5 + Math.sin(t * 2 + i) * .3; ctx.fillStyle = `rgba(120,200,255,${g * .35})`; ctx.beginPath(); ctx.arc(px, py, 14, 0, 6.3); ctx.fill(); ctx.fillStyle = i % 2 ? '#9FD8FF' : '#C8A8FF'; ctx.beginPath(); ctx.moveTo(px, py - 12); ctx.lineTo(px + 6, py); ctx.lineTo(px, py + 8); ctx.lineTo(px - 6, py); ctx.fill(); }
+  // 지하 냇물 (헤엄치는 생물이 사는 곳)
+  const wg = ctx.createLinearGradient(0, 252, 0, 345); wg.addColorStop(0, '#1B3550'); wg.addColorStop(1, '#0E1C2E'); ctx.fillStyle = wg; ctx.beginPath(); ctx.moveTo(0, 256); for (let x = 0; x <= W; x += 10) ctx.lineTo(x, 256 + Math.sin((x + cam) * .04) * 5); ctx.lineTo(W, 345); ctx.lineTo(0, 345); ctx.fill();
+  ctx.strokeStyle = 'rgba(150,200,255,.25)'; ctx.lineWidth = 1.5; for (let i = 0; i < 4; i++) { const wy = 272 + i * 18; ctx.beginPath(); for (let x = 0; x <= W; x += 10) ctx.lineTo(x, wy + Math.sin((x + cam) * .05 + t * 1.5 + i) * 2.5); ctx.stroke(); }
+  // 바닥 바위와 석순
+  const fg = ctx.createLinearGradient(0, 340, 0, H); fg.addColorStop(0, '#3A3F50'); fg.addColorStop(1, '#1E2230'); ctx.fillStyle = fg; ctx.beginPath(); ctx.moveTo(0, H); for (let x = 0; x <= W; x += 10) ctx.lineTo(x, 342 + Math.sin((x + cam) * .05) * 5); ctx.lineTo(W, H); ctx.fill();
+  for (let i = 0; i < 16; i++) { const px = ((i * 86 + 30 - cam) % (W + 80) + W + 80) % (W + 80) - 40, h = 24 + (i * 29) % 40, w = 8 + (i * 7) % 8; ctx.fillStyle = i % 3 ? '#4A5064' : '#3A3F50'; ctx.beginPath(); ctx.moveTo(px - w, 352); ctx.lineTo(px + w, 352); ctx.quadraticCurveTo(px + w * .3, 352 - h * .6, px, 352 - h); ctx.quadraticCurveTo(px - w * .3, 352 - h * .6, px - w, 352); ctx.fill(); }
+  for (let i = 0; i < 40; i++) { const px = ((seeded(i + 3300) * WW - cam) % (W + 20) + W + 20) % (W + 20) - 10; ctx.fillStyle = i % 3 ? '#555B70' : '#2A2E3E'; ctx.beginPath(); ctx.ellipse(px, 350 + seeded(i + 3400) * 45, 3 + seeded(i + 3500) * 6, 2 + seeded(i + 3500) * 3, 0, 0, 6.3); ctx.fill(); }
+  // 탐험가 헤드램프 불빛
+  const lamp = ctx.createRadialGradient(player.x - cam, GROUND - 50 + player.y, 30, player.x - cam, GROUND - 50 + player.y, 240); lamp.addColorStop(0, 'rgba(255,230,170,.16)'); lamp.addColorStop(1, 'rgba(0,0,0,.5)'); ctx.fillStyle = lamp; ctx.fillRect(0, 0, W, H);
+}
 function renderMap() {
   const mp = $('map'); $('mapView').style.left = (cam / WW * 100) + '%'; $('mapView').style.width = (W / WW * 100) + '%';
   const dots = [...mp.querySelectorAll('b')], live = bugs.filter(u => !u.leave);
@@ -758,7 +782,7 @@ function renderStrip() {
 let filter = 'all';
 function renderGrid() {
   const fs = $('filters'); if (!fs.children.length) {
-    [['all', '전체'], ['meadow', '풀밭'], ['forest', '숲'], ['pond', '연못'], ['yard', '마당'], ['home', '집안'], ['sea', '바다'], ['mountain', '산'], ['deepsea', '심해'], ['underground', '땅속'], ['rocks', '바위틈'], ['night', '🌙 밤'], ['rare', '⭐ 희귀'], ['not', '곤충 아님'], ['got', '✅ 잡은 것']].forEach(([k, label]) => { const c = document.createElement('button'); c.className = 'chip' + (k === filter ? ' on' : ''); c.dataset.k = k; c.textContent = label; c.addEventListener('click', () => { filter = k; [...fs.children].forEach(x => x.classList.toggle('on', x.dataset.k === k)); renderGrid(); }); fs.appendChild(c); });
+    [['all', '전체'], ['meadow', '풀밭'], ['forest', '숲'], ['pond', '연못'], ['yard', '마당'], ['home', '집안'], ['sea', '바다'], ['mountain', '산'], ['deepsea', '심해'], ['underground', '땅속'], ['rocks', '바위틈'], ['cave', '동굴'], ['night', '🌙 밤'], ['rare', '⭐ 희귀'], ['not', '곤충 아님'], ['got', '✅ 잡은 것']].forEach(([k, label]) => { const c = document.createElement('button'); c.className = 'chip' + (k === filter ? ' on' : ''); c.dataset.k = k; c.textContent = label; c.addEventListener('click', () => { filter = k; [...fs.children].forEach(x => x.classList.toggle('on', x.dataset.k === k)); renderGrid(); }); fs.appendChild(c); });
   }
   const list = BUGS.filter(b => filter === 'all' || (filter === 'night' ? b.time !== 'day' : filter === 'rare' ? b.rare === 2 : filter === 'not' ? b.notInsect : filter === 'got' ? S.caught[b.id] : b.place.includes(filter)));
   const grid = $('grid'); grid.innerHTML = '';

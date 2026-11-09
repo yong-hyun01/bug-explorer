@@ -1991,5 +1991,109 @@
 "url": "https://en.wikipedia.org/wiki/House_dust_mite",
 "lang": "en",
 "sci": "Common name for several species of mite"
+},
+"horseshoe_bat": {
+"title": "관박쥐",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Grand_Rhinolophe.jpg/500px-Grand_Rhinolophe.jpg",
+"extract": "관박쥐(학명: Rhinolophus ferrumequinum)는 관박쥐과에 속하는 박쥐이다. 주름코박쥐라고도 불리는 이 박쥐는 유럽, 아프리카, 아시아, 오스트레일리아에 서식한다. 유럽에서는 멸종 위기에 처해 있지만 한반도에서는 흔히 볼 수 있다. 한국에는 내륙관박쥐(R. f. korai)와 제주관박쥐(R. f. quelpartis) 등 2아종이 있는 것으로 알려져 있지만, 1933년 모리(Mori)가 발표한 제주관박쥐는 그 이후 아직 채집 관찰된 바 없다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%B4%80%EB%B0%95%EC%A5%90",
+"lang": "ko",
+"sci": ""
+},
+"orange_bat": {
+"title": "붉은박쥐",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Black-winged_Myotis_imported_from_iNaturalist_photo_6268974_on_26_January_2022.jpg/500px-Black-winged_Myotis_imported_from_iNaturalist_photo_6268974_on_26_January_2022.jpg",
+"extract": "붉은박쥐(학명: Myotis rufoniger, 문화어: 검은오렌지윗수염박쥐)는 애기박쥐과 윗수염박쥐속에 속하는 포유동물이다. ‘황금박쥐’, ‘오렌지윗수염박쥐’, ‘조복성박쥐’로도 불린다. 중국, 한반도, 일본의 쓰시마섬과 대만 등에 분포하여 산다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%B6%89%EC%9D%80%EB%B0%95%EC%A5%90",
+"lang": "ko",
+"sci": "포유류 박쥐목 애기박쥐과에 속하는 동물"
+},
+"cave_spider": {
+"title": "Meta menardi",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Meta_menardi.jpg/500px-Meta_menardi.jpg",
+"extract": "Meta menardi, the European cave spider, is a long-jawed orb-weaving spider. It is also known as the orbweaving cave spider and the cave orbweaver.",
+"url": "https://en.wikipedia.org/wiki/Meta_menardi",
+"lang": "en",
+"sci": "Species of spider"
+},
+"cave_beetle": {
+"title": "Leptodirus",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Leptodirus_hochenwartii.jpg/500px-Leptodirus_hochenwartii.jpg",
+"extract": "Leptodirus is a cave beetle in the family Leiodidae. The genus contains only the single species Leptodirus hochenwartii. It is a true troglobite, endemic to Slovenian, Croatian and, partly, Italian caves.",
+"url": "https://en.wikipedia.org/wiki/Leptodirus",
+"lang": "en",
+"sci": "Genus of beetles"
+},
+"cave_shrimp": {
+"title": "Troglocaris",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/PMS_-_jamska_kozica_Troglocaris.jpg/500px-PMS_-_jamska_kozica_Troglocaris.jpg",
+"extract": "Troglocaris is a genus of freshwater shrimp in the family Atyidae. These stygobitic, whitish and eyeless shrimp are found in Southern Europe. Although locally very common, the small ranges of the individual species make them highly vulnerable to habitat loss, for example by water extraction. Their underground habitat is often extremely stable; for example, the Vipavska jama cave in Slovenia is home to a population of T. anophthalmus, and its water only varies from 10 °C (50 °F) in the winter to 11 °C (52 °F) in the summer. In some Dinaric caves, notably Vjetrenica, as many as three species may occur together.",
+"url": "https://en.wikipedia.org/wiki/Troglocaris",
+"lang": "en",
+"sci": "Genus of crustaceans"
+},
+"cave_fish": {
+"title": "Mexican tetra",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Mexican_Tetra_%28Astyanax_mexicanus%29_%282687270083%29.jpg/500px-Mexican_Tetra_%28Astyanax_mexicanus%29_%282687270083%29.jpg",
+"extract": "The Mexican tetra, also known as the blind cave fish, blind cave characin or the blind cave tetra, is a species of freshwater ray-finned fish belonging to the family Acestrorhamphidae, the American characins. This fish is found in the lower Rio Grande, and the Nueces and Pecos Rivers in Texas, into the Central Plateau and eastern states of Mexico.",
+"url": "https://en.wikipedia.org/wiki/Mexican_tetra",
+"lang": "en",
+"sci": "Species of fish"
+},
+"firefly_cave": {
+"title": "Arachnocampa luminosa",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Arachnocampa_luminosa_290768813.jpg/500px-Arachnocampa_luminosa_290768813.jpg",
+"extract": "Arachnocampa luminosa, commonly known as New Zealand glowworm or simply glowworm, is a species of fungus gnat solely endemic to New Zealand. The larval stage and the imago produce a blue-green bioluminescence. The species is known to dwell in caves and on sheltered banks in the native bush where humidity is high, as moisture helps to maintain their silk structures that capture prey. Its Māori names are pūrātoke, from the verb \"to glow\", and titiwai, meaning \"lights reflected in water.\" This likely derives from the glowworms' presence near bodies of water, where their luminous displays are reflected.",
+"url": "https://en.wikipedia.org/wiki/Arachnocampa_luminosa",
+"lang": "en",
+"sci": "Species of fly"
+},
+"cave_millipede": {
+"title": "Brachycybe",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Brachycybe_lecontii_%28Platydesmida%29_millipede_%283680001399%29.jpg/500px-Brachycybe_lecontii_%28Platydesmida%29_millipede_%283680001399%29.jpg",
+"extract": "Brachycybe (Greek for \"short head\") is a genus of social millipedes with species in the United States and East Asia. Species in this genus are often referred to as \"feather millipedes\" due to their shape.",
+"url": "https://en.wikipedia.org/wiki/Brachycybe",
+"lang": "en",
+"sci": "Genus of millipedes"
+},
+"cave_springtail": {
+"title": "Springtail",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Orchesella_cincta.jpg/500px-Orchesella_cincta.jpg",
+"extract": "Springtails form the largest of the three lineages of modern hexapods that are no longer considered insects, the others being Protura and Diplura. Although the three lineages are sometimes grouped together in a class called Entognatha because they have internal mouthparts, they do not appear to be any more closely related to one another than they are to insects, which have external mouthparts. There are more than 9,000 species worldwide.",
+"url": "https://en.wikipedia.org/wiki/Springtail",
+"lang": "en",
+"sci": "Class of arthropods"
+},
+"cave_amphipod": {
+"title": "Niphargus",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Niphargus_ictus.jpg/500px-Niphargus_ictus.jpg",
+"extract": "Niphargus is by far the largest genus of its family, the Niphargidae, and the largest of all freshwater amphipod genera.",
+"url": "https://en.wikipedia.org/wiki/Niphargus",
+"lang": "en",
+"sci": "Genus of crustaceans"
+},
+"herald_moth": {
+"title": "Herald (moth)",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Scoliopteryx_libatrix01.jpg/500px-Scoliopteryx_libatrix01.jpg",
+"extract": "The herald is a moth of the family Erebidae. The species was first described by Carl Linnaeus in his 1758 10th edition of Systema Naturae.",
+"url": "https://en.wikipedia.org/wiki/Herald_(moth)",
+"lang": "en",
+"sci": "Species of moth"
+},
+"cave_snail": {
+"title": "Zospeum",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Zospeum-spelaeum_04.jpg/500px-Zospeum-spelaeum_04.jpg",
+"extract": "Zospeum is a genus of air-breathing land snails, terrestrial pulmonate gastropod mollusks in the family Ellobiidae, the salt marsh snails.",
+"url": "https://en.wikipedia.org/wiki/Zospeum",
+"lang": "en",
+"sci": "Genus of gastropods"
+},
+"olm": {
+"title": "동굴영원",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Proteus_anguinus_Postojnska_Jama_Slovenija.jpg/500px-Proteus_anguinus_Postojnska_Jama_Slovenija.jpg",
+"extract": "동굴도롱뇽 또는 동굴영원, 혹은 동굴도롱뇽붙이는 유럽에 서식하는 도롱뇽이다. 흔히 올름(olm)이라고 한다. 유럽 동남부 디나르알프스산맥(Dinaric Alps)의 카르스트 지대에서 발견된다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%8F%99%EA%B5%B4%EC%98%81%EC%9B%90",
+"lang": "ko",
+"sci": "유럽에 서식하는 도롱뇽이다."
 }
 }

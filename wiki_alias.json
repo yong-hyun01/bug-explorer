@@ -1482,5 +1482,143 @@
    "en",
    "House dust mite"
   ]
+ ],
+ "horseshoe_bat": [
+  [
+   "ko",
+   "관박쥐"
+  ],
+  [
+   "en",
+   "Greater horseshoe bat"
+  ]
+ ],
+ "orange_bat": [
+  [
+   "ko",
+   "붉은박쥐"
+  ],
+  [
+   "en",
+   "Myotis rufoniger"
+  ],
+  [
+   "en",
+   "Myotis formosus"
+  ]
+ ],
+ "cave_spider": [
+  [
+   "ko",
+   "동굴왕거미"
+  ],
+  [
+   "en",
+   "Meta menardi"
+  ]
+ ],
+ "cave_beetle": [
+  [
+   "en",
+   "Leptodirus"
+  ],
+  [
+   "commons",
+   "Leptodirus hochenwartii"
+  ]
+ ],
+ "cave_shrimp": [
+  [
+   "en",
+   "Troglocaris"
+  ],
+  [
+   "commons",
+   "Troglocaris anophthalmus"
+  ]
+ ],
+ "cave_fish": [
+  [
+   "ko",
+   "멕시코테트라"
+  ],
+  [
+   "en",
+   "Mexican tetra"
+  ],
+  [
+   "commons",
+   "Astyanax mexicanus blind"
+  ]
+ ],
+ "firefly_cave": [
+  [
+   "en",
+   "Arachnocampa luminosa"
+  ],
+  [
+   "en",
+   "Arachnocampa"
+  ]
+ ],
+ "cave_millipede": [
+  [
+   "en",
+   "Brachycybe"
+  ],
+  [
+   "commons",
+   "cave millipede"
+  ]
+ ],
+ "cave_springtail": [
+  [
+   "commons",
+   "cave springtail Collembola"
+  ],
+  [
+   "en",
+   "Springtail"
+  ]
+ ],
+ "cave_amphipod": [
+  [
+   "en",
+   "Niphargus"
+  ],
+  [
+   "ko",
+   "옆새우"
+  ]
+ ],
+ "herald_moth": [
+  [
+   "ko",
+   "동굴나방"
+  ],
+  [
+   "en",
+   "Scoliopteryx libatrix"
+  ]
+ ],
+ "cave_snail": [
+  [
+   "en",
+   "Zospeum"
+  ],
+  [
+   "commons",
+   "Zospeum"
+  ]
+ ],
+ "olm": [
+  [
+   "ko",
+   "올름"
+  ],
+  [
+   "en",
+   "Olm"
+  ]
  ]
 }
