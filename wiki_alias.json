@@ -1620,5 +1620,125 @@
    "en",
    "Olm"
   ]
+ ],
+ "deathstalker": [
+  [
+   "ko",
+   "데스스토커"
+  ],
+  [
+   "en",
+   "Deathstalker"
+  ]
+ ],
+ "fog_beetle": [
+  [
+   "ko",
+   "나미브사막거저리"
+  ],
+  [
+   "en",
+   "Namib desert beetle"
+  ],
+  [
+   "en",
+   "Stenocara gracilipes"
+  ]
+ ],
+ "sacred_scarab": [
+  [
+   "ko",
+   "왕쇠똥구리"
+  ],
+  [
+   "en",
+   "Scarabaeus sacer"
+  ]
+ ],
+ "camel_spider": [
+  [
+   "ko",
+   "낙타거미"
+  ],
+  [
+   "en",
+   "Solifugae"
+  ]
+ ],
+ "tarantula": [
+  [
+   "ko",
+   "타란툴라"
+  ],
+  [
+   "en",
+   "Tarantula"
+  ]
+ ],
+ "silver_ant": [
+  [
+   "ko",
+   "사하라은개미"
+  ],
+  [
+   "en",
+   "Saharan silver ant"
+  ]
+ ],
+ "honeypot_ant": [
+  [
+   "ko",
+   "꿀단지개미"
+  ],
+  [
+   "en",
+   "Honeypot ant"
+  ]
+ ],
+ "desert_centipede": [
+  [
+   "en",
+   "Scolopendra heros"
+  ]
+ ],
+ "thorny_devil": [
+  [
+   "ko",
+   "가시도마뱀"
+  ],
+  [
+   "en",
+   "Thorny devil"
+  ]
+ ],
+ "desert_locust": [
+  [
+   "ko",
+   "사막메뚜기"
+  ],
+  [
+   "en",
+   "Desert locust"
+  ]
+ ],
+ "wheel_spider": [
+  [
+   "en",
+   "Carparachne aureoflava"
+  ],
+  [
+   "en",
+   "Wheel spider"
+  ]
+ ],
+ "tarantula_hawk": [
+  [
+   "ko",
+   "타란툴라대모벌"
+  ],
+  [
+   "en",
+   "Tarantula hawk"
+  ]
  ]
 }

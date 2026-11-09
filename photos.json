@@ -2095,5 +2095,101 @@
 "url": "https://ko.wikipedia.org/wiki/%EB%8F%99%EA%B5%B4%EC%98%81%EC%9B%90",
 "lang": "ko",
 "sci": "유럽에 서식하는 도롱뇽이다."
+},
+"deathstalker": {
+"title": "데스스토커",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Deathstalker_%28Leiurus_quinquestriatus%29_7.jpg/500px-Deathstalker_%28Leiurus_quinquestriatus%29_7.jpg",
+"extract": "데스스토커(deathstalker, 학명: Leiurus quinquestriatus 레이우루스 쿠인쿠에스트리아투스[*])는 전갈과에 속하는 전갈이다. 노란색에 몸길이 30~77mm(평균 58mm)이다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%8D%B0%EC%8A%A4%EC%8A%A4%ED%86%A0%EC%BB%A4",
+"lang": "ko",
+"sci": ""
+},
+"fog_beetle": {
+"title": "Stenocara gracilipes",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Stenocara_gracilipes.jpg/500px-Stenocara_gracilipes.jpg",
+"extract": "Stenocara gracilipes, the racingstripe darkling beetle, is a species of beetle that is native to the Namib Desert in southern Africa. This is one of the most arid areas of the world, receiving only 1.4 centimetres (0.55 in) of rain per year. The beetle is able to survive by collecting water on its bumpy back surface from early morning fogs.",
+"url": "https://en.wikipedia.org/wiki/Stenocara_gracilipes",
+"lang": "en",
+"sci": "Species of beetle"
+},
+"sacred_scarab": {
+"title": "Scarabaeus sacer",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Scarabaeus.sacer.jpg/500px-Scarabaeus.sacer.jpg",
+"extract": "Scarabaeus sacer, common name sacred scarab, is the type species of the genus Scarabaeus and the family Scarabaeidae. This dung beetle is native to southern Europe, North Africa, West Asia, and was venerated in ancient Egypt.",
+"url": "https://en.wikipedia.org/wiki/Scarabaeus_sacer",
+"lang": "en",
+"sci": "Species of beetle"
+},
+"camel_spider": {
+"title": "낙타거미목",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Sunspider.jpg/500px-Sunspider.jpg",
+"extract": "낙타거미목(영어: Solifugae) 또는 피일목은 동물계, 절지동물문, 협각아문, 거미강에 속하는, '태양거미(영어: Sun spider)' 또는 '바람전갈(영어: Wind scorpion)', '낙타거미(영어: Camel spiders)'라고도 불리는 동물계의 한 목이다. 이 목은 153개의 속과 1,000 종이 넘는 종들을 포함한다. 이름에 거미가 들어감에도 불구하고, 완전한 거미나 완전한 전갈의 형태와는 차이를 보인다. 대부분의 거미들과 비슷하게 낙타거미 또한 두흉부와 후체부에 두개의 합체절이 있다. 두흉부는 종 대부분에서 눈에 띄게 큰 두 개의 앞쪽 끝 협각을 지탱한다. 협각은 턱의 역할을 하며 많은 종들에서 울음소리를 내기 위해 사용된다. 전갈과 다르게 꼬리에 세번째 협각을 갖지 않는다. 피일목의 대부분의 종들은 건조한 기후에서 서식하며, 육지에서 서식하는 절지동물과 작은 동물들을 먹이로한다. 가장 큰 종은 다리를 포함하여 12-15cm까지 자란다. 많은 도시전설에서 낙타거미의 크기와 속도, 인간에 대한 잠재적인 위험을 과장해서 말하는데, 이것은 사실과는 다른, 어디까지나 도시전설의 이야기이다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%82%99%ED%83%80%EA%B1%B0%EB%AF%B8%EB%AA%A9",
+"lang": "ko",
+"sci": "동물계의 한 목"
+},
+"tarantula": {
+"title": "타란툴라",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Lasiodora_parahybana_2009_G03.jpg/500px-Lasiodora_parahybana_2009_G03.jpg",
+"extract": "타란툴라(tarantula)는 짐승빛거미과(또는 대형열대거미과, Theraphosidae)에 속하는, 털이 북슬북슬하고 몸집이 큰 거미의 총칭이다. 2023년 12월 기준, 166속 1,100종이 동정되어 있다. '타란툴라'라는 단어는 보통 짐승빛거미과의 구성종들을 뜻하지만, 원실젖거미하목으로 같이 분류되어 있는 이외 다른 종들도 흔히 '타란툴라'로 불리거나 '타란툴라붙이'로 불린다.",
+"url": "https://ko.wikipedia.org/wiki/%ED%83%80%EB%9E%80%ED%88%B4%EB%9D%BC",
+"lang": "ko",
+"sci": "짐승빛거미과에 속하는 거미"
+},
+"silver_ant": {
+"title": "사하라은개미",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Saharan_Silver_Ants_Erg_Chebbi_2011.jpg/500px-Saharan_Silver_Ants_Erg_Chebbi_2011.jpg",
+"extract": "사하라은개미는 사하라 사막에 살아가는 개미의 종류다. 사막개미와 사하라사막개미와는 근연종이다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%82%AC%ED%95%98%EB%9D%BC%EC%9D%80%EA%B0%9C%EB%AF%B8",
+"lang": "ko",
+"sci": ""
+},
+"honeypot_ant": {
+"title": "꿀단지개미",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/HoneyAnt.jpg/500px-HoneyAnt.jpg",
+"extract": "꿀개미Honey ants라고도 불리는 꿀단지개미Honeypot ants는 다른 일개미들한테 액상형의 먹이를 복부가 크게 부풀어오를 정도로 받아먹는 전문화된 일개미들(repletes, plerergates, rotunds)이 있는 개미들이다. 이후 다른 개미들은 이 개미들한테 영양분을 받아먹는다. 이 개미들은 살아있는 식량창고의 역할을 한다. 꿀단지개미라고 불리는 개미들은 왕개미속, 미르메코시스투스속과 같은 몇몇 속들에 속해 있다. 꿀단지개미는 1881년에 헨리 크리스토퍼 맥쿡이 최초로 기록했으며 1908년에 윌리엄 모턴 휠러가 좀 더 자세히 묘사하였다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%BF%80%EB%8B%A8%EC%A7%80%EA%B0%9C%EB%AF%B8",
+"lang": "ko",
+"sci": ""
+},
+"desert_centipede": {
+"title": "Scolopendra heros",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Scolopendra_heros.jpg/500px-Scolopendra_heros.jpg",
+"extract": "Scolopendra heros, commonly known as the Arizona desert centipede, giant desert centipede, giant Sonoran centipede, Texas black-tailed centipede, Texas redheaded centipede, and giant redheaded centipede, is a species of North American centipede found in the Southwestern United States and Northern Mexico.",
+"url": "https://en.wikipedia.org/wiki/Scolopendra_heros",
+"lang": "en",
+"sci": "Species of centipede"
+},
+"thorny_devil": {
+"title": "가시도마뱀",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Thornydevil.jpg/500px-Thornydevil.jpg",
+"extract": "가시도마뱀(Thorny lizard)은 도깨비도마뱀(Thorny devil)이라고도 불리며 아가마과에 속하는 도마뱀의 일종이다. 이 종은 오스트레일리아의 토착종이며 가시도마뱀속(Moloch)의 유일한 종이다. 총 길이는 21cm까지 자라며 암컷이 수컷보다 일반적으로 더 크다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%B0%80%EC%8B%9C%EB%8F%84%EB%A7%88%EB%B1%80",
+"lang": "ko",
+"sci": ""
+},
+"desert_locust": {
+"title": "사막메뚜기",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/SGR_laying.jpg/500px-SGR_laying.jpg",
+"extract": "사막메뚜기(Schistocerca gregaria)는 메뚜기의 일종으로, 주기적으로 떼를 짓는 메뚜기목 메뚜기과의 짧은뿔메뚜기이다. 주로 북부 및 동부 아프리카, 아라비아반도, 그리고 서남아시아의 사막과 건조 지대에서 발견된다. 개체수가 급증하는 해에는 북쪽으로는 남유럽 일부 지역, 남쪽으로는 동부 아프리카, 동쪽으로는 북부 인도까지 서식지가 확장될 수 있다. 사막메뚜기는 주기적으로 몸의 형태가 변하며, 환경 조건에 따라 여러 세대에 걸쳐 혼자 사는 짧은 날개를 가진 높은 번식력의 비이동성 형태에서, 새로운 지역으로 멀리 이동할 수 있는 무리 생활을 하는 긴 날개의 이동성 형태로 변할 수 있다. 따라서 일부 해에는 메뚜기 재앙을 형성하여 새로운 지역을 침범하고, 작물을 포함한 모든 식생을 소비할 수 있으며, 다른 시기에는 소수가 눈에 띄지 않게 살 수 있다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%82%AC%EB%A7%89%EB%A9%94%EB%9A%9C%EA%B8%B0",
+"lang": "ko",
+"sci": "메뚜기과에 속한 아종"
+},
+"wheel_spider": {
+"title": "Wheel spider",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Carparachne_aureoflava_110456212.jpg/500px-Carparachne_aureoflava_110456212.jpg",
+"extract": "The wheel spider or golden wheel spider is a huntsman spider native to the Namib Desert of Southern Africa. This spider is distinct from Leucorchestris arenicola, a spider sharing the same common name and found in the same locale. The spider escapes parasitic pompilid wasps by flipping onto its side and cartwheeling down sand dunes at speeds of up to 44 turns per second.",
+"url": "https://en.wikipedia.org/wiki/Wheel_spider",
+"lang": "en",
+"sci": "Huntsman spider native to the Namib Desert"
+},
+"tarantula_hawk": {
+"title": "Tarantula hawk",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Tarantula_Hawk%2C_Southeastern_Colorado_P1270150b.jpg/500px-Tarantula_Hawk%2C_Southeastern_Colorado_P1270150b.jpg",
+"extract": "A tarantula hawk is a spider wasp (Pompilidae) that preys on tarantulas. Tarantula hawks belong to any of the many species in the genera Pepsis and Hemipepsis. They are some of the largest parasitoid wasps, using their sting to paralyze their prey before dragging it into a brood nest as living food; a single egg is laid on the prey, hatching to a larva, which then eats the still-living host. They are found on all continents other than Europe and Antarctica.",
+"url": "https://en.wikipedia.org/wiki/Tarantula_hawk",
+"lang": "en",
+"sci": "Common name for two genera of wasps"
 }
 }
