@@ -1740,5 +1740,229 @@
    "en",
    "Tarantula hawk"
   ]
+ ],
+ "mitten_crab": [
+  [
+   "ko",
+   "참게"
+  ],
+  [
+   "en",
+   "Chinese mitten crab"
+  ]
+ ],
+ "minnow": [
+  [
+   "ko",
+   "피라미"
+  ],
+  [
+   "en",
+   "Zacco platypus"
+  ]
+ ],
+ "loach": [
+  [
+   "ko",
+   "미꾸라지"
+  ],
+  [
+   "en",
+   "Misgurnus mizolepis"
+  ]
+ ],
+ "medaka": [
+  [
+   "ko",
+   "송사리"
+  ],
+  [
+   "en",
+   "Japanese rice fish"
+  ]
+ ],
+ "water_spider": [
+  [
+   "ko",
+   "물거미"
+  ],
+  [
+   "en",
+   "Diving bell spider"
+  ]
+ ],
+ "mayfly_nymph": [
+  [
+   "en",
+   "Baetidae"
+  ],
+  [
+   "en",
+   "Heptageniidae"
+  ]
+ ],
+ "black_jewelwing": [
+  [
+   "ko",
+   "검은물잠자리"
+  ],
+  [
+   "en",
+   "Calopteryx atrata"
+  ]
+ ],
+ "river_clubtail": [
+  [
+   "ko",
+   "어리장수잠자리"
+  ],
+  [
+   "en",
+   "Sieboldius albardae"
+  ],
+  [
+   "en",
+   "Sieboldius"
+  ],
+  [
+   "commons",
+   "Category:Sieboldius albardae"
+  ],
+  [
+   "en",
+   "Gomphidae"
+  ]
+ ],
+ "melania": [
+  [
+   "ko",
+   "다슬기"
+  ],
+  [
+   "en",
+   "Semisulcospira libertina"
+  ]
+ ],
+ "korean_frog": [
+  [
+   "ko",
+   "참개구리"
+  ],
+  [
+   "en",
+   "Pelophylax nigromaculatus"
+  ]
+ ],
+ "freshwater_shrimp": [
+  [
+   "ko",
+   "새뱅이"
+  ],
+  [
+   "ko",
+   "생이"
+  ],
+  [
+   "en",
+   "Neocaridina denticulata"
+  ],
+  [
+   "en",
+   "Neocaridina davidi"
+  ],
+  [
+   "en",
+   "Neocaridina"
+  ]
+ ],
+ "crayfish": [
+  [
+   "ko",
+   "가재"
+  ],
+  [
+   "en",
+   "Cambaroides similis"
+  ]
+ ],
+ "salamander": [
+  [
+   "ko",
+   "도롱뇽"
+  ],
+  [
+   "en",
+   "Hynobius leechii"
+  ]
+ ],
+ "firebelly_toad": [
+  [
+   "ko",
+   "무당개구리"
+  ],
+  [
+   "en",
+   "Oriental fire-bellied toad"
+  ]
+ ],
+ "dace": [
+  [
+   "ko",
+   "버들치"
+  ],
+  [
+   "en",
+   "Rhynchocypris oxycephalus"
+  ]
+ ],
+ "amphipod": [
+  [
+   "ko",
+   "옆새우"
+  ],
+  [
+   "en",
+   "Gammarus"
+  ]
+ ],
+ "planarian": [
+  [
+   "ko",
+   "플라나리아"
+  ],
+  [
+   "en",
+   "Planarian"
+  ]
+ ],
+ "caddis_larva": [
+  [
+   "en",
+   "Limnephilidae"
+  ],
+  [
+   "en",
+   "Caddisfly"
+  ]
+ ],
+ "stonefly_nymph": [
+  [
+   "en",
+   "Perlidae"
+  ],
+  [
+   "en",
+   "Plecoptera"
+  ]
+ ],
+ "valley_frog": [
+  [
+   "ko",
+   "계곡산개구리"
+  ],
+  [
+   "en",
+   "Rana huanrenensis"
+  ]
  ]
 }

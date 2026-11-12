@@ -246,6 +246,8 @@ const ICO = {
   home: ['nnnnnnnnnnnnnnnn','nnnnnnnnnnnnnnnn','nnwwwwwwnnnnnnnn','nnwmmmmwnnnyyynn','nnwmmmmwnnyyyyyn','nnwwwwwwnnnnknnn','nnwmmmmwnnnnknnn','nnwmmmmwnnnnknnn','nnwwwwwwnnrrrrrr','nnnnnnnnnrrrrrrr','nnnnnnnnnrrrrrrr','bbbbbbbbbbbbbbbb','bBbbBbbBbbBbbBbb','bbbbbbbbbbbbbbbb','................','................'],
   cave: ['................','....ssssssss....','..ssssssssssss..','.sssSssssssSsss.','.ssssseeeesssss.','ssssseeeeeesssss','ssssseeeeeesssss','sssseeeeeeeessss','sssseeeeeeeessss','sssseeeeeeeessss','sssseeeeeeeessss','sssseeeeeeeessss','gGggeeeeeeeeggGg','gggggggggggggggg','................','................'],
   desert: ['................','..........yy....','.........yyyy...','..........yy....','................','....GG..........','.GG.GG..........','.GG.GG..........','.GGGGG..........','....GG..........','....GG..........','NNNNNNNNNNNNNNNN','nnnnnnnnnnnnnnnn','nNnnnNnnnnNnnnNn','nnnnnnnnnnnnnnnn','................'],
+  river: ['................','................','GGGGGGGGGGGGGGGG','gggGggggGgggGggg','gggggggggggggggg','mmmmmmmmmmmmmmmm','mmwwmmmmwwmmmmww','mmmmmmmmmmmmmmmm','wwmmmmwwmmmmwwmm','mmmmmmmmmmmmmmmm','mmmmwwmmmmwwmmmm','mmmmmmmmmmmmmmmm','gggggggggggggggg','GGGGGGGGGGGGGGGG','................','................'],
+  valley: ['................','.......S........','......SSS.......','.....SSsSS......','....SSSwSSS.....','...SSSSwSSSS....','..SSSSSwSSSSS...','.SSGSSSwSSSGSS..','SSGGGSSwSSGGGSSS','GGGGGSSwSSGGGGGG','GGGGGSwwwSGGGGGG','GGGGSwwwwwSGGGGG','mmmmmwmmmwmmmmmm','mmmmmmmmmmmmmmmm','................','................'],
   bug: ['................','....e......e....','.....e....e.....','......eeee......','.....eeeeee.....','....rrrrrrrr....','...rrerrrrerr...','...rrrrrrrrrr...','...rrrrerrrrr...','..k.rrrrrrrr.k..','...krrerrerrk...','....rrrrrrrr....','.....rrrrrr.....','......rrrr......','................','................'],
 };
 function icon(name) {
@@ -281,6 +283,8 @@ const PLACES = [
   { id: 'meadow', name: '풀밭', hint: '꽃과 풀 사이를 잘 봐요', sky: ['#9FDBFF', '#D8F1FF'], nightSky: ['#141B38', '#2B3A66'] },
   { id: 'forest', name: '숲', hint: '나무 위와 아래를 살펴요', sky: ['#8FD3FF', '#CFF0E0'], nightSky: ['#0F1530', '#1E2A52'] },
   { id: 'pond', name: '연못', hint: '물 위와 물속을 봐요', sky: ['#A8E0FF', '#E3F5FF'], nightSky: ['#121A3A', '#223060'] },
+  { id: 'river', name: '강', hint: '물속과 물가 돌 밑을 봐요', sky: ['#9CD8FF', '#E6F6FF'], nightSky: ['#101A3A', '#1E2E5E'] },
+  { id: 'valley', name: '계곡', hint: '바위 밑과 맑은 물속을 봐요', sky: ['#A4D4F4', '#E0F2FF'], nightSky: ['#0E1630', '#1C2A52'] },
   { id: 'yard', name: '마당', hint: '화분 밑과 벽을 살펴요', sky: ['#B5E3FF', '#EAF7FF'], nightSky: ['#171C3A', '#2E3A6A'] },
   { id: 'home', name: '집안', hint: '가구 밑과 구석을 살펴요', sky: ['#FFF4DC', '#F6E6C8'], nightSky: ['#1C1A30', '#2C2A48'] },
   { id: 'sea', name: '바다', hint: '모래와 바위 틈을 봐요', sky: ['#8FD3FF', '#E3F5FF'], nightSky: ['#0F1A3A', '#1E3060'] },
@@ -409,6 +413,8 @@ function draw() {
   if (P.id === 'home') { drawHome(N); drawActors(); return; }
   if (P.id === 'cave') { drawCave(); drawActors(); return; }
   if (P.id === 'desert') { drawDesert(N); drawActors(); return; }
+  if (P.id === 'river') { drawRiver(N); drawActors(); return; }
+  if (P.id === 'valley') { drawValley(N); drawActors(); return; }
   // 해/달/별 (카메라 0.1)
   const sx = 330 - cam * .1;
   if (N) { ctx.fillStyle = '#FFF'; for (let i = 0; i < 60; i++) { const px = ((i * 97 - cam * .05) % W + W) % W, py = (i * 53) % 200; ctx.globalAlpha = .4 + Math.sin(t * 2 + i) * .4; ctx.fillRect(px, py, 2, 2); } ctx.globalAlpha = 1; ctx.fillStyle = '#FFF4C2'; ctx.beginPath(); ctx.arc(sx, 60, 26, 0, 6.3); ctx.fill(); ctx.fillStyle = sky[0]; ctx.beginPath(); ctx.arc(sx + 12, 52, 22, 0, 6.3); ctx.fill(); }
@@ -710,6 +716,62 @@ function drawDesert(N) {
   { const kx = 700 - cam; if (kx > -40 && kx < W + 40) { ctx.fillStyle = N ? '#B8B0C8' : '#F6EEDC'; ctx.beginPath(); ctx.ellipse(kx, GROUND + 56, 16, 11, 0, 0, 6.3); ctx.fill(); ctx.fillRect(kx - 8, GROUND + 60, 16, 10); ctx.fillStyle = N ? '#2E2A50' : '#A8784A'; ctx.beginPath(); ctx.arc(kx - 6, GROUND + 56, 3.5, 0, 6.3); ctx.arc(kx + 6, GROUND + 56, 3.5, 0, 6.3); ctx.fill(); } }
   if (!N) { ctx.fillStyle = 'rgba(255,200,120,.08)'; ctx.fillRect(0, 0, W, H); } else { ctx.fillStyle = 'rgba(10,15,40,.35)'; ctx.fillRect(0, 0, W, H); }
 }
+function drawSkyBits(N, sky) {
+  // 해/달/별/구름 (공통)
+  const sx = 330 - cam * .1;
+  if (N) { ctx.fillStyle = '#FFF'; for (let i = 0; i < 60; i++) { const px = ((i * 97 - cam * .05) % W + W) % W, py = (i * 53) % 200; ctx.globalAlpha = .4 + Math.sin(t * 2 + i) * .4; ctx.fillRect(px, py, 2, 2); } ctx.globalAlpha = 1; ctx.fillStyle = '#FFF4C2'; ctx.beginPath(); ctx.arc(sx, 60, 26, 0, 6.3); ctx.fill(); ctx.fillStyle = sky[0]; ctx.beginPath(); ctx.arc(sx + 12, 52, 22, 0, 6.3); ctx.fill(); }
+  else { const sg = ctx.createRadialGradient(sx, 60, 10, sx, 60, 90); sg.addColorStop(0, 'rgba(255,240,170,.9)'); sg.addColorStop(1, 'rgba(255,240,170,0)'); ctx.fillStyle = sg; ctx.fillRect(sx - 110, -30, 220, 200); ctx.fillStyle = '#FFD54A'; ctx.beginPath(); ctx.arc(sx, 60, 26, 0, 6.3); ctx.fill(); }
+  if (!N) { ctx.fillStyle = 'rgba(255,255,255,.85)'; for (let i = 0; i < 6; i++) { const cx = ((t * 8 + i * 150 - cam * .2) % (W + 120) + W + 120) % (W + 120) - 60, cy = 50 + (i % 3) * 28; ctx.beginPath(); ctx.arc(cx, cy, 16, 0, 6.3); ctx.arc(cx + 18, cy - 8, 20, 0, 6.3); ctx.arc(cx + 40, cy, 15, 0, 6.3); ctx.fill(); } }
+}
+function drawRiver(N) {
+  const P = placeOf(); drawSkyBits(N, N ? P.nightSky : P.sky);
+  // 먼 산 (0.3)
+  ctx.fillStyle = N ? '#1C2B45' : '#8DD08A'; ctx.beginPath(); ctx.moveTo(0, 240); for (let x = 0; x <= W; x += 10) { const wx = x + cam * .3; ctx.lineTo(x, 190 + Math.sin(wx * .03) * 18 + Math.sin(wx * .11) * 8); } ctx.lineTo(W, 240); ctx.fill();
+  // 건너편 둑: 나무줄 (0.6) 과 풀밭
+  for (let i = 0; i < 16; i++) { const tx = ((i * 92 + 30 - cam * .6) % (W + 100) + W + 100) % (W + 100) - 50, h = 34 + (i % 3) * 10; ctx.fillStyle = N ? '#2B1C10' : '#6B4A2B'; ctx.fillRect(tx - 3, 236 - h * .5, 6, h * .5 + 2); ctx.fillStyle = N ? '#14262E' : (i % 2 ? '#3F8A2A' : '#56A43A'); ctx.beginPath(); ctx.arc(tx, 236 - h * .6, h * .42, 0, 6.3); ctx.arc(tx - 10, 236 - h * .45, h * .3, 0, 6.3); ctx.arc(tx + 10, 236 - h * .45, h * .3, 0, 6.3); ctx.fill(); }
+  ctx.fillStyle = N ? '#1F3A1F' : '#7CC24A'; ctx.fillRect(0, 232, W, 20); ctx.fillStyle = N ? '#162B16' : '#4E9A2E'; ctx.fillRect(0, 246, W, 6);
+  // 갈대 (0.8)
+  for (let i = 0; i < 26; i++) { const rx = ((i * 58 + 14 - cam * .8) % (W + 40) + W + 40) % (W + 40) - 20, h = 26 + (i % 4) * 6, sway = Math.sin(t * 1.5 + i) * 2; ctx.strokeStyle = N ? '#2E4A2E' : '#5FAE5A'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(rx, 250); ctx.quadraticCurveTo(rx + sway, 250 - h * .6, rx + sway * 2, 250 - h); ctx.stroke(); if (i % 3 === 0) { ctx.fillStyle = N ? '#4A3220' : '#8A5A2B'; ctx.fillRect(rx + sway * 2 - 2, 250 - h - 10, 5, 12); } }
+  // 강물
+  const wg = ctx.createLinearGradient(0, WATER, 0, H); wg.addColorStop(0, N ? '#22406E' : '#7FCBF5'); wg.addColorStop(1, N ? '#101C3A' : '#2E86C8'); ctx.fillStyle = wg; ctx.fillRect(0, WATER, W, H - WATER);
+  // 흐르는 물결 (왼쪽 → 오른쪽)
+  ctx.strokeStyle = N ? 'rgba(200,220,255,.22)' : 'rgba(255,255,255,.45)'; ctx.lineWidth = 2; for (let i = 0; i < 9; i++) { const wy = WATER + 12 + i * 16; for (let k = 0; k < 4; k++) { const len = 30 + (i * 7 + k * 13) % 30, sx2 = (((k * 130 + i * 47) + t * (40 + i * 5) - cam) % (W + 80) + W + 80) % (W + 80) - 40; ctx.beginPath(); ctx.moveTo(sx2, wy); ctx.quadraticCurveTo(sx2 + len * .5, wy - 2 + Math.sin(t * 3 + i + k) * 1.5, sx2 + len, wy); ctx.stroke(); } }
+  // 물속 바위와 모래톱
+  for (const rx0 of [120, 480, 760, 1040]) { const px = rx0 - cam; if (px < -60 || px > W + 60) continue; ctx.fillStyle = N ? '#2E3A54' : '#7A8A94'; ctx.beginPath(); ctx.ellipse(px, WATER + 14, 30, 11, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = N ? '#3A4866' : '#A4B2BA'; ctx.beginPath(); ctx.ellipse(px - 6, WATER + 9, 18, 6, -.2, 0, 6.3); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(px - 32, WATER + 16); ctx.quadraticCurveTo(px - 38, WATER + 20, px - 44 - Math.sin(t * 4) * 2, WATER + 18); ctx.moveTo(px + 32, WATER + 16); ctx.quadraticCurveTo(px + 38, WATER + 20, px + 44 + Math.sin(t * 4) * 2, WATER + 18); ctx.stroke(); }
+  for (let i = 0; i < 40; i++) { const px = ((seeded(i + 5000) * WW - cam) % (W + 20) + W + 20) % (W + 20) - 10, py = 330 + seeded(i + 5100) * 66; ctx.fillStyle = N ? '#2A3A5A' : (i % 3 ? '#5A9AC8' : '#8ABEE0'); ctx.beginPath(); ctx.ellipse(px, py, 3 + seeded(i + 5200) * 5, 2 + seeded(i + 5200) * 2, 0, 0, 6.3); ctx.fill(); }
+  ctx.fillStyle = N ? '#3A4A6A' : '#B8D8E8'; ctx.beginPath(); ctx.moveTo(0, H); for (let x = 0; x <= W; x += 10) ctx.lineTo(x, 376 + Math.sin((x + cam) * .02) * 10 + Math.sin((x + cam) * .07) * 4); ctx.lineTo(W, H); ctx.fill();
+  // 나무 다리 (0.9)
+  { const bx = 640 - cam * .9; if (bx > -120 && bx < W + 120) { ctx.fillStyle = N ? '#3A2A18' : '#8A5A2B'; for (const dx of [-70, -24, 24, 70]) ctx.fillRect(bx + dx - 3, 236, 6, 34); ctx.fillStyle = N ? '#5A4428' : '#B0783B'; ctx.fillRect(bx - 90, 230, 180, 10); ctx.fillStyle = N ? '#3A2A18' : '#8A5A2B'; for (let k = 0; k < 9; k++) ctx.fillRect(bx - 86 + k * 21, 231, 2, 8); ctx.fillRect(bx - 90, 214, 180, 3); for (const dx of [-80, -40, 0, 40, 80]) ctx.fillRect(bx + dx - 1, 214, 3, 16); } }
+  if (N) { ctx.fillStyle = 'rgba(10,15,40,.25)'; ctx.fillRect(0, 0, W, H); }
+}
+function drawValley(N) {
+  const P = placeOf(); drawSkyBits(N, N ? P.nightSky : P.sky);
+  // 산봉우리 (0.2 / 0.4)
+  const peaks = (speed, base, amp, col, off) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, 300); for (let x = 0; x <= W; x += 8) { const wx = x + cam * speed + off; ctx.lineTo(x, base - Math.abs(Math.sin(wx * .012)) * amp - Math.abs(Math.sin(wx * .031 + 1)) * amp * .35); } ctx.lineTo(W, 300); ctx.fill(); };
+  peaks(.2, 220, 110, N ? '#1A2440' : '#8FB8D8', 0); peaks(.4, 246, 80, N ? '#15203A' : '#5F9A7A', 300);
+  // 양쪽 숲 (0.7): 침엽수
+  for (let i = 0; i < 24; i++) { const tx = ((i * 52 + 10 - cam * .7) % (W + 60) + W + 60) % (W + 60) - 30, h = 60 + (i % 3) * 16; ctx.fillStyle = N ? '#2B1C10' : '#5A3A1E'; ctx.fillRect(tx - 3, 230, 6, 20); ctx.fillStyle = N ? '#122A1E' : (i % 2 ? '#2E6B45' : '#3A7E52'); for (let k = 0; k < 3; k++) { const y = 238 - k * (h * .3), w = 24 - k * 6; ctx.beginPath(); ctx.moveTo(tx - w, y); ctx.lineTo(tx, y - h * .42); ctx.lineTo(tx + w, y); ctx.fill(); } }
+  // 절벽과 폭포 (0.85)
+  { const fx = 520 - cam * .85; if (fx > -160 && fx < W + 160) {
+    ctx.fillStyle = N ? '#2A3448' : '#7A8A8E'; ctx.beginPath(); ctx.moveTo(fx - 120, 250); ctx.lineTo(fx - 110, 150); ctx.lineTo(fx - 70, 120); ctx.lineTo(fx - 30, 130); ctx.lineTo(fx - 26, 250); ctx.fill(); ctx.beginPath(); ctx.moveTo(fx + 26, 250); ctx.lineTo(fx + 30, 126); ctx.lineTo(fx + 70, 116); ctx.lineTo(fx + 112, 146); ctx.lineTo(fx + 120, 250); ctx.fill();
+    ctx.fillStyle = N ? '#36425A' : '#A0ACB0'; ctx.beginPath(); ctx.moveTo(fx - 100, 160); ctx.lineTo(fx - 72, 134); ctx.lineTo(fx - 44, 150); ctx.lineTo(fx - 60, 190); ctx.fill(); ctx.beginPath(); ctx.moveTo(fx + 44, 148); ctx.lineTo(fx + 72, 130); ctx.lineTo(fx + 100, 160); ctx.lineTo(fx + 70, 196); ctx.fill();
+    ctx.fillStyle = N ? '#1E3A2E' : '#3E8A4E'; for (const [dx, dy] of [[-96, 200], [-50, 232], [96, 206], [52, 236]]) { ctx.beginPath(); ctx.ellipse(fx + dx, dy, 14, 7, 0, 0, 6.3); ctx.fill(); }
+    const fg = ctx.createLinearGradient(fx - 26, 0, fx + 26, 0); fg.addColorStop(0, N ? 'rgba(180,200,230,.55)' : 'rgba(255,255,255,.75)'); fg.addColorStop(.5, N ? 'rgba(220,235,255,.9)' : 'rgba(255,255,255,.98)'); fg.addColorStop(1, N ? 'rgba(180,200,230,.55)' : 'rgba(255,255,255,.75)'); ctx.fillStyle = fg; ctx.fillRect(fx - 26, 124, 52, 128);
+    ctx.strokeStyle = N ? 'rgba(140,170,210,.5)' : 'rgba(170,215,240,.6)'; ctx.lineWidth = 2; for (let k = 0; k < 6; k++) { const lx = fx - 20 + k * 8; ctx.beginPath(); ctx.moveTo(lx, 124); for (let y = 124; y <= 252; y += 8) ctx.lineTo(lx + Math.sin((y - t * 160) * .08 + k) * 2, y); ctx.stroke(); }
+    ctx.fillStyle = N ? 'rgba(200,220,255,.5)' : 'rgba(255,255,255,.8)'; for (let k = 0; k < 7; k++) { const r = 8 + ((k * 7 + Math.floor(t * 6)) % 5) * 2; ctx.beginPath(); ctx.arc(fx - 36 + k * 12, 256 + Math.sin(t * 5 + k) * 3, r, 0, 6.3); ctx.fill(); }
+  } }
+  // 계곡물
+  const wg = ctx.createLinearGradient(0, 244, 0, H); wg.addColorStop(0, N ? '#1E4A5A' : '#8FE0E8'); wg.addColorStop(1, N ? '#0E2838' : '#2F9FB8'); ctx.fillStyle = wg; ctx.fillRect(0, 244, W, H - 244);
+  ctx.strokeStyle = N ? 'rgba(200,230,255,.25)' : 'rgba(255,255,255,.55)'; ctx.lineWidth = 2; for (let i = 0; i < 10; i++) { const wy = 254 + i * 14; for (let k = 0; k < 4; k++) { const len = 20 + (i * 7 + k * 13) % 24, sx2 = (((k * 120 + i * 53) + t * (70 + i * 6) - cam) % (W + 80) + W + 80) % (W + 80) - 40; ctx.beginPath(); ctx.moveTo(sx2, wy); ctx.quadraticCurveTo(sx2 + len * .5, wy - 3 + Math.sin(t * 4 + i + k) * 2, sx2 + len, wy); ctx.stroke(); } }
+  // 바닥 자갈
+  for (let i = 0; i < 60; i++) { const px = ((seeded(i + 6000) * WW - cam) % (W + 20) + W + 20) % (W + 20) - 10, py = 320 + seeded(i + 6100) * 76, r = 3 + seeded(i + 6200) * 6; ctx.fillStyle = N ? '#2A3A50' : (i % 3 ? '#8FB4BC' : '#B8D2D8'); ctx.beginPath(); ctx.ellipse(px, py, r, r * .6, 0, 0, 6.3); ctx.fill(); }
+  // 물 위로 솟은 큰 바위와 이끼, 하얀 물보라
+  for (const [rx0, ry0, r] of [[90, 262, 34], [300, 300, 40], [720, 270, 36], [900, 318, 30], [1120, 280, 38]]) { const px = rx0 - cam; if (px < -80 || px > W + 80) continue;
+    ctx.fillStyle = N ? '#2A3448' : '#8A8E8C'; ctx.beginPath(); ctx.ellipse(px, ry0, r, r * .62, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = N ? '#36425A' : '#B2B6B2'; ctx.beginPath(); ctx.ellipse(px - r * .2, ry0 - r * .22, r * .55, r * .3, -.3, 0, 6.3); ctx.fill();
+    ctx.fillStyle = N ? '#1E3A2E' : '#5AA868'; ctx.beginPath(); ctx.ellipse(px + r * .3, ry0 - r * .4, r * .3, r * .14, .2, 0, 6.3); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(px - r - 4, ry0 + r * .3); ctx.quadraticCurveTo(px - r - 12, ry0 + r * .4 + Math.sin(t * 5) * 2, px - r - 24, ry0 + r * .34); ctx.moveTo(px + r + 4, ry0 + r * .3); ctx.quadraticCurveTo(px + r + 12, ry0 + r * .4 + Math.cos(t * 5) * 2, px + r + 24, ry0 + r * .34); ctx.stroke(); }
+  if (N) { ctx.fillStyle = 'rgba(10,15,40,.3)'; ctx.fillRect(0, 0, W, H); }
+}
 function renderMap() {
   const mp = $('map'); $('mapView').style.left = (cam / WW * 100) + '%'; $('mapView').style.width = (W / WW * 100) + '%';
   const dots = [...mp.querySelectorAll('b')], live = bugs.filter(u => !u.leave);
@@ -812,7 +874,7 @@ function renderStrip() {
 let filter = 'all';
 function renderGrid() {
   const fs = $('filters'); if (!fs.children.length) {
-    [['all', '전체'], ['meadow', '풀밭'], ['forest', '숲'], ['pond', '연못'], ['yard', '마당'], ['home', '집안'], ['sea', '바다'], ['mountain', '산'], ['deepsea', '심해'], ['underground', '땅속'], ['rocks', '바위틈'], ['cave', '동굴'], ['desert', '사막'], ['night', '🌙 밤'], ['rare', '⭐ 희귀'], ['not', '곤충 아님'], ['got', '✅ 잡은 것']].forEach(([k, label]) => { const c = document.createElement('button'); c.className = 'chip' + (k === filter ? ' on' : ''); c.dataset.k = k; c.textContent = label; c.addEventListener('click', () => { filter = k; [...fs.children].forEach(x => x.classList.toggle('on', x.dataset.k === k)); renderGrid(); }); fs.appendChild(c); });
+    [['all', '전체'], ['meadow', '풀밭'], ['forest', '숲'], ['pond', '연못'], ['river', '강'], ['valley', '계곡'], ['yard', '마당'], ['home', '집안'], ['sea', '바다'], ['mountain', '산'], ['deepsea', '심해'], ['underground', '땅속'], ['rocks', '바위틈'], ['cave', '동굴'], ['desert', '사막'], ['night', '🌙 밤'], ['rare', '⭐ 희귀'], ['not', '곤충 아님'], ['got', '✅ 잡은 것']].forEach(([k, label]) => { const c = document.createElement('button'); c.className = 'chip' + (k === filter ? ' on' : ''); c.dataset.k = k; c.textContent = label; c.addEventListener('click', () => { filter = k; [...fs.children].forEach(x => x.classList.toggle('on', x.dataset.k === k)); renderGrid(); }); fs.appendChild(c); });
   }
   const list = BUGS.filter(b => filter === 'all' || (filter === 'night' ? b.time !== 'day' : filter === 'rare' ? b.rare === 2 : filter === 'not' ? b.notInsect : filter === 'got' ? S.caught[b.id] : b.place.includes(filter)));
   const grid = $('grid'); grid.innerHTML = '';
