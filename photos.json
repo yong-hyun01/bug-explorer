@@ -2351,5 +2351,141 @@
 "url": "https://ko.wikipedia.org/wiki/%EA%B3%84%EA%B3%A1%EC%82%B0%EA%B0%9C%EA%B5%AC%EB%A6%AC",
 "lang": "ko",
 "sci": "개구리의 일종"
+},
+"gold_frog": {
+"title": "금개구리",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Pelophylax_chosenicus_%28cropped%29.jpg/500px-Pelophylax_chosenicus_%28cropped%29.jpg",
+"extract": "금개구리(金―, 학명: Pelophylax chosenicus)는 개구리목에 속하는 양서류이다. 금선와(金線蛙) 또는 금줄개구리라고도 한다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%B8%88%EA%B0%9C%EA%B5%AC%EB%A6%AC",
+"lang": "ko",
+"sci": "양서류 개구리목 개구리과에 속하는 동물"
+},
+"tree_frog": {
+"title": "청개구리",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Japanese_tree_frog_eating_wood_louse.jpg/500px-Japanese_tree_frog_eating_wood_louse.jpg",
+"extract": "청개구리(학명: Hyla japonica 휠라 야포니카[*])는 청개구리과의 개구리이다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%B2%AD%EA%B0%9C%EA%B5%AC%EB%A6%AC",
+"lang": "ko",
+"sci": ""
+},
+"narrow_frog": {
+"title": "맹꽁이",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Kaloula_borealis_2.jpg/500px-Kaloula_borealis_2.jpg",
+"extract": "맹꽁이(학명: Kaloula borealis)는 맹꽁이과에 속하는 개구리로, 영어권에서는 boreal digging frog라고 부른다. 중국 중북부, 한반도, 제주도에 분포한다. IUCN 적색 목록에서는 관심 대상(LC)으로 평가하나, 한국에서는 멸종 위기 야생 생물 II급으로 지정되어 있다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%A7%B9%EA%BD%81%EC%9D%B4",
+"lang": "ko",
+"sci": "맹꽁이과에 속하는 양서류"
+},
+"toad": {
+"title": "두꺼비",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Bufo_gargarizans_profile.jpg/500px-Bufo_gargarizans_profile.jpg",
+"extract": "두꺼비(학명: Bufo sachalinensis)는 개구리목 두꺼비과에 속하는 양서류로 사할린두꺼비라고도 일컫는다. 한반도에서 분포하는 개구리목 생물 가운데 최대종이며, 한반도 외에도 중국 요동·사할린· 러시아 연해주 등지에 분포한다. 본래는 중국에 서식하고 있는 중국두꺼비(Bufo gargarizans)와 동일종으로 분류하였으나 최근 연구로 인하여 별개의 종으로 분리되었다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%91%90%EA%BA%BC%EB%B9%84",
+"lang": "ko",
+"sci": "개구리목 두꺼비과에 속하는 양서류"
+},
+"fishing_spider": {
+"title": "Dolomedes sulfureus",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/IouiroHashirigumo_06d2035sv.jpg/500px-IouiroHashirigumo_06d2035sv.jpg",
+"extract": "Dolomedes sulfureus is a species of spiders commonly known as fishing spiders belonging to the genus Dolomedes. They produce a venom that contains a group of neurotoxic peptides. The species is found in Russia, China, Korea, and Japan.",
+"url": "https://en.wikipedia.org/wiki/Dolomedes_sulfureus",
+"lang": "en",
+"sci": "Species of spider"
+},
+"tiny_dragonfly": {
+"title": "꼬마잠자리",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Nannophya_pygmaea.JPG/500px-Nannophya_pygmaea.JPG",
+"extract": "꼬마잠자리는 잠자리목 잠자리과의 곤충이다. 배의 길이는 10~14mm이고, 뒷날개길이는 13~15mm이다. 전체 1.7cm 내외의 크기로 세계에서 가장 작은 잠자리이다. 수컷은 1m 내외의 영역을 확보하여 영역 경계 활동을 하며, 약 10초 정도의 짧은 짝짓기를 한후 암컷 단독으로 타수산란을 한다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%BC%AC%EB%A7%88%EC%9E%A0%EC%9E%90%EB%A6%AC",
+"lang": "ko",
+"sci": ""
+},
+"apple_snail": {
+"title": "우렁이",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Viviparus_contectus_met_operculum2.JPG/500px-Viviparus_contectus_met_operculum2.JPG",
+"extract": "우렁이 또는 논우렁이(Lister's river snail)는 논우렁이과에 속하는 복족류 고둥의 총칭이다. 남미와 남극 대륙을 제외한 각 대륙과 그 주변 지역의 민물에 서식하고, 자웅이주의 난태생이다. 딱딱한 껍질과 딱딱하고 편편한 모자를 둘러쓴 것과 같은 입을 가진다. 민물 고둥으로서는 대형의 종을 포함한다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%9A%B0%EB%A0%81%EC%9D%B4",
+"lang": "ko",
+"sci": "복족류의 과"
+},
+"wriggler": {
+"title": "장구벌레",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mosquito_larva.jpg/500px-Mosquito_larva.jpg",
+"extract": "장구벌레는 모기의 애벌레를 가리킨다. 모기는 한번에 100~700개의 알을 물이 고여있는 곳에 낳는다. 장구벌레는 물 속에서 위아래로 이동하여 먹이를 섭취하는 등 매우 활발하게 운동한다. 집모기의 장구벌레는 꼬리 부분 끝에 있는 호흡관을 수면 밖으로 내어 외호흡을 하며, 4회 탈피 후 번데기로 된다. 반면 학질모기의 장구벌레는 호흡관이 없고, 꼬리끝의 기문을 수면 밖으로 내어 외호흡을 한다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%9E%A5%EA%B5%AC%EB%B2%8C%EB%A0%88",
+"lang": "ko",
+"sci": "모기의 애벌레"
+},
+"black_damsel": {
+"title": "Paracercion calamorum",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Paracercion_calamorum_%28Dusky_Lilysquatter%29_male.jpg/500px-Paracercion_calamorum_%28Dusky_Lilysquatter%29_male.jpg",
+"extract": "Paracercion calamorum, the dusky lilly-squatter, is a species of damselfly in the family Coenagrionidae. It has a range that extends from southern far-eastern Russia to Japan, and to India and Indonesia. The nominate subspecies P. c. calamorum is known from central and eastern China, Korea and Japan. The subspecies P. c. dyeri occurs in southern China, Hong Kong, Taiwan, Indonesia, India, Nepal, and Thailand.",
+"url": "https://en.wikipedia.org/wiki/Paracercion_calamorum",
+"lang": "en",
+"sci": "Species of damselfly"
+},
+"kkeokji": {
+"title": "꺽지",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/%E3%82%B3%E3%82%A6%E3%83%A9%E3%82%A4_%E3%82%AA%E3%83%A4%E3%83%8B%E3%83%A9%E3%83%9F.jpg/500px-%E3%82%B3%E3%82%A6%E3%83%A9%E3%82%A4_%E3%82%AA%E3%83%A4%E3%83%8B%E3%83%A9%E3%83%9F.jpg",
+"extract": "꺽지는 쏘가리과의 물고기로 한국의 고유종이다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%BA%BD%EC%A7%80",
+"lang": "ko",
+"sci": ""
+},
+"dolgogi": {
+"title": "돌고기",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pungtungia_herzi1.jpg/500px-Pungtungia_herzi1.jpg",
+"extract": "돌고기(Pungtungia herzi)는 민물고기의 일종이다. 방언으로는 쭉비라 하며, 어린 개체는 가사리라 부른다. 물속에 사는 곤충들을 먹는다. 비교적 물이 맑고 바닥에 큰 돌이나 자갈이 많은 곳에 무리를 지어 산다. 주로 하천 중상류에 서식한다. 등은 암갈색이고, 배는 담황색이다. 몸이 길고 약간 납작한 원통형이다. 감돌고기 · 가는돌고기와는 생김새가 비슷하며 같은 아과에 속하지만 속 단계에서 갈라진다. 알은 봄에 돌이 맣은 맑은 냇물 바닥에 낳는다. 물 깊이가 50~100cm쯤 되고 넓적한 돌이나 바위가 많은 곳에 낳는다. 이때 수컷은 입술이나 지느러미에 오돌오돌한 돌기가 생기고 혼인색을 띤다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%8F%8C%EA%B3%A0%EA%B8%B0",
+"lang": "ko",
+"sci": ""
+},
+"galgyeoni": {
+"title": "갈겨니",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Nipponocypris_temminckii.jpg/500px-Nipponocypris_temminckii.jpg",
+"extract": "갈겨니(학명: Nipponocypris temminckii)는 동아시아의 개천에 서식하는 민물고기이다. 갈견이라고도 부르며, 눈이 검다 하여 안흑어(眼黑魚), 눈검쟁이라고도 한다.",
+"url": "https://ko.wikipedia.org/wiki/%EA%B0%88%EA%B2%A8%EB%8B%88",
+"lang": "ko",
+"sci": "잉어과 갈겨니속의 물고기"
+},
+"dongsari": {
+"title": "Odontobutis platycephala",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Odontobutis_platycephala_COEX1.jpg/500px-Odontobutis_platycephala_COEX1.jpg",
+"extract": "Odontobutis platycephala is a species of freshwater sleeper endemic to South Korea.",
+"url": "https://en.wikipedia.org/wiki/Odontobutis_platycephala",
+"lang": "en",
+"sci": "Species of fish"
+},
+"dobsonfly": {
+"title": "뱀잠자리",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Protohermes_grandis.jpg/500px-Protohermes_grandis.jpg",
+"extract": "뱀잠자리는 뱀잠자리목 뱀잠자리과의 곤충이다. '뱀잠자리'라는 이름은 길고 둥근 머리와 긴 앞가슴 모양이 마치 뱀이 머리를 곧추세우고 있는 모습과 유사하여 붙여졌다. 더듬이는 다른 잠자리들과 다르게 길다. 한국에서 기존에 뱀잠자리로 알려졌던 종은 노란뱀잠자리(Protohermes xanthodes)이며 뱀잠자리(P. grandis)종은 한국에서의 분포 확인이 필요하다.",
+"url": "https://ko.wikipedia.org/wiki/%EB%B1%80%EC%9E%A0%EC%9E%90%EB%A6%AC",
+"lang": "ko",
+"sci": ""
+},
+"hellgrammite": {
+"title": "Dobsonfly",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Corydalus_cornutus_MHNT.jpg/500px-Corydalus_cornutus_MHNT.jpg",
+"extract": "Dobsonflies are a subfamily of insects, Corydalinae, part of the Megalopteran family Corydalidae. The larvae are aquatic, living in streams, and the adults are often found along streams as well. The nine genera of dobsonflies are distributed in the Americas, Asia, and South Africa.",
+"url": "https://en.wikipedia.org/wiki/Dobsonfly",
+"lang": "en",
+"sci": "Subfamily of insects"
+},
+"striped_shrimp": {
+"title": "줄새우",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Palaemon_paucidens.jpg/500px-Palaemon_paucidens.jpg",
+"extract": "줄새우(Palaemon paucidens)는 징거미새우과에 속하는 새우이다. 몸의 특징은 갑각의 간 부위에 가시가 없고 아가미 부위에 가시가 있다. 또 수컷의 제2가슴다리는 다른 가슴다리에 비해 그다지 크지 않다. 암컷이 수컷보다 크다. 몸은 연한 갈색을 띠고 갑각의 옆에 짙은 갈색의 복잡한 무늬가 있다. 또 배의 제2마디에 두 줄, 꼬리마디를 제외한 다른 마디에 각각 한 줄씩 모두 일곱 줄의 짙은 갈색 줄무늬가 있다. 배에는 알 뭉치가 붙는데, 알 뭉치는 연한 황록색을 띤다. 한국·일본·러시아·중국 등지에 분포한다.",
+"url": "https://ko.wikipedia.org/wiki/%EC%A4%84%EC%83%88%EC%9A%B0",
+"lang": "ko",
+"sci": ""
+},
+"clubtail": {
+"title": "Gomphidae",
+"img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Bladetail_%28Lindenia_tetraphylla%29_male_Macedonia.jpg/500px-Bladetail_%28Lindenia_tetraphylla%29_male_Macedonia.jpg",
+"extract": "Gomphidae is a family of dragonflies commonly known as clubtails or club-tailed dragonflies. The family is placed in the superfamily Gomphoidea, together with Petaluridae.",
+"url": "https://en.wikipedia.org/wiki/Gomphidae",
+"lang": "en",
+"sci": "Family of dragonflies"
 }
 }

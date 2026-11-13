@@ -248,6 +248,8 @@ const ICO = {
   desert: ['................','..........yy....','.........yyyy...','..........yy....','................','....GG..........','.GG.GG..........','.GG.GG..........','.GGGGG..........','....GG..........','....GG..........','NNNNNNNNNNNNNNNN','nnnnnnnnnnnnnnnn','nNnnnNnnnnNnnnNn','nnnnnnnnnnnnnnnn','................'],
   river: ['................','................','GGGGGGGGGGGGGGGG','gggGggggGgggGggg','gggggggggggggggg','mmmmmmmmmmmmmmmm','mmwwmmmmwwmmmmww','mmmmmmmmmmmmmmmm','wwmmmmwwmmmmwwmm','mmmmmmmmmmmmmmmm','mmmmwwmmmmwwmmmm','mmmmmmmmmmmmmmmm','gggggggggggggggg','GGGGGGGGGGGGGGGG','................','................'],
   valley: ['................','.......S........','......SSS.......','.....SSsSS......','....SSSwSSS.....','...SSSSwSSSS....','..SSSSSwSSSSS...','.SSGSSSwSSSGSS..','SSGGGSSwSSGGGSSS','GGGGGSSwSSGGGGGG','GGGGGSwwwSGGGGGG','GGGGSwwwwwSGGGGG','mmmmmwmmmwmmmmmm','mmmmmmmmmmmmmmmm','................','................'],
+  wetland: ['................','................','.....B....B.....','.....B..B.B.....','.....g..B.g.....','.....g..g.g.....','GGGGGgGGgGgGGGGG','GGGGGgGGgGgGGGGG','GgGGGGGGGGGgGGGG','GGGGGGrGGGGGGGGG','GGGGGgGGGGGGGgGG','GGGGGGGGGGGGGGGG','bbbbbbbbbbbbbbbb','BBBBBBBBBBBBBBBB','................','................'],
+  stream: ['................','gggggggggggggggg','GgGgGgGgGgGgGgGg','gggggggggggggggg','mmmmmmmmmmmmmmmm','mmmmmmmmmmmmmmmm','mmssmmmssmmmssmm','mSSSSmmSSSmSSSSm','mmssmmmssmmmssmm','mmmmmmmmmmmmmmmm','mmmmmmmmmmmmmmmm','mmmmmmmmmmmmmmmm','gggggggggggggggg','GgGgGgGgGgGgGgGg','................','................'],
   bug: ['................','....e......e....','.....e....e.....','......eeee......','.....eeeeee.....','....rrrrrrrr....','...rrerrrrerr...','...rrrrrrrrrr...','...rrrrerrrrr...','..k.rrrrrrrr.k..','...krrerrerrk...','....rrrrrrrr....','.....rrrrrr.....','......rrrr......','................','................'],
 };
 function icon(name) {
@@ -285,6 +287,8 @@ const PLACES = [
   { id: 'pond', name: '연못', hint: '물 위와 물속을 봐요', sky: ['#A8E0FF', '#E3F5FF'], nightSky: ['#121A3A', '#223060'] },
   { id: 'river', name: '강', hint: '물속과 물가 돌 밑을 봐요', sky: ['#9CD8FF', '#E6F6FF'], nightSky: ['#101A3A', '#1E2E5E'] },
   { id: 'valley', name: '계곡', hint: '바위 밑과 맑은 물속을 봐요', sky: ['#A4D4F4', '#E0F2FF'], nightSky: ['#0E1630', '#1C2A52'] },
+  { id: 'wetland', name: '습지', hint: '갈대 사이와 진흙을 살펴요', sky: ['#B8DCEC', '#EEF4E8'], nightSky: ['#121A32', '#223050'] },
+  { id: 'stream', name: '하천', hint: '징검다리 밑 자갈을 봐요', sky: ['#9CD8FF', '#E8F6FF'], nightSky: ['#101A3A', '#1E2E5E'] },
   { id: 'yard', name: '마당', hint: '화분 밑과 벽을 살펴요', sky: ['#B5E3FF', '#EAF7FF'], nightSky: ['#171C3A', '#2E3A6A'] },
   { id: 'home', name: '집안', hint: '가구 밑과 구석을 살펴요', sky: ['#FFF4DC', '#F6E6C8'], nightSky: ['#1C1A30', '#2C2A48'] },
   { id: 'sea', name: '바다', hint: '모래와 바위 틈을 봐요', sky: ['#8FD3FF', '#E3F5FF'], nightSky: ['#0F1A3A', '#1E3060'] },
@@ -415,6 +419,8 @@ function draw() {
   if (P.id === 'desert') { drawDesert(N); drawActors(); return; }
   if (P.id === 'river') { drawRiver(N); drawActors(); return; }
   if (P.id === 'valley') { drawValley(N); drawActors(); return; }
+  if (P.id === 'wetland') { drawWetland(N); drawActors(); return; }
+  if (P.id === 'stream') { drawStream(N); drawActors(); return; }
   // 해/달/별 (카메라 0.1)
   const sx = 330 - cam * .1;
   if (N) { ctx.fillStyle = '#FFF'; for (let i = 0; i < 60; i++) { const px = ((i * 97 - cam * .05) % W + W) % W, py = (i * 53) % 200; ctx.globalAlpha = .4 + Math.sin(t * 2 + i) * .4; ctx.fillRect(px, py, 2, 2); } ctx.globalAlpha = 1; ctx.fillStyle = '#FFF4C2'; ctx.beginPath(); ctx.arc(sx, 60, 26, 0, 6.3); ctx.fill(); ctx.fillStyle = sky[0]; ctx.beginPath(); ctx.arc(sx + 12, 52, 22, 0, 6.3); ctx.fill(); }
@@ -772,6 +778,51 @@ function drawValley(N) {
     ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(px - r - 4, ry0 + r * .3); ctx.quadraticCurveTo(px - r - 12, ry0 + r * .4 + Math.sin(t * 5) * 2, px - r - 24, ry0 + r * .34); ctx.moveTo(px + r + 4, ry0 + r * .3); ctx.quadraticCurveTo(px + r + 12, ry0 + r * .4 + Math.cos(t * 5) * 2, px + r + 24, ry0 + r * .34); ctx.stroke(); }
   if (N) { ctx.fillStyle = 'rgba(10,15,40,.3)'; ctx.fillRect(0, 0, W, H); }
 }
+function drawWetland(N) {
+  const P = placeOf(); drawSkyBits(N, N ? P.nightSky : P.sky);
+  // 먼 숲 띠 (0.3) 와 죽은 나무 (0.5)
+  ctx.fillStyle = N ? '#16243A' : '#6FA87A'; ctx.beginPath(); ctx.moveTo(0, 236); for (let x = 0; x <= W; x += 8) { const wx = x + cam * .3; ctx.lineTo(x, 206 + Math.sin(wx * .05) * 6 + Math.sin(wx * .17) * 4); } ctx.lineTo(W, 236); ctx.fill();
+  for (let i = 0; i < 7; i++) { const tx = ((i * 190 + 60 - cam * .5) % (W + 100) + W + 100) % (W + 100) - 50, h = 60 + (i % 3) * 20; ctx.strokeStyle = N ? '#1E2838' : '#5A5048'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(tx, 236); ctx.lineTo(tx, 236 - h); ctx.stroke(); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(tx, 236 - h * .6); ctx.lineTo(tx - 18, 236 - h * .85); ctx.moveTo(tx, 236 - h * .75); ctx.lineTo(tx + 16, 236 - h); ctx.moveTo(tx, 236 - h * .4); ctx.lineTo(tx + 14, 236 - h * .55); ctx.stroke(); }
+  // 물안개
+  { const mg = ctx.createLinearGradient(0, 196, 0, 250); mg.addColorStop(0, 'rgba(255,255,255,0)'); mg.addColorStop(.6, N ? 'rgba(180,200,220,.18)' : 'rgba(255,255,255,.45)'); mg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = mg; ctx.fillRect(0, 196, W, 54); }
+  // 진흙 둑
+  ctx.fillStyle = N ? '#2A2418' : '#7A6240'; ctx.fillRect(0, 230, W, 22); ctx.fillStyle = N ? '#1E1A12' : '#5E4A30'; for (let i = 0; i < 30; i++) { const px = ((seeded(i + 7000) * WW - cam) % (W + 20) + W + 20) % (W + 20) - 10; ctx.beginPath(); ctx.ellipse(px, 236 + seeded(i + 7100) * 12, 6 + seeded(i + 7200) * 8, 2.5, 0, 0, 6.3); ctx.fill(); }
+  // 습지 물
+  const wg = ctx.createLinearGradient(0, WATER, 0, H); wg.addColorStop(0, N ? '#1E3A3A' : '#6FB8A8'); wg.addColorStop(1, N ? '#0E1E24' : '#2E6E68'); ctx.fillStyle = wg; ctx.fillRect(0, WATER, W, H - WATER);
+  ctx.strokeStyle = N ? 'rgba(200,220,255,.12)' : 'rgba(255,255,255,.25)'; ctx.lineWidth = 2; for (let i = 0; i < 6; i++) { const wy = WATER + 24 + i * 24; ctx.beginPath(); for (let x = 0; x <= W; x += 10) ctx.lineTo(x, wy + Math.sin((x + cam) * .04 + t * 1.2 + i) * 2); ctx.stroke(); }
+  // 개구리밥
+  ctx.fillStyle = N ? '#2E4A2E' : '#7CC24A'; for (let i = 0; i < 90; i++) { const px = ((seeded(i + 7300) * WW - cam) % (W + 10) + W + 10) % (W + 10) - 5, py = WATER + 6 + seeded(i + 7400) * 140; ctx.beginPath(); ctx.ellipse(px, py, 2.5, 1.5, 0, 0, 6.3); ctx.fill(); }
+  // 연잎과 연꽃
+  for (let i = 0; i < 10; i++) { const px = ((i * 125 + 50 - cam) % (W + 100) + W + 100) % (W + 100) - 50, py = WATER + 40 + (i % 3) * 36, r = 26 + (i % 2) * 8; ctx.fillStyle = N ? '#243A24' : '#4E9A4E'; ctx.beginPath(); ctx.ellipse(px, py, r, r * .45, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = N ? '#2E4A2E' : '#64B264'; ctx.beginPath(); ctx.ellipse(px - 4, py - 2, r * .7, r * .3, 0, 0, 6.3); ctx.fill(); ctx.strokeStyle = N ? '#1A2A1A' : '#3A7A3A'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + r * .8, py + r * .3); ctx.stroke();
+    if (i % 3 === 1) { ctx.fillStyle = N ? '#A0607A' : '#FF8FB1'; for (let k = 0; k < 6; k++) { const ang = k / 6 * 6.28; ctx.beginPath(); ctx.ellipse(px + 14 + Math.cos(ang) * 7, py - 14 + Math.sin(ang) * 4, 6, 3.5, ang, 0, 6.3); ctx.fill(); } ctx.fillStyle = N ? '#B0A040' : '#FFD54A'; ctx.beginPath(); ctx.arc(px + 14, py - 14, 3.5, 0, 6.3); ctx.fill(); } }
+  // 부들과 갈대 (0.9)
+  for (let i = 0; i < 30; i++) { const rx = ((i * 47 + 20 - cam * .9) % (W + 40) + W + 40) % (W + 40) - 20, h = 50 + (i % 5) * 12, sway = Math.sin(t * 1.3 + i) * 3, base = 246 + (i % 3) * 10; ctx.strokeStyle = N ? '#2E4A2E' : (i % 2 ? '#6FAE5A' : '#8FC26A'); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(rx, base); ctx.quadraticCurveTo(rx + sway, base - h * .6, rx + sway * 2, base - h); ctx.stroke(); if (i % 3 === 0) { ctx.fillStyle = N ? '#4A3220' : '#7A4A22'; ctx.beginPath(); ctx.roundRect(rx + sway * 2 - 3, base - h - 14, 6, 18, 3); ctx.fill(); } else if (i % 3 === 1) { ctx.strokeStyle = N ? '#5A5040' : '#D9C58F'; ctx.lineWidth = 1.5; for (let k = 0; k < 4; k++) { ctx.beginPath(); ctx.moveTo(rx + sway * 2, base - h + k * 4); ctx.lineTo(rx + sway * 2 + 6 - k * 1.5, base - h - 6 + k * 4); ctx.stroke(); } } }
+  // 백로 (낮)
+  if (!N) { const ex = 860 - cam; if (ex > -40 && ex < W + 40) { ctx.strokeStyle = '#2A2A2A'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ex - 4, 246); ctx.lineTo(ex - 4, 270); ctx.moveTo(ex + 6, 246); ctx.lineTo(ex + 6, 268); ctx.stroke(); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.ellipse(ex, 236, 18, 11, -.1, 0, 6.3); ctx.fill(); ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(ex + 12, 230); ctx.quadraticCurveTo(ex + 26, 216, ex + 22, 196); ctx.stroke(); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.ellipse(ex + 22, 194, 7, 5, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = '#F2C14E'; ctx.beginPath(); ctx.moveTo(ex + 28, 193); ctx.lineTo(ex + 42, 196); ctx.lineTo(ex + 28, 197); ctx.fill(); ctx.fillStyle = '#2A2A2A'; ctx.beginPath(); ctx.arc(ex + 24, 193, 1.3, 0, 6.3); ctx.fill(); } }
+  if (N) { ctx.fillStyle = 'rgba(10,15,40,.3)'; ctx.fillRect(0, 0, W, H); }
+}
+function drawStream(N) {
+  const P = placeOf(); drawSkyBits(N, N ? P.nightSky : P.sky);
+  // 먼 산 (0.3)
+  ctx.fillStyle = N ? '#1C2B45' : '#8DD08A'; ctx.beginPath(); ctx.moveTo(0, 230); for (let x = 0; x <= W; x += 10) { const wx = x + cam * .3; ctx.lineTo(x, 186 + Math.sin(wx * .03) * 16 + Math.sin(wx * .11) * 6); } ctx.lineTo(W, 230); ctx.fill();
+  // 논 (0.5)
+  for (let r = 0; r < 4; r++) { const y = 204 + r * 8; ctx.fillStyle = N ? (r % 2 ? '#1A2E1A' : '#162816') : (r % 2 ? '#7CC24A' : '#9AD45A'); ctx.fillRect(0, y, W, 8); ctx.fillStyle = N ? '#122012' : '#5FA83A'; for (let i = 0; i < 40; i++) { const px = ((i * 24 + r * 7 - cam * .5) % (W + 24) + W + 24) % (W + 24) - 12; ctx.fillRect(px, y + 1, 2, 6); } }
+  // 버드나무 (0.6)
+  for (const wx0 of [200, 700, 1100]) { const wx = wx0 - cam * .6; if (wx < -80 || wx > W + 80) continue; ctx.fillStyle = N ? '#2B1C10' : '#6B4A2B'; ctx.fillRect(wx - 5, 190, 10, 46); ctx.fillStyle = N ? '#14262E' : '#6FBF5A'; ctx.beginPath(); ctx.arc(wx, 176, 34, 0, 6.3); ctx.fill(); ctx.strokeStyle = N ? '#1A3038' : '#5FAE5A'; ctx.lineWidth = 2; for (let k = 0; k < 9; k++) { const bx = wx - 32 + k * 8, sway = Math.sin(t * 1.4 + k) * 3; ctx.beginPath(); ctx.moveTo(bx, 190); ctx.quadraticCurveTo(bx + sway, 215, bx + sway * 1.5, 238 - (k % 3) * 6); ctx.stroke(); } }
+  // 풀 둑과 꽃
+  ctx.fillStyle = N ? '#1F3A1F' : '#7CC24A'; ctx.fillRect(0, 236, W, 16); ctx.fillStyle = N ? '#162B16' : '#4E9A2E'; for (let i = 0; i < 50; i++) { const px = ((i * 25 + 5 - cam * .9) % (W + 10) + W + 10) % (W + 10) - 5; ctx.fillRect(px, 232 + (i % 3) * 2, 2, 8 + (i % 2) * 4); }
+  for (let i = 0; i < 16; i++) { const px = ((i * 78 + 30 - cam * .9) % (W + 10) + W + 10) % (W + 10) - 5; ctx.fillStyle = N ? '#5A4A60' : ['#FFD54A', '#FFFFFF', '#FF8FB1', '#B48CFF'][i % 4]; ctx.beginPath(); ctx.arc(px, 238 + (i % 2) * 6, 2.5, 0, 6.3); ctx.fill(); }
+  // 맑은 시냇물과 바닥 자갈
+  const wg = ctx.createLinearGradient(0, WATER, 0, H); wg.addColorStop(0, N ? '#22406E' : '#A8E0F8'); wg.addColorStop(1, N ? '#101C3A' : '#5AB0E0'); ctx.fillStyle = wg; ctx.fillRect(0, WATER, W, H - WATER);
+  for (let i = 0; i < 90; i++) { const px = ((seeded(i + 8000) * WW - cam) % (W + 20) + W + 20) % (W + 20) - 10, py = WATER + 30 + seeded(i + 8100) * 120, r = 2.5 + seeded(i + 8200) * 6; ctx.fillStyle = N ? '#2A3A5A' : (i % 4 === 0 ? '#C8A878' : i % 4 === 1 ? '#9AB8C8' : i % 4 === 2 ? '#B8CCD4' : '#8A9AA8'); ctx.globalAlpha = N ? .7 : .75; ctx.beginPath(); ctx.ellipse(px, py, r, r * .6, 0, 0, 6.3); ctx.fill(); } ctx.globalAlpha = 1;
+  // 물풀
+  for (let i = 0; i < 7; i++) { const px = ((i * 170 + 40 - cam) % (W + 40) + W + 40) % (W + 40) - 20; ctx.strokeStyle = N ? 'rgba(60,110,80,.55)' : 'rgba(70,160,90,.6)'; ctx.lineWidth = 2; for (let k = 0; k < 2; k++) { const sway = Math.sin(t * 2 + i + k) * 4; ctx.beginPath(); ctx.moveTo(px + k * 7, 396); ctx.quadraticCurveTo(px + k * 7 + sway, 372, px + k * 7 + sway * 2, 350 + k * 8); ctx.stroke(); } }
+  // 흐르는 물결
+  ctx.strokeStyle = N ? 'rgba(200,220,255,.2)' : 'rgba(255,255,255,.5)'; ctx.lineWidth = 2; for (let i = 0; i < 8; i++) { const wy = WATER + 14 + i * 18; for (let k = 0; k < 4; k++) { const len = 24 + (i * 7 + k * 13) % 26, sx2 = (((k * 130 + i * 47) + t * (36 + i * 4) - cam) % (W + 80) + W + 80) % (W + 80) - 40; ctx.beginPath(); ctx.moveTo(sx2, wy); ctx.quadraticCurveTo(sx2 + len * .5, wy - 2 + Math.sin(t * 3 + i + k) * 1.5, sx2 + len, wy); ctx.stroke(); } }
+  // 징검다리
+  { const bx = 560 - cam; if (bx > -140 && bx < W + 140) for (let k = 0; k < 6; k++) { const sx = bx - 100 + k * 40, sy = 262 + (k % 2) * 6; ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(sx - 22, sy + 4); ctx.quadraticCurveTo(sx - 28, sy + 6, sx - 34 - Math.sin(t * 4 + k) * 2, sy + 4); ctx.stroke(); ctx.fillStyle = N ? '#2E3A54' : '#7A8A94'; ctx.beginPath(); ctx.ellipse(sx, sy, 20, 9, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = N ? '#3A4866' : '#A4B2BA'; ctx.beginPath(); ctx.ellipse(sx - 3, sy - 3, 13, 5, -.15, 0, 6.3); ctx.fill(); } }
+  if (N) { ctx.fillStyle = 'rgba(10,15,40,.25)'; ctx.fillRect(0, 0, W, H); }
+}
 function renderMap() {
   const mp = $('map'); $('mapView').style.left = (cam / WW * 100) + '%'; $('mapView').style.width = (W / WW * 100) + '%';
   const dots = [...mp.querySelectorAll('b')], live = bugs.filter(u => !u.leave);
@@ -874,7 +925,7 @@ function renderStrip() {
 let filter = 'all';
 function renderGrid() {
   const fs = $('filters'); if (!fs.children.length) {
-    [['all', '전체'], ['meadow', '풀밭'], ['forest', '숲'], ['pond', '연못'], ['river', '강'], ['valley', '계곡'], ['yard', '마당'], ['home', '집안'], ['sea', '바다'], ['mountain', '산'], ['deepsea', '심해'], ['underground', '땅속'], ['rocks', '바위틈'], ['cave', '동굴'], ['desert', '사막'], ['night', '🌙 밤'], ['rare', '⭐ 희귀'], ['not', '곤충 아님'], ['got', '✅ 잡은 것']].forEach(([k, label]) => { const c = document.createElement('button'); c.className = 'chip' + (k === filter ? ' on' : ''); c.dataset.k = k; c.textContent = label; c.addEventListener('click', () => { filter = k; [...fs.children].forEach(x => x.classList.toggle('on', x.dataset.k === k)); renderGrid(); }); fs.appendChild(c); });
+    [['all', '전체'], ['meadow', '풀밭'], ['forest', '숲'], ['pond', '연못'], ['river', '강'], ['valley', '계곡'], ['wetland', '습지'], ['stream', '하천'], ['yard', '마당'], ['home', '집안'], ['sea', '바다'], ['mountain', '산'], ['deepsea', '심해'], ['underground', '땅속'], ['rocks', '바위틈'], ['cave', '동굴'], ['desert', '사막'], ['night', '🌙 밤'], ['rare', '⭐ 희귀'], ['not', '곤충 아님'], ['got', '✅ 잡은 것']].forEach(([k, label]) => { const c = document.createElement('button'); c.className = 'chip' + (k === filter ? ' on' : ''); c.dataset.k = k; c.textContent = label; c.addEventListener('click', () => { filter = k; [...fs.children].forEach(x => x.classList.toggle('on', x.dataset.k === k)); renderGrid(); }); fs.appendChild(c); });
   }
   const list = BUGS.filter(b => filter === 'all' || (filter === 'night' ? b.time !== 'day' : filter === 'rare' ? b.rare === 2 : filter === 'not' ? b.notInsect : filter === 'got' ? S.caught[b.id] : b.place.includes(filter)));
   const grid = $('grid'); grid.innerHTML = '';
