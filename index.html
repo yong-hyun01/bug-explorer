@@ -32,7 +32,7 @@ img.px{image-rendering:pixelated}
 .hud .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--grass),var(--grass-2));transition:width .4s}
 .hud .snd{width:34px;height:34px;border-radius:50%;background:#FFF;box-shadow:0 2px 0 #D9CCA6;font-size:16px;display:grid;place-items:center}
 
-.scene{position:relative;margin:0 12px;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:1/1;max-height:50dvh;border:3px solid #FFF;box-shadow:0 8px 24px -8px rgba(0,0,0,.35);flex:none}
+.scene{position:relative;margin:0 12px;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:10/9;max-height:50dvh;border:3px solid #FFF;box-shadow:0 8px 24px -8px rgba(0,0,0,.35);flex:none}
 .scene canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 .scene .label{position:absolute;top:10px;left:12px;font-family:var(--display);font-size:20px;color:#FFF;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 10px rgba(0,0,0,.3);pointer-events:none}
 .scene .label small{display:block;font-family:var(--body);font-size:12px;font-weight:700;opacity:.9}
@@ -41,17 +41,17 @@ img.px{image-rendering:pixelated}
 .scene .map{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:140px;height:14px;border-radius:7px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.5);pointer-events:none}
 .scene .map i{position:absolute;top:1px;bottom:1px;border-radius:6px;background:rgba(255,255,255,.65)}
 .scene .map b{position:absolute;top:4px;width:5px;height:5px;border-radius:50%;background:#FFD54A;box-shadow:0 0 3px #000}
-.pad{display:flex;justify-content:space-between;align-items:center;padding:18px 14px 10px;gap:12px;user-select:none;-webkit-user-select:none;touch-action:none}
+.pad{display:flex;justify-content:space-between;align-items:center;padding:28px 14px 10px;gap:12px;user-select:none;-webkit-user-select:none;touch-action:none}
 .pad button{touch-action:none}
 .dpad{display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(2,52px);gap:8px}
 .dpad button{background:#FFF;border:2px solid #E8DFC3;border-radius:14px;font-size:24px;font-weight:900;color:var(--ink);box-shadow:0 4px 0 #D9CCA6;touch-action:none}
 .dpad button:active,.dpad button.on{transform:translateY(3px);box-shadow:0 1px 0 #D9CCA6;background:#FFF1E3;border-color:var(--accent)}
 .dpad .l{grid-column:1;grid-row:1/3}.dpad .r{grid-column:3;grid-row:1/3}.dpad .u{grid-column:2;grid-row:1}.dpad .d{grid-column:2;grid-row:2}
 .acts{display:flex;align-items:flex-end;gap:8px}
-.jumpb{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#9FE07A,#4E9A2E);color:#FFF;font-family:var(--display);font-size:15px;box-shadow:0 5px 0 #2E6B1E,0 8px 16px rgba(0,0,0,.2);border:3px solid #FFF;touch-action:none;display:grid;place-items:center;line-height:1}
+.jumpb{width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#9FE07A,#4E9A2E);color:#FFF;font-family:var(--display);font-size:14px;box-shadow:0 5px 0 #2E6B1E,0 8px 16px rgba(0,0,0,.2);border:3px solid #FFF;touch-action:none;display:grid;place-items:center;line-height:1}
 .jumpb:active,.jumpb.on{transform:translateY(4px);box-shadow:0 1px 0 #2E6B1E}
 .jumpb[hidden]{display:none}
-.catch{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFB070,var(--accent));color:#FFF;font-family:var(--display);font-size:20px;box-shadow:0 6px 0 var(--accent-2),0 10px 20px rgba(0,0,0,.25);border:3px solid #FFF;touch-action:none;display:grid;place-items:center;line-height:1}
+.catch{width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFB070,var(--accent));color:#FFF;font-family:var(--display);font-size:18px;box-shadow:0 6px 0 var(--accent-2),0 10px 20px rgba(0,0,0,.25);border:3px solid #FFF;touch-action:none;display:grid;place-items:center;line-height:1}
 .catch small{font-family:var(--body);font-size:10px;font-weight:700;opacity:.9}
 .catch:active,.catch.on{transform:translateY(5px);box-shadow:0 1px 0 var(--accent-2)}
 .places{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:8px 12px 4px}
@@ -152,10 +152,10 @@ img.px{image-rendering:pixelated}
 @media (orientation: landscape) and (min-width: 560px) {
   body{align-items:stretch}
   .phone{max-width:none;max-height:none;height:100dvh;border-radius:0;border:0;box-shadow:none}
-  .scroller{--sc:min(calc(100dvh - 184px),calc(100vw - 340px),760px);display:grid;grid-template-columns:calc(var(--sc) + 12px) minmax(280px,520px);grid-template-rows:auto 1fr auto;grid-template-areas:"hud hud" "scene side" "pad side";column-gap:12px;justify-content:center;overflow:hidden;scroll-behavior:auto}
+  .scroller{--sc:min(calc((100dvh - 178px) / .9),calc(100vw - 340px),760px);display:grid;grid-template-columns:calc(var(--sc) + 12px) minmax(280px,520px);grid-template-rows:auto 1fr auto;grid-template-areas:"hud hud" "scene side" "pad side";column-gap:12px;justify-content:center;overflow:hidden;scroll-behavior:auto}
   .hud{grid-area:hud;padding:8px 16px 4px;max-width:1120px;width:100%;justify-self:center}
-  .scene{grid-area:scene;width:var(--sc);height:var(--sc);aspect-ratio:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
-  .pad{grid-area:pad;align-self:start;padding:16px 12px 10px;margin-left:12px;justify-content:space-between}
+  .scene{grid-area:scene;width:var(--sc);height:calc(var(--sc) * .9);aspect-ratio:auto;max-height:none;margin:0 0 0 12px;justify-self:start}
+  .pad{grid-area:pad;align-self:start;padding:22px 12px 10px;margin-left:12px;justify-content:space-between}
   .side{display:flex;flex-direction:column;grid-area:side;min-height:0;overflow:auto;padding-right:12px;overscroll-behavior:contain}
   .places{padding:0 0 4px;grid-template-columns:repeat(5,1fr)}
   .place{padding:4px 2px;font-size:12px}.place img{width:22px;height:22px}.place small{font-size:10px}
@@ -167,11 +167,11 @@ img.px{image-rendering:pixelated}
 }
 @media (orientation: landscape) and (min-width: 560px) and (max-height: 520px) {
   /* 스마트폰 가로: 탐험 화면을 세로로 꽉 채우고 키패드는 오른쪽 아래에 */
-  .scroller{--sc:min(calc(100dvh - 62px),calc(100vw - 340px));grid-template-rows:auto 1fr;grid-template-areas:"hud hud" "scene side"}
+  .scroller{--sc:min(calc((100dvh - 62px) / .9),calc(100vw - 340px));grid-template-rows:auto 1fr;grid-template-areas:"hud hud" "scene side"}
   .pad{grid-area:side;align-self:end;z-index:3;margin:0;padding:6px 10px 8px;background:linear-gradient(180deg,rgba(255,248,230,0),var(--cream) 30%)}
   .side{padding-bottom:110px}
   .dpad{grid-template-columns:repeat(3,50px);grid-template-rows:repeat(2,42px);gap:6px}
-  .catch{width:70px;height:70px;font-size:16px}.jumpb{width:50px;height:50px;font-size:13px}
+  .catch{width:62px;height:62px;font-size:15px}.jumpb{width:46px;height:46px;font-size:12px}
   .hud{padding:6px 14px 2px}.hud h1{font-size:18px}
   .scene .hint{font-size:11px;line-height:1.3}
 }
@@ -1474,6 +1474,7 @@ const SND = { catch: [[660, .12, 0], [880, .18, .1]], new: [[523, .12, 0], [659,
 
 // ======================= 넓은 탐험 세계 =======================
 const W = 400, H = 400, WW = 1200, GROUND = 300, WATER = 250;
+const VH = 360, OY = 24; // 화면에 보이는 세로 영역 (위 24px·아래 16px 는 잘라냄, 10:9 비율)
 const cv = $('cv'), ctx = cv.getContext('2d');
 function resize() { const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); }
 new ResizeObserver(resize).observe(cv); resize();
@@ -1564,7 +1565,7 @@ function tick() {
 function hexA(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
 function shadeC(hex, k) { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k))); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; }
 function draw() {
-  ctx.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0); ctx.imageSmoothingEnabled = true;
+  ctx.setTransform(cv.width / W, 0, 0, cv.height / VH, 0, -OY * cv.height / VH); ctx.imageSmoothingEnabled = true;
   const P = placeOf(), N = S.night && !P.dark, sky = N ? P.nightSky : P.sky;
   const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, sky[0]); g.addColorStop(1, sky[1]); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   if (P.id === 'deepsea') { drawDeepSea(); drawActors(); return; }
