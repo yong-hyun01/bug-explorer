@@ -8,7 +8,6 @@ assert '/*__BUGS_DATA__*/' in app
 photos = (root / 'photos.json').read_text() if (root / 'photos.json').exists() else '{}'
 import json as _j
 ph = {k: v for k, v in _j.loads(photos).items() if v}
-hero = (root / 'hero' / 'hero.json').read_text() if (root / 'hero' / 'hero.json').exists() else '{}'
-html = app.replace('/*__HERO__*/{}', hero).replace('/*__BUGS_DATA__*/', data).replace('/*__PHOTOS__*/{}', _j.dumps(ph, ensure_ascii=False))
+html = app.replace('/*__BUGS_DATA__*/', data).replace('/*__PHOTOS__*/{}', _j.dumps(ph, ensure_ascii=False))
 (root / 'index.html').write_text(html)
 print('built index.html', len(app) + len(data), 'bytes')
