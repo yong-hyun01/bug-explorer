@@ -44,7 +44,7 @@ img.px{image-rendering:pixelated}
 .pad{display:flex;justify-content:space-between;align-items:center;padding:28px 14px 10px;gap:12px;user-select:none;-webkit-user-select:none;touch-action:none}
 .pad button{touch-action:none}
 .dpad{display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(2,52px);gap:8px}
-.dpad button{background:#FFF;border:2px solid #E8DFC3;border-radius:14px;font-size:24px;font-weight:900;color:var(--ink);box-shadow:0 4px 0 #D9CCA6;touch-action:none}
+.dpad button{background:#FFF;border:2px solid #E8DFC3;border-radius:14px;font-size:24px;font-weight:900;color:var(--ink);box-shadow:0 4px 0 #D9CCA6;touch-action:none;transition:transform .06s,box-shadow .06s,background .06s}
 .dpad button:active,.dpad button.on{transform:translateY(3px);box-shadow:0 1px 0 #D9CCA6;background:#FFF1E3;border-color:var(--accent)}
 .dpad .l{grid-column:1;grid-row:1/3}.dpad .r{grid-column:3;grid-row:1/3}.dpad .u{grid-column:2;grid-row:1}.dpad .d{grid-column:2;grid-row:2}
 .acts{display:flex;align-items:flex-end;gap:8px}
@@ -55,7 +55,7 @@ img.px{image-rendering:pixelated}
 .catch small{font-family:var(--body);font-size:10px;font-weight:700;opacity:.9}
 .catch:active,.catch.on{transform:translateY(5px);box-shadow:0 1px 0 var(--accent-2)}
 .places{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:8px 12px 4px}
-.place{padding:5px 1px;font-size:12px;border-radius:14px;background:#FFF;border:2px solid #E8DFC3;font-weight:900;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 3px 0 #D9CCA6}
+.place{padding:5px 1px;font-size:12px;border-radius:14px;background:#FFF;border:2px solid #E8DFC3;font-weight:900;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .18s cubic-bezier(.2,.9,.3,1.4),box-shadow .18s,background .18s,border-color .18s;box-shadow:0 3px 0 #D9CCA6}
 .place img{width:26px;height:26px}
 .place.on{border-color:var(--accent);background:#FFF1E3;transform:translateY(-2px);box-shadow:0 5px 0 var(--accent-2)}
 .place:active{transform:translateY(2px);box-shadow:0 1px 0 #D9CCA6}
@@ -93,7 +93,7 @@ img.px{image-rendering:pixelated}
 .modal .close.ghost{background:#F2EBD6;color:var(--dim);box-shadow:0 4px 0 #D8CEB0}
 .modal .close.danger{background:var(--red);box-shadow:0 4px 0 #9A2A26}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.card{position:relative;background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:8px 4px 6px;text-align:center;box-shadow:0 3px 0 #E8DFC3;transition:transform .05s}
+.card{position:relative;background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:8px 4px 6px;text-align:center;box-shadow:0 3px 0 #E8DFC3;transition:transform .12s cubic-bezier(.2,.9,.3,1.3),box-shadow .12s}
 .card:active{transform:translateY(2px);box-shadow:0 1px 0 #E8DFC3}
 .card img{width:64px;height:64px}
 .card .pw{position:relative;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#EFE6CB}
@@ -329,9 +329,10 @@ const cv = $('cv'), ctx = cv.getContext('2d');
 function resize() { const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); }
 new ResizeObserver(resize).observe(cv); resize();
 let bugs = [], spawnT = .5, net = null, t = 0, last = performance.now() / 1000, puffs = [], misses = [], sparkles = [];
+document.addEventListener('visibilitychange', () => { if (!document.hidden) last = performance.now() / 1000; }); // 숨겨진 동안의 시간은 건너뛴다
 let cam = (WW - W) / 2, camTarget = cam;
 // 탐험가 (심해에서는 잠수부). 키패드로 움직이고 잠자리채를 휘둘러 잡는다.
-const player = { x: WW / 2, y: 0, vy: 0, py: 220, gy: GROUND + 8, dir: 1, moving: false, runT: 0, swing: 0, cd: 0, walk: 0, happy: 0, oops: 0, land: 0, blink: 0, blinkT: 2.5, dustT: 0, air: false };
+const player = { x: WW / 2, y: 0, vy: 0, py: 220, gy: GROUND + 8, dir: 1, face: 1, vx: 0, vfy: 0, vgy: 0, skid: 0, moving: false, runT: 0, swing: 0, cd: 0, walk: 0, happy: 0, oops: 0, land: 0, blink: 0, blinkT: 2.5, dustT: 0, air: false };
 const keys = { l: false, r: false, u: false, d: false, a: false, j: false };
 const isFree = () => !!placeOf().free;
 const feetY = () => isFree() ? player.py + 30 : player.gy + player.y;
@@ -362,29 +363,44 @@ function spawn() {
   let y; if (isFree()) y = (b.move === 'crawl' || b.move === 'still') ? rnd(GROUND + 30, GROUND + 60) : rnd(90, 330); else if (b.move === 'fly') y = rnd(110, 230); else if (b.move === 'swim') y = S.place === 'sea' ? rnd(170, 248) : rnd(WATER + 10, 330); else if (b.move === 'glide') y = rnd(120, 200); else if (b.move === 'still') y = rnd(GROUND + 10, GROUND + 50); else y = rnd(GROUND - 20, GROUND + 40);
   let x = clamp(rnd(cam + 50, cam + W - 50), 40, WW - 40); // 지금 보이는 화면 안, 탐험가와는 조금 떨어진 곳에 나타난다
   if (Math.abs(x - player.x) < 110) x = clamp(player.x + (x < player.x ? -110 : 110), 40, WW - 40);
-  bugs.push({ b, x, y, dir: Math.random() < .5 ? 1 : -1, t: 0, life: rnd(12, 20), ph: rnd(0, 6.28), vx: rnd(16, 36) * [1, .85, .7][b.rare], hop: 0, hopV: 0, leave: false, sc: sizeOf(b.id), pop: 0 });
+  bugs.push({ b, x, y, dir: Math.random() < .5 ? 1 : -1, t: 0, life: rnd(12, 20), ph: rnd(0, 6.28), vx: rnd(16, 36) * [1, .85, .7][b.rare], hop: 0, hopV: 0, leave: false, sc: sizeOf(b.id), pop: 0,
+    vxv: 0, vyv: 0, face: 0, rot: 0, rotV: 0, sqz: 1, wob: rnd(0, 6.28), wander: rnd(0, 6.28), yMin: Math.max(70, y - 45), yMax: Math.min(H - 30, y + 45), trail: [] }); // 속도·회전·탄성 상태
   for (let i = 0; i < 10; i++) sparkles.push({ x: x + rnd(-20, 20), y: y + rnd(-20, 20), t: 0, life: rnd(.4, .8) });
 }
 function tick() {
   const now = performance.now() / 1000, dt = Math.min(.1, now - last); last = now; t += dt;
-  // 탐험가 조작
+  // 탐험가 조작: 입력 방향으로 가속하고, 손을 떼면 미끄러지듯 감속한다 (물속·하늘은 더 둥실하게)
   const free = isFree(), spd = 150;
-  const vx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
-  if (vx) { player.dir = vx; player.x = clamp(player.x + vx * spd * dt, 30, WW - 30); player.walk += dt * 9; }
-  player.moving = !!vx;
-  const vy = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
-  if (free) { if (vy) { player.py = clamp(player.py + vy * spd * dt, 90, 350); player.moving = true; player.walk += dt * 8; } }
-  else {
-    if (vy && player.y === 0) { player.gy = clamp(player.gy + vy * spd * .7 * dt, GROUND - 30, GROUND + 70); player.moving = true; player.walk += dt * 11; }
-    if (keys.j && player.y === 0 && player.vy === 0) { player.vy = -460; player.air = true; beep(SND.tap); for (let i = 0; i < 5; i++) puffs.push({ x: player.x + rnd(-10, 10), y: player.gy, vx: rnd(-50, 50), vy: rnd(-30, 0), t: 0, life: .4, s: 3, c: 'rgba(120,90,60,.5)' }); }
-    if (player.y < 0 || player.vy) { player.vy += 1150 * dt; player.y = Math.min(0, player.y + player.vy * dt); if (player.y === 0) { player.vy = 0; if (player.air) { player.air = false; player.land = .18; for (let i = 0; i < 8; i++) puffs.push({ x: player.x + rnd(-16, 16), y: player.gy, vx: rnd(-80, 80), vy: rnd(-40, 0), t: 0, life: .45, s: 3, c: 'rgba(120,90,60,.5)' }); } } if (player.vy) player.moving = true; }
-    if (vx && player.y === 0) { player.dustT -= dt; if (player.dustT <= 0) { player.dustT = .16; puffs.push({ x: player.x - player.dir * 10, y: player.gy, vx: -player.dir * 30, vy: -20, t: 0, life: .4, s: 3, c: 'rgba(120,90,60,.4)' }); } }
+  const ix = (keys.r ? 1 : 0) - (keys.l ? 1 : 0), iy = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
+  const accel = free ? 5 : 13, damp = free ? 3 : 15;
+  player.vx += (ix * spd - player.vx) * Math.min(1, (ix ? accel : damp) * dt); if (!ix && Math.abs(player.vx) < 2) player.vx = 0;
+  if (ix) {
+    if (ix !== player.dir && Math.abs(player.vx) > 70 && player.y === 0 && !free) { player.skid = .25; for (let i = 0; i < 6; i++) puffs.push({ x: player.x + player.dir * 8, y: player.gy, vx: player.dir * rnd(40, 110), vy: rnd(-60, -10), t: 0, life: .45, s: rnd(2, 4), c: 'rgba(120,90,60,.45)' }); } // 급방향전환: 흙먼지 튀김
+    player.dir = ix;
   }
+  const nx = clamp(player.x + player.vx * dt, 30, WW - 30); if (nx !== player.x + player.vx * dt) player.vx = 0; player.x = nx;
+  player.face += (player.dir - player.face) * Math.min(1, dt * 12); // 몸 돌리기는 부드럽게
+  const speedK = Math.abs(player.vx) / spd;
+  player.moving = speedK > .08;
+  if (player.moving) player.walk += dt * 9 * Math.max(.45, speedK);
+  if (free) {
+    player.vfy += (iy * spd - player.vfy) * Math.min(1, (iy ? accel : damp) * dt); if (!iy && Math.abs(player.vfy) < 2) player.vfy = 0;
+    player.py = clamp(player.py + player.vfy * dt, 90, 350);
+    if (Math.abs(player.vfy) > 12) { player.moving = true; player.walk += dt * 8; }
+  }
+  else {
+    player.vgy += (iy * spd * .7 - player.vgy) * Math.min(1, (iy ? accel : damp) * dt); if (!iy && Math.abs(player.vgy) < 2) player.vgy = 0;
+    if (player.y === 0 && player.vgy) { player.gy = clamp(player.gy + player.vgy * dt, GROUND - 30, GROUND + 70); if (Math.abs(player.vgy) > 12) { player.moving = true; player.walk += dt * 11; } }
+    if (keys.j && player.y === 0 && player.vy === 0) { player.vy = -460; player.air = true; beep(SND.tap); for (let i = 0; i < 5; i++) puffs.push({ x: player.x + rnd(-10, 10), y: player.gy, vx: rnd(-50, 50), vy: rnd(-30, 0), t: 0, life: .4, s: 3, c: 'rgba(120,90,60,.5)' }); }
+    if (player.y < 0 || player.vy) { player.vy += 1150 * dt; player.y = Math.min(0, player.y + player.vy * dt); if (player.y === 0) { player.vy = 0; if (player.air) { player.air = false; player.land = .18; for (let i = 0; i < 10; i++) { const a = rnd(0, 6.28), v = rnd(40, 110); puffs.push({ x: player.x + Math.cos(a) * 6, y: player.gy, vx: Math.cos(a) * v, vy: Math.sin(a) * v * .25 - 20, t: 0, life: .5, s: rnd(2, 4), c: 'rgba(120,90,60,.5)' }); } } } if (player.vy) player.moving = true; } // 착지: 사방으로 퍼지는 먼지
+    if (player.moving && player.y === 0) { player.dustT -= dt; if (player.dustT <= 0) { player.dustT = .2 - speedK * .08; puffs.push({ x: player.x - player.dir * 10, y: player.gy + rnd(-2, 2), vx: -player.dir * (20 + speedK * 40), vy: rnd(-30, -10), t: 0, life: .45, s: 2 + speedK * 2, c: 'rgba(120,90,60,.4)' }); } }
+  }
+  player.skid = Math.max(0, player.skid - dt);
   player.runT = player.moving ? player.runT + dt : 0;
   player.happy = Math.max(0, player.happy - dt); player.oops = Math.max(0, player.oops - dt); player.land = Math.max(0, player.land - dt);
   player.blinkT -= dt; if (player.blinkT <= 0) { player.blink = .12; player.blinkT = rnd(2, 4.5); } player.blink = Math.max(0, player.blink - dt);
   if (free && player.moving && Math.random() < .25) puffs.push({ x: player.x - player.dir * 8, y: player.py - 40, vx: rnd(-10, 10), vy: -50, t: 0, life: 1.1, s: rnd(2, 5), c: placeOf().fly ? 'rgba(255,255,255,.9)' : 'rgba(200,230,255,.75)' });
-  camTarget = clamp(player.x - W / 2, 0, WW - W);
+  camTarget = clamp(player.x - W / 2 + player.vx * .3, 0, WW - W); // 가는 방향을 조금 앞서 본다
   if (player.swing > 0) player.swing -= dt; if (player.cd > 0) player.cd -= dt;
   if (keys.a && player.cd <= 0) swingNet();
   cam += (camTarget - cam) * Math.min(1, dt * 10);
@@ -396,13 +412,34 @@ function tick() {
     // 경계: 탐험가가 가까우면 '!' 가 뜨고, 움직이며 다가오면 도망간다
     if (!u.leave && u.b.move !== 'still') { const dd = Math.hypot(u.x - player.x, (u.y + u.hop) - feetY() + 30); u.alert = dd < 130; if (player.runT > .5 && dd < 90 && Math.random() < wary(u.b) * dt * 1.3) flee(u); }
     const m = u.b.move, sp = u.vx * (u.leave ? 2.2 : 1);
-    const bounce = () => { if (!u.leave && (u.x < 40 || u.x > WW - 40)) u.dir *= -1; };
-    if (m === 'fly') { u.x += u.dir * sp * dt; u.y += Math.sin(t * 3 + u.ph) * 40 * dt; bounce(); }
-    else if (m === 'glide') { u.x += u.dir * sp * .4 * dt; bounce(); }
-    else if (m === 'swim') { u.x += u.dir * sp * .9 * dt; u.y += Math.sin(t * 1.5 + u.ph) * 6 * dt; bounce(); }
-    else if (m === 'still') { /* 따개비처럼 움직이지 않는다 */ }
-    else if (m === 'crawl') { u.x += u.dir * sp * .6 * dt * (Math.sin(t * 4 + u.ph) > -.3 ? 1 : 0); bounce(); }
-    else if (m === 'hop') { u.hopV += 700 * dt; u.hop += u.hopV * dt; if (u.hop >= 0) { u.hop = 0; u.hopV = 0; if (Math.random() < .02 || u.leave) { u.hopV = -rnd(180, 300); if (!u.leave && Math.random() < .3) u.dir *= -1; } } if (u.hop < 0) u.x += u.dir * sp * 1.6 * dt; if (!u.leave) u.x = clamp(u.x, 40, WW - 40); }
+    const edge = () => { if (!u.leave) { if (u.x < 40) u.dir = 1; else if (u.x > WW - 40) u.dir = -1; } };
+    // 목표 속도 (tvx, tvy) 를 정하고 그쪽으로 가속·감속한다 → 급출발·급정지 없이 유기적으로
+    let tvx = 0, tvy = 0, acc = 4;
+    if (m === 'fly') { const wander = Math.sin(t * .9 + u.wander) * .5 + Math.sin(t * 2.3 + u.wander * 2) * .25; tvx = u.dir * sp * (1 + wander * .45); tvy = Math.sin(t * 2.2 + u.ph) * 38 + Math.sin(t * 5.1 + u.ph * 2) * 14; acc = 5; }
+    else if (m === 'glide') { tvx = u.dir * sp * .4; tvy = Math.sin(t * .8 + u.ph) * 8; acc = 1.5; }
+    else if (m === 'swim') { tvx = u.dir * sp * .9 * (1 + Math.sin(t * 1.7 + u.ph) * .35); tvy = Math.sin(t * 1.5 + u.ph) * 7; acc = 3; }
+    else if (m === 'crawl') { const go = u.leave || Math.sin(t * 1.6 + u.ph) > -.25; tvx = go ? u.dir * sp * .6 : 0; acc = go ? 6 : 10; } // 멈칫멈칫 기어가기
+    else if (m === 'hop') {
+      u.hopV += 700 * dt; u.hop += u.hopV * dt;
+      if (u.hop >= 0) { if (u.hopV > 120) u.sqz = .72; u.hop = 0; u.hopV = 0; if (Math.random() < .02 || u.leave) { u.hopV = -rnd(180, 300); u.sqz = 1.28; if (!u.leave && Math.random() < .3) u.dir *= -1; } } // 착지 찌그러짐·도약 늘어남
+      tvx = u.hop < 0 ? u.dir * sp * 1.6 : 0; acc = u.hop < 0 ? 14 : 12;
+    }
+    if (m !== 'still') {
+      u.vxv += (tvx - u.vxv) * Math.min(1, acc * dt); u.vyv += (tvy - u.vyv) * Math.min(1, acc * dt);
+      u.x += u.vxv * dt; if (m === 'fly' || m === 'glide' || m === 'swim') { u.y += u.vyv * dt; if (!u.leave) { if (u.y < u.yMin) u.vyv += (u.yMin - u.y) * 6 * dt; else if (u.y > u.yMax) u.vyv -= (u.y - u.yMax) * 6 * dt; } }
+      edge(); if (!u.leave) u.x = clamp(u.x, 30, WW - 30);
+    }
+    // 탄성 복귀, 부드러운 방향 전환(face), 스프링 회전(rot), 몸 흔들림(wob), 잔상(trail)
+    u.sqz += (1 - u.sqz) * Math.min(1, 9 * dt);
+    u.face += (u.dir - u.face) * Math.min(1, dt * (m === 'fly' ? 7 : 5));
+    let trot; const pitch = Math.atan2(u.vyv, Math.abs(u.vxv) + 50);
+    if (SIDE.has(u.b.tpl)) trot = (m === 'fly' || m === 'swim' || m === 'glide') ? pitch * .5 : 0;
+    else if (m === 'fly' || m === 'glide') trot = u.face * .22 + pitch * .35 * u.face;
+    else trot = u.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+    const K = 70, C = 2 * Math.sqrt(K) * .75; u.rotV += ((trot - u.rot) * K - u.rotV * C) * dt; u.rot += u.rotV * dt; // 감쇠 스프링: 방향을 바꿀 때 살짝 넘쳤다가 돌아온다
+    u.wob += dt * (Math.abs(u.vxv) * .18 + 2.5);
+    if ((m === 'fly' || m === 'swim') && (u.leave || Math.abs(u.vxv) > 34)) { u.trail.push({ x: u.x, y: u.y + u.hop, t: 0 }); if (u.trail.length > 9) u.trail.shift(); }
+    for (const q of u.trail) q.t += dt; if (u.trail.length && u.trail[0].t > .4) u.trail.shift();
     if (u.leave && (u.x < -60 || u.x > WW + 60)) bugs.splice(i, 1);
   }
   if (net) { net.t += dt; if (net.t > .35) net = null; }
@@ -502,17 +539,25 @@ function drawActors() {
   const fy = feetY(); let playerDrawn = false;
   [...bugs].sort((a, b) => a.y - b.y).forEach(u => {
     if (!playerDrawn && (u.y + u.hop) >= fy) { drawPlayer(); playerDrawn = true; }
-    const still = u.b.move === 'still', fr = still ? 0 : FRAMES[Math.floor(t * (u.b.move === 'fly' ? 10 : 7) + u.ph * 2) & 3];
-    const img = bugBitmap(u.b.id, fr), w = u.sc * (0.5 + u.pop * .5), h = w, x = u.x - cam;
+    const m = u.b.move, still = m === 'still', fr = still ? 0 : FRAMES[Math.floor(t * (m === 'fly' ? 10 : 7) + u.ph * 2) & 3];
+    const popK = (0.5 + u.pop * .5) * (1 + Math.sin(u.pop * Math.PI) * .18); // 등장할 때 살짝 튀어오르듯 커진다
+    const img = bugBitmap(u.b.id, fr), w = u.sc * popK, h = w, x = u.x - cam;
     if (x < -80 || x > W + 80) return;
-    const bob = u.b.move === 'fly' ? Math.sin(t * 12 + u.ph) * 3 : 0;
+    const bob = m === 'fly' ? Math.sin(t * 12 + u.ph) * 2 : 0;
+    // 잔상: 빠르게 날거나 헤엄칠 때 뒤로 흐릿한 꼬리
+    for (const q of u.trail) { const k = 1 - q.t / .4; ctx.globalAlpha = k * .22; ctx.fillStyle = N ? '#CFE3FF' : '#FFFFFF'; ctx.beginPath(); ctx.arc(q.x - cam, q.y, w * .16 * k + 2, 0, 6.3); ctx.fill(); } ctx.globalAlpha = 1;
+    // 그림자: 땅에 남고, 높이 뛸수록 작고 옅어진다. 나는 곤충은 날갯짓에 맞춰 숨쉬듯 커졌다 작아진다
+    if (!placeOf().fly) { const lift = m === 'hop' ? clamp(1 + u.hop / 220, .35, 1) : 1, fl = m === 'fly' ? 1 + Math.sin(t * 12 + u.ph) * .08 : 1; ctx.globalAlpha = .25 * lift; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(x, u.y + h * .42 + (m === 'fly' ? 14 : 0), w * .3 * lift * fl, 7 * lift, 0, 0, 6.3); ctx.fill(); ctx.globalAlpha = 1; }
     ctx.save(); ctx.translate(x, u.y + u.hop + bob);
     if (N && !u.b.id.startsWith('firefly')) { const ml = ctx.createRadialGradient(0, 0, 4, 0, 0, w * .75); ml.addColorStop(0, 'rgba(255,250,220,.3)'); ml.addColorStop(1, 'rgba(255,250,220,0)'); ctx.fillStyle = ml; ctx.fillRect(-w, -w, w * 2, w * 2); }
     if (u.b.id.startsWith('firefly')) { const gl = ctx.createRadialGradient(0, 8, 2, 0, 8, 40 * (0.7 + Math.sin(t * 4 + u.ph) * .3)); gl.addColorStop(0, 'rgba(255,245,120,.7)'); gl.addColorStop(1, 'rgba(255,245,120,0)'); ctx.fillStyle = gl; ctx.fillRect(-50, -40, 100, 100); }
-    if (!placeOf().fly) { ctx.globalAlpha = .25; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(0, h * .42 + (u.b.move === 'fly' ? 14 : 0), w * .3, 7, 0, 0, 6.3); ctx.fill(); ctx.globalAlpha = 1; }
-    if (SIDE.has(u.b.tpl)) { if (u.dir < 0) ctx.scale(-1, 1); }
-    else if (u.b.move === 'fly' || u.b.move === 'glide') { ctx.rotate(u.dir * .22 + Math.sin(t * 2 + u.ph) * .12); } // 나는 곤충은 머리를 위로 두고 살짝 기울어진다
-    else { ctx.rotate(u.dir > 0 ? Math.PI / 2 : -Math.PI / 2); } // 기어가는 곤충은 가는 방향으로 머리를 돌린다
+    // 몸 흔들림: 기어갈 때 좌우로 뒤뚱, 헤엄칠 때 꼬리 흔들듯, 가만히 있을 때 숨쉬기
+    const movingK = Math.min(1, Math.abs(u.vxv) / 20);
+    const wobble = (m === 'crawl' || m === 'hop') ? Math.sin(u.wob * 2) * .07 * movingK : m === 'swim' ? Math.sin(u.wob) * .06 : m === 'fly' || m === 'glide' ? Math.sin(t * 2 + u.ph) * .08 : 0;
+    const breathe = still || movingK < .2 ? 1 + Math.sin(t * 3 + u.ph) * .02 : 1;
+    ctx.scale((2 - u.sqz) * breathe, u.sqz * breathe); // 탄성(찌그러짐·늘어남)
+    if (SIDE.has(u.b.tpl)) { const f = u.face || u.dir; ctx.scale(Math.sign(f) * Math.max(.12, Math.abs(f)), 1); ctx.rotate(u.rot * Math.sign(f) + wobble); } // 옆모습: 몸을 돌리는 동안 얇아졌다 펴진다
+    else ctx.rotate(u.rot + wobble);
     if (img) ctx.drawImage(img, -w / 2, -h / 2, w, h);
     ctx.restore();
   });
@@ -543,8 +588,8 @@ function drawPlayer() {
   const paw = (px, py, col) => { ctx.fillStyle = col; ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(px, py, 5, 4.2, 0, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.strokeStyle = sh(col, .7); ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(px - 2, py + 1); ctx.lineTo(px - 2, py + 3.5); ctx.moveTo(px, py + 1.2); ctx.lineTo(px, py + 4); ctx.moveTo(px + 2, py + 1); ctx.lineTo(px + 2, py + 3.5); ctx.stroke(); };
   ctx.save(); ctx.translate(x, baseY - hop);
   if (!free) { ctx.globalAlpha = .28 * (player.y < 0 ? .6 : 1); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(0, hop + 2 - player.y, 22 - player.y * .05, 6, 0, 0, 6.3); ctx.fill(); ctx.globalAlpha = 1; }
-  if (d < 0) ctx.scale(-1, 1);
-  ctx.scale(sq, 1 / sq); ctx.rotate(mv ? .04 : 0);
+  { const f = player.face || d; ctx.scale(Math.sign(f) * Math.max(.15, Math.abs(f)), 1); } // 돌아설 때 몸이 얇아졌다 펴진다
+  ctx.scale(sq, 1 / sq); ctx.rotate(Math.abs(player.vx) / 150 * .07 + (player.skid > 0 ? -.12 * player.skid / .25 : 0)); // 빠를수록 앞으로 기울고, 급정지 땐 뒤로 젖힌다
   const bob = mv ? Math.abs(Math.sin(ph)) * -2 : 0, HIP = -30 + bob, SH = -56 + bob;
   if (fly) { // ---- 하늘: 등에 묶은 빨간 풍선 (몸 뒤) ----
     const bx = -16 + Math.sin(t * 1.6) * 5, by = SH - 86 + Math.sin(t * 2.2) * 3;
@@ -974,7 +1019,7 @@ function renderHud() {
 function renderPlaces() {
   const box = $('places'); box.innerHTML = '';
   PLACES.forEach(p => { const b = document.createElement('button'); b.className = 'place' + (p.id === S.place ? ' on' : ''); const got = BUGS.filter(x => x.place.includes(p.id) && S.caught[x.id]).length, all = BUGS.filter(x => x.place.includes(p.id)).length;
-    b.innerHTML = `<img class="px" src="${icon(p.id)}" alt="">${p.name}<small>${got}/${all}</small>`; b.addEventListener('click', () => { if (S.place !== p.id) { S.place = p.id; bugs = []; spawnT = .3; player.x = WW / 2; player.y = 0; player.vy = 0; player.py = 220; player.gy = GROUND + 8; cam = camTarget = clamp(player.x - W / 2, 0, WW - W); save(); renderPlaces(); renderScene(); preloadFrames(); beep(SND.tap); } }); box.appendChild(b); });
+    b.innerHTML = `<img class="px" src="${icon(p.id)}" alt="">${p.name}<small>${got}/${all}</small>`; b.addEventListener('click', () => { if (S.place !== p.id) { S.place = p.id; bugs = []; spawnT = .3; player.x = WW / 2; player.y = 0; player.vy = 0; player.py = 220; player.gy = GROUND + 8; player.vx = 0; player.vfy = 0; player.vgy = 0; cam = camTarget = clamp(player.x - W / 2, 0, WW - W); save(); renderPlaces(); renderScene(); preloadFrames(); beep(SND.tap); } }); box.appendChild(b); });
 }
 function renderScene() { const p = placeOf(); $('placeName').textContent = (S.night && !p.dark ? '밤의 ' : '') + p.name; $('placeHint').textContent = p.hint; $('dayBtn').textContent = S.night ? '🌙 밤' : '☀️ 낮'; $('dayBtn').hidden = !!p.dark; $('btnJ').hidden = !!p.free; }
 function renderStrip() {
