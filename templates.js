@@ -272,7 +272,7 @@ const T = {
   // ====== 거미 (위) ======
   spider: o => {
     const a = o.a || '#4A3E5A', b = dark(a, .45), col = dark(a, .85);
-    let s = '';
+    let s = o.silk ? L(`M100 70 C${96 + WAVE() * 6} 40 ${104 - WAVE() * 6} 16 100 0`, 1.6, '#F4F6FA', 'opacity=".9"') : '';
     const legsL = [[[92, 92], [66, 60], [52, 32], [44, 14]], [[90, 98], [56, 76], [30, 58], [16, 46]], [[90, 106], [58, 112], [28, 134], [14, 150]], [[92, 112], [68, 142], [52, 172], [44, 192]]];
     legsL.forEach(pts => { s += leg(pts, col, 4.5) + leg(pts.map(([x, y]) => [200 - x, y]), col, 4.5); for (let i = 1; i < 3; i++) { const [x, y] = pts[i]; s += L(`M${x} ${y} l-3 -4 M${x} ${y} l3 -4 M${200 - x} ${y} l-3 -4 M${200 - x} ${y} l3 -4`, 1, col, 'opacity=".7"'); } });
     s += E(100, 132, o.fat ? 36 : 30, o.fat ? 40 : 36, 'url(#sp)') + `<ellipse cx="100" cy="132" rx="${o.fat ? 36 : 30}" ry="${o.fat ? 40 : 36}" fill="url(#hr)"/>`;
@@ -704,6 +704,62 @@ Object.assign(T, {
     s += L(`M118 86 C100 88 86 ${94 + w * .5} 66 ${98 - w * .5}`, 1.5, dark(a, 1.6), 'opacity=".6"');
     s += ceye(184, 78, 3.6, 3.6, '#CFE3FF') + C(185, 78, 1.7, '#15121A') + SHINE(150, 72, 20, 4, -8, .18);
     return wrap(G('ee', a, b, .4, .3) + G('ep', dark(a, .9), b, .4, .3) + G('eg', '#FFB0C0', '#FF3A6A', .5, .5), s);
+  },
+  cloud: o => { // 구름 (정면) — 귀여운 얼굴이 있다 (kind: puffy|tall|wispy|flock|flat|lens|trail, rain·snow·bolt·glow·angry)
+    const a = o.a || '#FFFFFF', b = o.b || dark(a, .72), f = WAVE() * 3, kind = o.kind || 'puffy';
+    const gen = ex => { // 같은 모양을 두 번 그려 바깥 윤곽만 남긴다 (1차: 굵은 선, 2차: 면)
+      let g = '';
+      if (kind === 'wispy') { for (const [x, y, w, h] of [[16, 70, 150, 16], [40, 104, 146, 20], [22, 140, 120, 14]]) g += P(`M${x} ${y} C${x + w * .25} ${y - h + f} ${x + w * .6} ${y - h * .6 - f} ${x + w} ${y - h * 1.2} C${x + w * .7} ${y + h * .2 - f} ${x + w * .35} ${y + h * .9 + f} ${x} ${y} Z`, a, ex); }
+      else if (kind === 'flock') { for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) { const x = 40 + c * 40 + (r % 2) * 20 - (r === 1 ? 10 : 0), y = 74 + r * 30 + ((c + r) % 2 ? f : -f); if (r === 1 && c === 3) continue; g += C(x, y, 22, a, ex); } }
+      else if (kind === 'flat') { g += P(`M18 108 C18 80 60 ${76 + f} 100 84 C140 ${76 - f} 182 80 182 108 C182 136 140 ${140 - f} 100 132 C60 ${140 + f} 18 136 18 108 Z`, a, ex); }
+      else if (kind === 'lens') { g += E(100, 104 + f, 82, 20, a, ex) + E(100, 90 + f, 50, 18, a, ex); }
+      else if (kind === 'trail') { g += P(`M12 ${112 + f} L182 ${90 - f} L182 ${104 - f} L12 ${126 + f} Z`, a, ex); }
+      else { const ps = kind === 'tall' ? [[100, 56, 32], [68, 80, 28], [132, 80, 28], [48, 116, 28], [152, 116, 28], [100, 98, 40], [78, 142, 32], [122, 142, 32], [100, 150, 34]] : [[58, 112, 30], [142, 112, 30], [100, 86, 42], [78, 134, 32], [122, 134, 32], [100, 130, 36]]; for (const [x, y, r] of ps) g += C(x, y + (x < 100 ? f : -f), r, a, ex); }
+      return g;
+    };
+    let s = '';
+    if (o.glow) s += E(100, 108, 96, 70, '#9FD8FF', 'opacity=".35" stroke="none"') + E(100, 108, 80, 56, '#CFF0FF', 'opacity=".35" stroke="none"');
+    if (o.bolt) s += P('M108 132 L92 160 L104 158 L94 190 L120 152 L106 154 L118 132 Z', '#FFD54A', `stroke="${dark('#FFD54A', .7)}" stroke-width="2"`);
+    if (o.rain) for (let i = 0; i < 6; i++) { const x = 44 + i * 22, y = 150 + (i % 2) * 14 + WAVE() * 6; s += L(`M${x} ${y} L${x - 4} ${y + 14}`, 4, '#5FB8F0'); }
+    if (o.snow) for (let i = 0; i < 6; i++) { const x = 42 + i * 23, y = 154 + (i % 2) * 14 + WAVE() * 5; s += C(x, y, 4, '#FFFFFF', 'stroke="#BFD8F0" stroke-width="1.5"') + L(`M${x - 5} ${y} L${x + 5} ${y} M${x} ${y - 5} L${x} ${y + 5}`, 1.2, '#BFD8F0'); }
+    s += gen(`stroke="${b}" stroke-width="7"`) + gen('stroke="none"');
+    // 아래쪽 그늘
+    if (kind !== 'trail' && kind !== 'wispy') s += (kind === 'flat' ? E(100, 126, 60, 8, b, 'opacity=".28" stroke="none"') : kind === 'lens' ? E(100, 114, 60, 8, b, 'opacity=".28" stroke="none"') : E(100, 150 + (kind === 'tall' ? 14 : 0), 44, 10, b, 'opacity=".28" stroke="none"'));
+    if (kind === 'trail') s += P('M156 70 L190 84 L178 90 L182 102 L172 97 L154 103 L162 88 Z', '#EEF2F6', 'stroke-width="1.5"') + L('M160 86 L176 92', 1.2, '#6A7A8A'); // 작은 비행기
+    // 얼굴
+    const fy = kind === 'tall' ? 100 : kind === 'flat' ? 104 : kind === 'lens' ? 92 : kind === 'flock' ? 106 : kind === 'wispy' ? 98 : 110;
+    if (kind !== 'trail' && kind !== 'wispy') {
+      const ink = '#2A2A3A';
+      if (o.angry) s += L(`M78 ${fy - 14} L92 ${fy - 8} M122 ${fy - 14} L108 ${fy - 8}`, 3, ink);
+      if (o.sleepy) s += L(`M80 ${fy} Q86 ${fy + 5} 92 ${fy} M108 ${fy} Q114 ${fy + 5} 120 ${fy}`, 3, ink);
+      else s += C(86, fy, 5, ink) + C(114, fy, 5, ink) + C(88, fy - 2, 1.8, '#fff') + C(116, fy - 2, 1.8, '#fff');
+      s += o.angry ? L(`M90 ${fy + 16} Q100 ${fy + 10} 110 ${fy + 16}`, 2.5, ink) : L(`M90 ${fy + 12} Q100 ${fy + 20} 110 ${fy + 12}`, 2.5, ink);
+      s += C(74, fy + 10, 5, '#FFB0B0', 'opacity=".55"') + C(126, fy + 10, 5, '#FFB0B0', 'opacity=".55"');
+    }
+    return wrap('', s);
+  },
+  rainbow: o => { // 무지개 — 양 끝에 작은 구름
+    const cols = ['#E53935', '#FF8A3D', '#FFD54A', '#7CC24A', '#3F9AE8', '#3949AB', '#8E44AD'], f = WAVE() * 2;
+    let s = '';
+    cols.forEach((c, i) => { const r = 86 - i * 9; s += `<path d="M${100 - r} 150 A${r} ${r} 0 0 1 ${100 + r} 150" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="butt"/>`; });
+    s += `<path d="M14 150 A86 86 0 0 1 186 150" fill="none" stroke="${OL}" stroke-width="2" opacity=".5"/><path d="M${100 - 32} 150 A32 32 0 0 1 ${100 + 32} 150" fill="none" stroke="${OL}" stroke-width="2" opacity=".5"/>`;
+    for (const cx of [22, 178]) { const g = ex => C(cx, 150 + f, 18, '#fff', ex) + C(cx - 16, 156 + f, 13, '#fff', ex) + C(cx + 16, 156 + f, 13, '#fff', ex) + E(cx, 162 + f, 26, 10, '#fff', ex); s += g('stroke="#B8C8D8" stroke-width="6"') + g('stroke="none"'); }
+    s += C(92, 118, 4, '#2A2A3A') + C(108, 118, 4, '#2A2A3A') + L('M94 128 Q100 134 106 128', 2.5, '#2A2A3A');
+    return wrap('', s);
+  },
+  bird: o => { // 새 (옆, 오른쪽을 향함) — 날개 펄럭임 (forked 제비 꼬리, throat 목 색)
+    const a = o.a || '#2A3A5A', b = dark(a, .55), belly = o.belly || '#F3EFE4', w = WAVE() * 22;
+    let s = '';
+    s += o.forked ? P('M60 100 L12 80 L34 104 L10 126 Z', a) : P('M60 98 L16 88 L22 104 L14 118 Z', a); // 꼬리
+    s += P(`M62 102 C52 ${70 - w} 60 ${44 - w} 86 ${40 - w} C100 ${50 - w * .6} 104 ${76 - w * .3} 96 100 Z`, dark(a, .85)); // 뒤 날개
+    s += E(90, 104, 46, 22, 'url(#bd)') + P('M60 110 C76 126 112 126 134 108 C120 118 90 120 60 110 Z', belly, 'stroke="none"'); // 몸통·배
+    s += C(134, 92, 19, 'url(#bd)'); // 머리
+    if (o.throat) s += P('M118 100 C126 110 140 110 150 100 C142 106 128 106 118 100 Z', o.throat, 'stroke="none"');
+    s += P('M150 92 L170 96 L150 100 Z', o.beak || '#F4B942', 'stroke-width="1.5"'); // 부리
+    s += C(140, 88, 4.5, '#15121A') + C(142, 86, 1.6, '#fff');
+    s += P(`M78 106 C66 ${84 + w} 78 ${58 + w} 104 ${46 + w} L118 ${44 + w * 1.1} L110 ${58 + w * .9} L124 ${56 + w} L112 ${70 + w * .7} C122 ${82 + w * .4} 118 ${96 + w * .2} 104 108 Z`, 'url(#bw)'); // 앞 날개 (끝에 깃털 갈래)
+    s += L(`M88 98 C92 ${80 + w * .8} 102 ${66 + w * .9} 110 ${58 + w}`, 1.4, b, 'opacity=".5"');
+    return wrap(G('bd', a, b, .4, .35) + G('bw', dark(a, .95), b, .4, .3), s);
   },
   bat: o => { // 박쥐 (위에서 본 모습, 날개를 활짝 편 채 머리는 위)
     const a = o.a || '#6B5A4A', b = dark(a, .5), wing = o.wing || dark(a, .75), f = WAVE() * 10;

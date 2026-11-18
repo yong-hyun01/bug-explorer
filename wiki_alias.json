@@ -2162,5 +2162,171 @@
    "en",
    "Gomphidae"
   ]
+ ],
+ "cumulus": [
+  [
+   "ko",
+   "적운"
+  ],
+  [
+   "en",
+   "Cumulus cloud"
+  ]
+ ],
+ "cirrus": [
+  [
+   "ko",
+   "권운"
+  ],
+  [
+   "en",
+   "Cirrus cloud"
+  ]
+ ],
+ "altocumulus": [
+  [
+   "ko",
+   "고적운"
+  ],
+  [
+   "en",
+   "Altocumulus cloud"
+  ]
+ ],
+ "stratus": [
+  [
+   "ko",
+   "층운"
+  ],
+  [
+   "en",
+   "Stratus cloud"
+  ]
+ ],
+ "nimbostratus": [
+  [
+   "ko",
+   "난층운"
+  ],
+  [
+   "en",
+   "Nimbostratus cloud"
+  ]
+ ],
+ "cumulonimbus": [
+  [
+   "ko",
+   "적란운"
+  ],
+  [
+   "en",
+   "Cumulonimbus cloud"
+  ]
+ ],
+ "sunset_cloud": [
+  [
+   "ko",
+   "노을"
+  ],
+  [
+   "en",
+   "Sunset"
+  ],
+  [
+   "commons",
+   "sunset clouds orange"
+  ]
+ ],
+ "lenticular": [
+  [
+   "ko",
+   "렌즈구름"
+  ],
+  [
+   "ko",
+   "렌즈운"
+  ],
+  [
+   "en",
+   "Lenticular cloud"
+  ]
+ ],
+ "contrail": [
+  [
+   "ko",
+   "비행운"
+  ],
+  [
+   "en",
+   "Contrail"
+  ]
+ ],
+ "snow_cloud": [
+  [
+   "ko",
+   "눈 (날씨)"
+  ],
+  [
+   "en",
+   "Snow"
+  ],
+  [
+   "commons",
+   "snow clouds winter sky"
+  ]
+ ],
+ "noctilucent": [
+  [
+   "ko",
+   "야광운"
+  ],
+  [
+   "en",
+   "Noctilucent cloud"
+  ]
+ ],
+ "rainbow": [
+  [
+   "ko",
+   "무지개"
+  ],
+  [
+   "en",
+   "Rainbow"
+  ]
+ ],
+ "swallow": [
+  [
+   "ko",
+   "제비"
+  ],
+  [
+   "en",
+   "Barn swallow"
+  ]
+ ],
+ "swift": [
+  [
+   "ko",
+   "칼새"
+  ],
+  [
+   "en",
+   "Common swift"
+  ]
+ ],
+ "ballooning_spider": [
+  [
+   "en",
+   "Ballooning (spider)"
+  ],
+  [
+   "commons",
+   "ballooning spider silk"
+  ],
+  [
+   "ko",
+   "유사비행"
+  ]
  ]
 }

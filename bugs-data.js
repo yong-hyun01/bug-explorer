@@ -272,7 +272,7 @@ const T = {
   // ====== 거미 (위) ======
   spider: o => {
     const a = o.a || '#4A3E5A', b = dark(a, .45), col = dark(a, .85);
-    let s = '';
+    let s = o.silk ? L(`M100 70 C${96 + WAVE() * 6} 40 ${104 - WAVE() * 6} 16 100 0`, 1.6, '#F4F6FA', 'opacity=".9"') : '';
     const legsL = [[[92, 92], [66, 60], [52, 32], [44, 14]], [[90, 98], [56, 76], [30, 58], [16, 46]], [[90, 106], [58, 112], [28, 134], [14, 150]], [[92, 112], [68, 142], [52, 172], [44, 192]]];
     legsL.forEach(pts => { s += leg(pts, col, 4.5) + leg(pts.map(([x, y]) => [200 - x, y]), col, 4.5); for (let i = 1; i < 3; i++) { const [x, y] = pts[i]; s += L(`M${x} ${y} l-3 -4 M${x} ${y} l3 -4 M${200 - x} ${y} l-3 -4 M${200 - x} ${y} l3 -4`, 1, col, 'opacity=".7"'); } });
     s += E(100, 132, o.fat ? 36 : 30, o.fat ? 40 : 36, 'url(#sp)') + `<ellipse cx="100" cy="132" rx="${o.fat ? 36 : 30}" ry="${o.fat ? 40 : 36}" fill="url(#hr)"/>`;
@@ -705,6 +705,62 @@ Object.assign(T, {
     s += ceye(184, 78, 3.6, 3.6, '#CFE3FF') + C(185, 78, 1.7, '#15121A') + SHINE(150, 72, 20, 4, -8, .18);
     return wrap(G('ee', a, b, .4, .3) + G('ep', dark(a, .9), b, .4, .3) + G('eg', '#FFB0C0', '#FF3A6A', .5, .5), s);
   },
+  cloud: o => { // 구름 (정면) — 귀여운 얼굴이 있다 (kind: puffy|tall|wispy|flock|flat|lens|trail, rain·snow·bolt·glow·angry)
+    const a = o.a || '#FFFFFF', b = o.b || dark(a, .72), f = WAVE() * 3, kind = o.kind || 'puffy';
+    const gen = ex => { // 같은 모양을 두 번 그려 바깥 윤곽만 남긴다 (1차: 굵은 선, 2차: 면)
+      let g = '';
+      if (kind === 'wispy') { for (const [x, y, w, h] of [[16, 70, 150, 16], [40, 104, 146, 20], [22, 140, 120, 14]]) g += P(`M${x} ${y} C${x + w * .25} ${y - h + f} ${x + w * .6} ${y - h * .6 - f} ${x + w} ${y - h * 1.2} C${x + w * .7} ${y + h * .2 - f} ${x + w * .35} ${y + h * .9 + f} ${x} ${y} Z`, a, ex); }
+      else if (kind === 'flock') { for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) { const x = 40 + c * 40 + (r % 2) * 20 - (r === 1 ? 10 : 0), y = 74 + r * 30 + ((c + r) % 2 ? f : -f); if (r === 1 && c === 3) continue; g += C(x, y, 22, a, ex); } }
+      else if (kind === 'flat') { g += P(`M18 108 C18 80 60 ${76 + f} 100 84 C140 ${76 - f} 182 80 182 108 C182 136 140 ${140 - f} 100 132 C60 ${140 + f} 18 136 18 108 Z`, a, ex); }
+      else if (kind === 'lens') { g += E(100, 104 + f, 82, 20, a, ex) + E(100, 90 + f, 50, 18, a, ex); }
+      else if (kind === 'trail') { g += P(`M12 ${112 + f} L182 ${90 - f} L182 ${104 - f} L12 ${126 + f} Z`, a, ex); }
+      else { const ps = kind === 'tall' ? [[100, 56, 32], [68, 80, 28], [132, 80, 28], [48, 116, 28], [152, 116, 28], [100, 98, 40], [78, 142, 32], [122, 142, 32], [100, 150, 34]] : [[58, 112, 30], [142, 112, 30], [100, 86, 42], [78, 134, 32], [122, 134, 32], [100, 130, 36]]; for (const [x, y, r] of ps) g += C(x, y + (x < 100 ? f : -f), r, a, ex); }
+      return g;
+    };
+    let s = '';
+    if (o.glow) s += E(100, 108, 96, 70, '#9FD8FF', 'opacity=".35" stroke="none"') + E(100, 108, 80, 56, '#CFF0FF', 'opacity=".35" stroke="none"');
+    if (o.bolt) s += P('M108 132 L92 160 L104 158 L94 190 L120 152 L106 154 L118 132 Z', '#FFD54A', `stroke="${dark('#FFD54A', .7)}" stroke-width="2"`);
+    if (o.rain) for (let i = 0; i < 6; i++) { const x = 44 + i * 22, y = 150 + (i % 2) * 14 + WAVE() * 6; s += L(`M${x} ${y} L${x - 4} ${y + 14}`, 4, '#5FB8F0'); }
+    if (o.snow) for (let i = 0; i < 6; i++) { const x = 42 + i * 23, y = 154 + (i % 2) * 14 + WAVE() * 5; s += C(x, y, 4, '#FFFFFF', 'stroke="#BFD8F0" stroke-width="1.5"') + L(`M${x - 5} ${y} L${x + 5} ${y} M${x} ${y - 5} L${x} ${y + 5}`, 1.2, '#BFD8F0'); }
+    s += gen(`stroke="${b}" stroke-width="7"`) + gen('stroke="none"');
+    // 아래쪽 그늘
+    if (kind !== 'trail' && kind !== 'wispy') s += (kind === 'flat' ? E(100, 126, 60, 8, b, 'opacity=".28" stroke="none"') : kind === 'lens' ? E(100, 114, 60, 8, b, 'opacity=".28" stroke="none"') : E(100, 150 + (kind === 'tall' ? 14 : 0), 44, 10, b, 'opacity=".28" stroke="none"'));
+    if (kind === 'trail') s += P('M156 70 L190 84 L178 90 L182 102 L172 97 L154 103 L162 88 Z', '#EEF2F6', 'stroke-width="1.5"') + L('M160 86 L176 92', 1.2, '#6A7A8A'); // 작은 비행기
+    // 얼굴
+    const fy = kind === 'tall' ? 100 : kind === 'flat' ? 104 : kind === 'lens' ? 92 : kind === 'flock' ? 106 : kind === 'wispy' ? 98 : 110;
+    if (kind !== 'trail' && kind !== 'wispy') {
+      const ink = '#2A2A3A';
+      if (o.angry) s += L(`M78 ${fy - 14} L92 ${fy - 8} M122 ${fy - 14} L108 ${fy - 8}`, 3, ink);
+      if (o.sleepy) s += L(`M80 ${fy} Q86 ${fy + 5} 92 ${fy} M108 ${fy} Q114 ${fy + 5} 120 ${fy}`, 3, ink);
+      else s += C(86, fy, 5, ink) + C(114, fy, 5, ink) + C(88, fy - 2, 1.8, '#fff') + C(116, fy - 2, 1.8, '#fff');
+      s += o.angry ? L(`M90 ${fy + 16} Q100 ${fy + 10} 110 ${fy + 16}`, 2.5, ink) : L(`M90 ${fy + 12} Q100 ${fy + 20} 110 ${fy + 12}`, 2.5, ink);
+      s += C(74, fy + 10, 5, '#FFB0B0', 'opacity=".55"') + C(126, fy + 10, 5, '#FFB0B0', 'opacity=".55"');
+    }
+    return wrap('', s);
+  },
+  rainbow: o => { // 무지개 — 양 끝에 작은 구름
+    const cols = ['#E53935', '#FF8A3D', '#FFD54A', '#7CC24A', '#3F9AE8', '#3949AB', '#8E44AD'], f = WAVE() * 2;
+    let s = '';
+    cols.forEach((c, i) => { const r = 86 - i * 9; s += `<path d="M${100 - r} 150 A${r} ${r} 0 0 1 ${100 + r} 150" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="butt"/>`; });
+    s += `<path d="M14 150 A86 86 0 0 1 186 150" fill="none" stroke="${OL}" stroke-width="2" opacity=".5"/><path d="M${100 - 32} 150 A32 32 0 0 1 ${100 + 32} 150" fill="none" stroke="${OL}" stroke-width="2" opacity=".5"/>`;
+    for (const cx of [22, 178]) { const g = ex => C(cx, 150 + f, 18, '#fff', ex) + C(cx - 16, 156 + f, 13, '#fff', ex) + C(cx + 16, 156 + f, 13, '#fff', ex) + E(cx, 162 + f, 26, 10, '#fff', ex); s += g('stroke="#B8C8D8" stroke-width="6"') + g('stroke="none"'); }
+    s += C(92, 118, 4, '#2A2A3A') + C(108, 118, 4, '#2A2A3A') + L('M94 128 Q100 134 106 128', 2.5, '#2A2A3A');
+    return wrap('', s);
+  },
+  bird: o => { // 새 (옆, 오른쪽을 향함) — 날개 펄럭임 (forked 제비 꼬리, throat 목 색)
+    const a = o.a || '#2A3A5A', b = dark(a, .55), belly = o.belly || '#F3EFE4', w = WAVE() * 22;
+    let s = '';
+    s += o.forked ? P('M60 100 L12 80 L34 104 L10 126 Z', a) : P('M60 98 L16 88 L22 104 L14 118 Z', a); // 꼬리
+    s += P(`M62 102 C52 ${70 - w} 60 ${44 - w} 86 ${40 - w} C100 ${50 - w * .6} 104 ${76 - w * .3} 96 100 Z`, dark(a, .85)); // 뒤 날개
+    s += E(90, 104, 46, 22, 'url(#bd)') + P('M60 110 C76 126 112 126 134 108 C120 118 90 120 60 110 Z', belly, 'stroke="none"'); // 몸통·배
+    s += C(134, 92, 19, 'url(#bd)'); // 머리
+    if (o.throat) s += P('M118 100 C126 110 140 110 150 100 C142 106 128 106 118 100 Z', o.throat, 'stroke="none"');
+    s += P('M150 92 L170 96 L150 100 Z', o.beak || '#F4B942', 'stroke-width="1.5"'); // 부리
+    s += C(140, 88, 4.5, '#15121A') + C(142, 86, 1.6, '#fff');
+    s += P(`M78 106 C66 ${84 + w} 78 ${58 + w} 104 ${46 + w} L118 ${44 + w * 1.1} L110 ${58 + w * .9} L124 ${56 + w} L112 ${70 + w * .7} C122 ${82 + w * .4} 118 ${96 + w * .2} 104 108 Z`, 'url(#bw)'); // 앞 날개 (끝에 깃털 갈래)
+    s += L(`M88 98 C92 ${80 + w * .8} 102 ${66 + w * .9} 110 ${58 + w}`, 1.4, b, 'opacity=".5"');
+    return wrap(G('bd', a, b, .4, .35) + G('bw', dark(a, .95), b, .4, .3), s);
+  },
   bat: o => { // 박쥐 (위에서 본 모습, 날개를 활짝 편 채 머리는 위)
     const a = o.a || '#6B5A4A', b = dark(a, .5), wing = o.wing || dark(a, .75), f = WAVE() * 10;
     const w = d => `M${100 + d * 14} 96 C${100 + d * 40} ${70 - f} ${100 + d * 70} ${60 - f} ${100 + d * 96} ${66 - f} C${100 + d * 92} ${86 - f * .5} ${100 + d * 84} ${100} ${100 + d * 82} ${118} C${100 + d * 70} ${108} ${100 + d * 62} ${120} ${100 + d * 56} ${138} C${100 + d * 48} ${124} ${100 + d * 38} ${130} ${100 + d * 30} ${146} C${100 + d * 24} ${130} ${100 + d * 18} ${124} ${100 + d * 12} ${126} Z`;
@@ -833,7 +889,7 @@ const RAW = [
 ['blue_bf', '남방부전나비', '나비', ['meadow'], 'day', 'fly', 0, 'butterfly', { a: '#7FB3FF', b: '#3B5BDB', lo: '#9FC4FF', tipStyle: 'none', spots: [[60, 86, 4], [74, 150, 4]] }, '2.5cm · 어른 엄지손톱 두 개 크기', '꽃의 꿀', '풀밭과 공원', '아주 작은 파란 나비예요. 날개를 접으면 회색이라 숨바꼭질을 잘해요.'],
 ['comma', '네발나비', '나비', ['meadow'], 'day', 'fly', 0, 'butterfly', { a: '#F39C3D', b: '#C45A12', lo: '#E67E22', spots: [[64, 70, 6], [76, 90, 5], [60, 150, 5]], veins: true }, '5cm · 날개를 펴면 어른 엄지 길이', '과일즙, 꽃의 꿀', '숲 가장자리', '다리가 네 개처럼 보여서 네발나비예요. 사실 앞다리 두 개가 아주 작아서 숨어 있어요.'],
 ['peacock', '공작나비', '나비', ['forest'], 'day', 'fly', 2, 'butterfly', { a: '#C0392B', b: '#7B1E1E', lo: '#A93226', tipStyle: 'none', eyes: [[52, 70, 13, '#F2C14E', '#3B5BDB'], [60, 150, 10, '#F2C14E', '#3B5BDB']] }, '6cm · 어른 손가락 길이', '꽃의 꿀', '높은 산', '날개에 공작새 깃털 같은 눈알 무늬가 있어요. 새가 오면 날개를 펴서 깜짝 놀라게 해요.'],
-['monarch', '왕나비', '나비', ['forest'], 'day', 'fly', 2, 'butterfly', { a: '#F39C3D', b: '#C45A12', lo: '#E67E22', stripes: true, veins: true, spots: [[30, 62, 4, '#fff'], [44, 52, 4, '#fff']] }, '10cm · 어른 손바닥만 해요', '꽃의 꿀', '남쪽 섬과 산', '바다를 건너 아주 멀리까지 여행하는 나비예요. 제주도에서 일본까지 날아간 기록도 있어요.'],
+['monarch', '왕나비', '나비', ['forest', 'sky'], 'day', 'fly', 2, 'butterfly', { a: '#F39C3D', b: '#C45A12', lo: '#E67E22', stripes: true, veins: true, spots: [[30, 62, 4, '#fff'], [44, 52, 4, '#fff']] }, '10cm · 어른 손바닥만 해요', '꽃의 꿀', '남쪽 섬과 산', '바다를 건너 아주 멀리까지 여행하는 나비예요. 제주도에서 일본까지 날아간 기록도 있어요.'],
 ['large_white', '큰줄흰나비', '나비', ['meadow'], 'day', 'fly', 0, 'butterfly', { a: '#F8F8FF', veins: true, spots: [[60, 82, 5]] }, '6cm · 어른 손가락 길이', '꽃의 꿀', '산과 들판', '배추흰나비와 닮았지만 날개에 까만 줄이 뚜렷해요. 산에서 더 많이 보여요.'],
 ['parnassius', '모시나비', '나비', ['meadow'], 'day', 'fly', 2, 'butterfly', { a: '#F8F8FF', b: '#E0E0EA', tipStyle: 'none', veins: true, body: '#5A5A6E' }, '6cm · 어른 손가락 길이', '꽃의 꿀', '산속 풀밭', '날개가 얇은 모시옷처럼 비쳐요. 봄에만 잠깐 나오는 귀한 나비예요.'],
 ['skipper', '팔랑나비', '나비', ['meadow'], 'day', 'fly', 0, 'butterfly', { a: '#A0522D', b: '#6B3A1E', lo: '#8B4A2B', tipStyle: 'none', spots: [[56, 76, 4, '#F3E7C3'], [70, 90, 4, '#F3E7C3']], body: '#5A3E1E' }, '3cm · 어른 엄지손가락만 해요', '꽃의 꿀', '풀밭', '날개를 팔랑팔랑 빠르게 흔들며 날아요. 몸이 통통하고 더듬이 끝이 갈고리처럼 휘었어요.'],
@@ -873,7 +929,7 @@ const RAW = [
 ['mantis_big', '왕사마귀', '사마귀', ['forest'], 'day', 'crawl', 2, 'mantis', { a: '#7CC24A' }, '9cm · 어른 손바닥 길이', '다른 곤충', '풀밭', '우리나라에서 가장 큰 사마귀예요. 가을에 거품 같은 알집을 만들어 겨울을 나요.'],
 ['mantis_brown', '갈색사마귀', '사마귀', ['meadow'], 'day', 'crawl', 1, 'mantis', { a: '#C8A46A' }, '7cm · 어른 손가락 길이', '다른 곤충', '마른 풀밭', '마른 풀 색깔이라 가을 풀밭에서 숨기 좋아요. 사마귀는 몸 색이 초록도 갈색도 있어요.'],
 // ---- 잠자리 ----
-['dragonfly', '된장잠자리', '잠자리', ['pond'], 'day', 'fly', 0, 'dragonfly', { a: '#D9A066', eye: '#8B6B3C' }, '5cm · 날개를 펴면 어른 엄지 길이', '모기, 파리', '연못과 들판', '된장 색이라 된장잠자리예요. 바다를 건너 아주 먼 나라까지 날아가는 여행가예요.'],
+['dragonfly', '된장잠자리', '잠자리', ['pond', 'sky'], 'day', 'fly', 0, 'dragonfly', { a: '#D9A066', eye: '#8B6B3C' }, '5cm · 날개를 펴면 어른 엄지 길이', '모기, 파리', '연못과 들판', '된장 색이라 된장잠자리예요. 바다를 건너 아주 먼 나라까지 날아가는 여행가예요.'],
 ['red_dragonfly', '고추잠자리', '잠자리', ['pond', 'wetland'], 'day', 'fly', 0, 'dragonfly', { a: '#E53935', eye: '#C0392B' }, '5cm · 날개를 펴면 어른 엄지 길이', '모기, 파리', '연못과 논', '가을 하늘을 빨갛게 수놓아요. 수컷만 고추처럼 빨갛고 암컷은 노란빛이에요.'],
 ['emperor', '왕잠자리', '잠자리', ['pond', 'river'], 'day', 'fly', 2, 'dragonfly', { a: '#3B82F6', eye: '#2ECC71' }, '8cm · 어른 손가락 길이', '나비, 파리', '큰 연못', '잠자리 중에서 가장 크고 빨라요. 눈이 아주 커서 거의 모든 방향을 한 번에 볼 수 있어요.'],
 ['skimmer', '밀잠자리', '잠자리', ['pond', 'river', 'stream'], 'day', 'fly', 0, 'dragonfly', { a: '#9FC4FF', eye: '#5A9A5A' }, '5cm · 날개를 펴면 어른 엄지 길이', '작은 벌레', '연못과 냇가', '수컷은 몸에 하얀 가루가 덮여 있어 밀가루 같아요. 물가 돌 위에 앉아 쉬는 걸 좋아해요.'],
@@ -897,7 +953,7 @@ const RAW = [
 ['cicada_brown', '유지매미', '매미', ['forest'], 'day', 'glide', 1, 'cicada', { a: '#8B6B4A', h: '#5A3E1E', wing: '#8B6B4A', wingOp: .8 }, '5cm · 날개를 펴면 어른 엄지 길이', '나무 수액', '숲속 나무', '날개가 기름종이처럼 갈색이라 유지매미예요. "지글지글" 기름 끓는 소리처럼 울어요.'],
 // ---- 파리·모기 ----
 ['housefly', '집파리', '파리', ['yard', 'home'], 'day', 'fly', 0, 'fly', {}, '0.7cm · 새끼손톱만 해요', '음식 찌꺼기', '집 근처', '발로 맛을 봐요! 발에 맛을 느끼는 털이 있어서 음식 위를 걸으며 맛을 확인해요.'],
-['hoverfly', '꽃등에', '파리', ['yard'], 'day', 'fly', 0, 'fly', { a: '#F2C14E', stripes: '#2B2340', th: '#8A5A2B', eye: '#8B2B1E' }, '1.2cm · 콩알 두 개 크기', '꽃가루와 꿀', '꽃밭', '벌처럼 생겼지만 침이 없는 파리예요. 헬리콥터처럼 공중에 가만히 떠 있을 수 있어요.'],
+['hoverfly', '꽃등에', '파리', ['yard', 'sky'], 'day', 'fly', 0, 'fly', { a: '#F2C14E', stripes: '#2B2340', th: '#8A5A2B', eye: '#8B2B1E' }, '1.2cm · 콩알 두 개 크기', '꽃가루와 꿀', '꽃밭', '벌처럼 생겼지만 침이 없는 파리예요. 헬리콥터처럼 공중에 가만히 떠 있을 수 있어요.'],
 ['mosquito', '모기', '파리', ['pond', 'home', 'wetland'], 'night', 'fly', 0, 'fly', { a: '#6B6B7A', slim: true, eye: '#1E1A26' }, '0.5cm · 쌀알만 해요', '꽃의 꿀, 피(암컷)', '물가와 집 근처', '피를 빠는 건 알을 낳으려는 엄마 모기뿐이에요. 아빠 모기는 꽃의 꿀만 먹어요.'],
 ['horsefly', '등에', '파리', ['meadow'], 'day', 'fly', 1, 'fly', { a: '#6B5A3A', eye: '#2ECC71' }, '2cm · 콩알 세 개 크기', '꽃의 꿀, 피(암컷)', '소와 말이 있는 풀밭', '눈이 초록·무지개빛으로 반짝여요. 소와 말을 따라다니며 괴롭히는 큰 파리예요.'],
 ['fruitfly', '초파리', '파리', ['yard', 'home'], 'both', 'fly', 0, 'fly', { a: '#D9A066', eye: '#E53935' }, '0.3cm · 깨알만 해요', '익은 과일', '과일 바구니 근처', '아주 작지만 과학자들이 가장 많이 연구하는 곤충이에요. 빨간 눈이 특징이에요.'],
@@ -998,7 +1054,7 @@ const RAW = [
 ['bronze_chafer', '청동풍뎅이', '딱정벌레', ['meadow'], 'day', 'crawl', 0, 'beetle', { a: '#5E8E3E', b: '#2E5E2E', shape: 'oval', head: '#2E5E2E', pron: '#3E7E3E', antClub: true }, '2cm · 콩알 세 개 크기', '잎, 꽃', '풀밭과 과수원', '햇빛을 받으면 청동처럼 반짝여요. 여름 저녁에 불빛으로 날아오기도 해요.'],
 ['purple_dor', '보라금풍뎅이', '딱정벌레', ['meadow'], 'night', 'crawl', 2, 'beetle', { a: '#6A3FA0', b: '#3A1E60', shape: 'round', head: '#2A1A40', pron: '#4A2A80', striae: true }, '2cm · 콩알 세 개 크기', '동물 똥', '풀밭 땅속 굴', '보랏빛으로 반짝이는 똥 청소부예요. 똥 밑에 굴을 파고 똥을 끌어다 알을 낳아요.'],
 ['pointy_hopper', '섬서구메뚜기', '메뚜기', ['meadow'], 'day', 'hop', 0, 'hopper', { a: '#9BC45A', long: true, head: '#7CA840' }, '3cm · 어른 엄지손가락만 해요', '풀잎', '풀밭', '머리가 뾰족한 원뿔 모양이에요. 암컷이 수컷보다 두 배나 커서 수컷을 업고 다니는 것처럼 보여요.'],
-['painted_lady', '작은멋쟁이나비', '나비', ['meadow', 'desert'], 'day', 'fly', 1, 'butterfly', { a: '#F39C3D', b: '#C45A12', lo: '#E67E22', tipStyle: 'none', spots: [[40, 56, 4, '#fff'], [54, 50, 4, '#fff'], [60, 150, 4], [72, 160, 4]], veins: true }, '5cm · 날개를 펴면 어른 엄지 길이', '꽃꿀', '풀밭과 꽃밭', '세계에서 가장 멀리 여행하는 나비 중 하나예요. 아프리카에서 유럽까지 수천 킬로미터를 날아가요.'],
+['painted_lady', '작은멋쟁이나비', '나비', ['meadow', 'desert', 'sky'], 'day', 'fly', 1, 'butterfly', { a: '#F39C3D', b: '#C45A12', lo: '#E67E22', tipStyle: 'none', spots: [[40, 56, 4, '#fff'], [54, 50, 4, '#fff'], [60, 150, 4], [72, 160, 4]], veins: true }, '5cm · 날개를 펴면 어른 엄지 길이', '꽃꿀', '풀밭과 꽃밭', '세계에서 가장 멀리 여행하는 나비 중 하나예요. 아프리카에서 유럽까지 수천 킬로미터를 날아가요.'],
 ['leafhopper', '끝동매미충', '노린재', ['meadow'], 'day', 'hop', 0, 'shield', { a: '#7CC24A', sc: '#5A9A2A', spots: [[80, 92, 3, '#1E1A26'], [120, 92, 3, '#1E1A26']] }, '0.5cm · 쌀알만 해요', '풀즙', '논과 풀밭', '매미를 아주 작게 줄인 모습이에요. 건드리면 옆으로 쓱 걸어가 잎 뒤로 숨어요.'],
 ['leaf_beetle', '청줄보라잎벌레', '딱정벌레', ['meadow'], 'day', 'crawl', 1, 'beetle', { a: '#4A3FA8', b: '#2A1E70', shape: 'round', head: '#2A1E70', pron: '#3A2E90', stripes: 2, stripeColor: '#2ECC71' }, '1.2cm · 콩알만 해요', '잎', '풀밭', '보라색 몸에 초록 줄무늬가 보석처럼 빛나요. 위험하면 다리를 오므리고 땅으로 툭 떨어져요.'],
 ['cranefly', '각다귀', '파리', ['meadow', 'cave'], 'both', 'fly', 0, 'fly', { a: '#9A8A6A', slim: true, eye: '#3A2E26' }, '2.5cm · 다리를 펴면 어른 엄지 길이', '꽃꿀, 물', '풀밭과 물가', '모기를 크게 키운 것처럼 생겼지만 물지 않아요. 긴 다리는 잡히면 쉽게 떨어져서 도망칠 수 있어요.'],
@@ -1138,6 +1194,22 @@ const RAW = [
 ['apple_snail', '논우렁이', '곤충 아님!', ['wetland'], 'both', 'crawl', 0, 'snail', { a: '#5A6A3A', body: '#6A6A5A' }, '4cm · 어른 엄지손가락만 해요', '물풀, 이끼', '습지와 논 바닥', '껍데기 입구를 뚜껑으로 꼭 닫을 수 있어요. 알을 낳지 않고 몸속에서 새끼를 키워 작은 우렁이로 낳아요.', 'not'],
 ['wriggler', '장구벌레', '파리', ['wetland'], 'both', 'swim', 0, 'worm', { a: '#7A7A6A' }, '0.7cm · 쌀알보다 조금 커요', '물속 찌꺼기', '고인 물속', '모기의 애벌레예요. 몸을 꿈틀꿈틀 접었다 펴며 헤엄쳐요. 꼬리 끝 숨관을 물 밖으로 내밀어 숨을 쉬어요.'],
 ['black_damsel', '등검은실잠자리', '잠자리', ['wetland'], 'day', 'fly', 0, 'dragonfly', { a: '#2E3A2A', eye: '#3A6A3A', folded: true, thin: true }, '3cm · 어른 엄지손가락만 해요', '작은 날벌레', '습지 풀잎', '등이 검고 옆은 연두색이에요. 짝을 지으면 하트 모양이 돼요. 암컷은 물풀 줄기 속에 알을 낳아요.'],
+// ---- 하늘 ----
+['cumulus', '뭉게구름', '구름', ['sky'], 'day', 'glide', 0, 'cloud', {}, '1~2km · 산만큼 커요', '물방울과 따뜻한 공기', '낮은 하늘 (1~2km 높이)', '솜사탕처럼 뭉게뭉게 피어난 구름이에요. 맑은 날 오후에 땅이 데워지면 따뜻한 공기가 올라가 만들어져요. 위로 쑥쑥 자라면 먹구름이 돼요.', 'not'],
+['cirrus', '새털구름', '구름', ['sky'], 'day', 'glide', 1, 'cloud', { kind: 'wispy', a: '#F8FBFF' }, '수 km · 얇게 퍼져요', '아주 작은 얼음 알갱이', '아주 높은 하늘 (8km 위)', '새의 깃털처럼 가늘게 흩어진 구름이에요. 너무 높아서 물방울이 아니라 얼음 알갱이로 되어 있어요. 새털구름이 늘어나면 하루 이틀 뒤 비가 올 수 있어요.', 'not'],
+['altocumulus', '양떼구름', '구름', ['sky'], 'day', 'glide', 1, 'cloud', { kind: 'flock' }, '작은 뭉치가 줄지어', '물방울', '중간 하늘 (2~6km)', '양 떼가 줄지어 가는 것처럼 작은 구름이 잔뜩 모여 있어요. 가을 하늘에 특히 잘 보여요. 구름 사이로 파란 하늘이 보여요.', 'not'],
+['stratus', '안개구름', '구름', ['sky'], 'both', 'glide', 0, 'cloud', { kind: 'flat', a: '#E6EAEE', sleepy: true }, '하늘을 넓게 덮어요', '물방울', '아주 낮은 하늘', '하늘을 담요처럼 납작하게 덮는 구름이에요. 땅까지 내려오면 안개가 돼요. 이 구름이 끼면 하루 종일 흐려요.', 'not'],
+['nimbostratus', '비구름', '구름', ['sky'], 'both', 'glide', 1, 'cloud', { kind: 'flat', a: '#9AA6B4', rain: true }, '두껍고 넓어요', '물방울', '낮은 하늘', '두껍고 어두운 구름이 하늘을 덮고 하루 종일 주룩주룩 비를 내려요. 해가 가려져 낮에도 어둑어둑해요.', 'not'],
+['cumulonimbus', '먹구름', '구름', ['sky'], 'both', 'glide', 2, 'cloud', { kind: 'tall', a: '#6A7280', bolt: true, angry: true }, '10km 이상 · 비행기보다 높이', '물방울과 우박', '낮은 하늘부터 아주 높은 하늘까지', '천둥 번개와 소나기, 우박을 내리는 무시무시한 구름이에요. 산보다 훨씬 높이 솟아올라 꼭대기는 모루처럼 납작해요. 비행기도 이 구름은 피해 가요.', 'not'],
+['sunset_cloud', '노을구름', '구름', ['sky'], 'day', 'glide', 2, 'cloud', { a: '#FFB58A', b: '#D9607A' }, '1~2km', '저녁 햇빛', '해 질 녘 서쪽 하늘', '해가 질 때 햇빛이 옆에서 비춰 주황색·분홍색으로 물든 구름이에요. 해가 지는 짧은 시간에만 볼 수 있어요.', 'not'],
+['lenticular', '렌즈구름', '구름', ['sky'], 'day', 'glide', 2, 'cloud', { kind: 'lens', a: '#F4F7FA' }, '수 km', '산을 넘는 바람', '높은 산 꼭대기 위', 'UFO처럼 생긴 둥글납작한 구름이에요. 바람이 산을 넘을 때 물결처럼 출렁이며 만들어져요. 바람이 세게 불어도 그 자리에 가만히 떠 있어요.', 'not'],
+['contrail', '비행기구름', '구름', ['sky'], 'day', 'glide', 1, 'cloud', { kind: 'trail', a: '#F6F9FC' }, '수십 km · 길게 늘어져요', '비행기 엔진의 수증기', '비행기가 지나간 자리 (10km 높이)', '비행기 엔진에서 나온 뜨거운 수증기가 차가운 하늘에서 얼어붙어 생긴 줄 구름이에요. 하늘에 하얀 선을 쭉 그려요.', 'not'],
+['snow_cloud', '눈구름', '구름', ['sky'], 'night', 'glide', 1, 'cloud', { a: '#DCE6F2', snow: true, sleepy: true }, '1~3km', '얼음 알갱이', '겨울 하늘', '구름 속 얼음 알갱이가 서로 달라붙어 눈송이가 되어 내려요. 눈송이는 모두 모양이 달라요. 눈이 오는 날 밤은 소리가 눈에 흡수돼 조용해요.', 'not'],
+['noctilucent', '야광구름', '구름', ['sky'], 'night', 'glide', 2, 'cloud', { kind: 'wispy', a: '#BFE6FF', glow: true }, '아주 얇아요', '우주 먼지에 붙은 얼음', '가장 높은 하늘 (80km 높이)', '해가 진 뒤에도 파랗게 빛나는 구름이에요. 지구에서 가장 높은 곳에 생기는 구름으로 여름밤 북쪽 하늘에서 아주 드물게 보여요.', 'not'],
+['rainbow', '무지개', '구름', ['sky'], 'day', 'glide', 2, 'rainbow', {}, '거대 · 하늘 절반', '햇빛과 빗방울', '비 그친 뒤 해 반대쪽 하늘', '빨주노초파남보 일곱 빛깔이에요. 햇빛이 빗방울 속에서 꺾이면서 색이 나뉘어요. 해를 등지고 서야 보이고, 두 겹으로 뜨는 쌍무지개도 있어요.', 'not'],
+['swallow', '제비', '곤충 아님!', ['sky'], 'day', 'fly', 1, 'bird', { a: '#1E2A4A', belly: '#F3EFE4', throat: '#C84A3A', forked: true, beak: '#3A3A3A' }, '17cm · 어른 손 길이', '날아다니는 벌레', '처마 밑 둥지와 하늘', '봄에 따뜻한 남쪽 나라에서 날아와 처마 밑에 진흙 둥지를 지어요. 날면서 입을 벌려 벌레를 잡아먹고, 꼬리가 가위처럼 둘로 갈라져 있어요.', 'not'],
+['swift', '칼새', '곤충 아님!', ['sky'], 'day', 'fly', 2, 'bird', { a: '#3A3A42', belly: '#55555E', beak: '#2A2A2A' }, '18cm · 어른 손 길이', '날아다니는 벌레', '거의 하늘에서만 살아요', '칼처럼 날렵한 날개로 가장 빠르게 나는 새 중 하나예요. 먹고 자는 것까지 날면서 해서 몇 달 동안 땅에 내려오지 않아요. 다리가 아주 짧아 땅에서는 잘 걷지 못해요.', 'not'],
+['ballooning_spider', '하늘 나는 새끼거미', '거미', ['sky'], 'day', 'fly', 2, 'spider', { a: '#9A8A6A', bigEyes: true, silk: true }, '2mm · 깨알만 해요', '아주 작은 벌레', '바람 타고 하늘 높이', '새끼 거미는 거미줄을 길게 뽑아 바람에 띄워 하늘을 날아요. 이걸 유사 비행이라고 해요. 수천 미터 높이까지 올라가 바다 건너까지 날아가기도 해요.', 'not'],
 // ---- 하천 ----
 ['kkeokji', '꺽지', '곤충 아님!', ['stream'], 'day', 'swim', 1, 'minnow', { a: '#6A7A5A', stripe: '#3A4A3A' }, '15cm · 어른 손 길이', '작은 물고기, 물벌레', '하천 바위 틈', '몸에 호랑이 같은 세로 줄무늬가 있어요. 아빠 꺽지는 바위 밑에 낳은 알을 부화할 때까지 지켜요. 기분에 따라 몸 색이 변해요.', 'not'],
 ['dolgogi', '돌고기', '곤충 아님!', ['stream'], 'day', 'swim', 0, 'minnow', { a: '#B0A070', stripe: '#2A2A2A', small: true }, '8cm · 어른 손가락 길이', '물벌레, 돌에 붙은 이끼', '하천 자갈 바닥', '머리부터 꼬리까지 까만 줄이 쭉 그어져 있어요. 입이 돼지코처럼 작고 둥글어요. 꺽지 둥지에 몰래 알을 낳기도 해요.', 'not'],
@@ -1149,4 +1221,4 @@ const RAW = [
 ['clubtail', '쇠측범잠자리', '잠자리', ['stream'], 'day', 'fly', 1, 'dragonfly', { a: '#2E2A2A', eye: '#2E8B57', wing: '#EAF4FF' }, '5cm · 날개를 펴면 어른 엄지 길이', '작은 날벌레', '하천 자갈밭', '까만 몸에 노란 줄무늬가 호랑이 같아요. 눈이 서로 떨어져 있는 게 특징이에요. 하천가 자갈 위에 앉아 쉬기를 좋아해요.'],
 ];
 const BUGS = RAW.map(r => ({ id: r[0], name: r[1], grp: r[2], place: r[3], time: r[4], move: r[5], rare: r[6], tpl: r[7], opt: r[8], size: r[9], food: r[10], home: r[11], fact: r[12], notInsect: r[13] === 'not' }));
-const SIDE = new Set(['hopper', 'mantis', 'rhino', 'stick', 'mayfly', 'caterpillar', 'earwig', 'snail', 'worm', 'anglerfish', 'shrimp', 'grub', 'springtail', 'mole', 'silverfish', 'slug', 'eel', 'fish', 'olm', 'lizard', 'minnow']); // 옆모습 템플릿
+const SIDE = new Set(['hopper', 'mantis', 'rhino', 'stick', 'mayfly', 'caterpillar', 'earwig', 'snail', 'worm', 'anglerfish', 'shrimp', 'grub', 'springtail', 'mole', 'silverfish', 'slug', 'eel', 'fish', 'olm', 'lizard', 'minnow', 'cloud', 'rainbow', 'bird']); // 옆모습 템플릿
