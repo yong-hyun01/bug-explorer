@@ -578,7 +578,7 @@ const SWING_T = .34; // 휘두르기 한 번에 걸리는 시간(초): 준비 20
 // 매 프레임 입력·물리에서 '목표 자세'만 정하고, 부위마다 강성·감쇠가 다른 스프링으로 따라가게 한다.
 // 그래서 골반 → 어깨 → 머리, 위팔 → 아래팔 → 채 순으로 시간차가 생기고, 멈춘 뒤에도 관성이 남는다. 모두 dt 기반.
 const pose = { lean: 0, leanV: 0, hip: 0, hipV: 0, twist: 0, twistV: 0, head: 0, headV: 0, headY: 0, headYV: 0, crouch: 0, crouchV: 0, bodyY: 0, bodyYV: 0,
-  armF: -.3, armFV: 0, foreF: 1.6, foreFV: 0, armB: -.45, armBV: 0, foreB: .25, foreBV: 0, net: -.2, netV: 0,
+  armF: .15, armFV: 0, foreF: .1, foreFV: 0, armB: .2, armBV: 0, foreB: 1.4, foreBV: 0, net: -.2, netV: 0, // F = 가까운(앞) 팔: 자유, B = 먼(뒤) 팔: 잠자리채
   thighF: .07, thighFV: 0, kneeF: -.04, kneeFV: 0, thighB: -.07, thighBV: 0, kneeB: -.04, kneeBV: 0,
   look: 0, lookV: 0, lookT: 0, lookTimer: 2, weight: 0, ear: 0, earTimer: 3, tail: 0, tailV: 0, gait: 0, sneak: 0, stride: .25, prevVx: 0, ax: 0, jumpPrep: 0, stretch: 0, idleT: 0, breath: 0 };
 const lerp = (a, b, k) => a + (b - a) * k, clamp01 = v => Math.max(0, Math.min(1, v));
@@ -645,17 +645,18 @@ function updatePose(dt) {
   const armAmp = (.25 + .3 * speedK + .25 * P.gait) * (1 - P.sneak * .6);
   let aF, fF, aB, fB, netT;
   if (swinging) {
-    const a1 = lerp(-.3, .6, pWind), f1 = lerp(1.6, .4, pWind), n1 = lerp(-.2, .55, pWind);         // 준비: 팔을 앞·아래로 뻗어 채를 낮게 겨눔
-    const a2 = lerp(a1, 2.3, pHit), f2 = lerp(f1, .5, pHit), n2 = lerp(n1, -1.3, pHit);              // 휘두름: 아래에서 머리 위로 쓸어 올림
-    aF = lerp(a2, 1.5, pEnd); fF = lerp(f2, .9, pEnd); netT = lerp(n2, -1.0, pEnd);                    // 마무리(원래 자세 복귀는 스프링이 follow-through 로 만든다)
-    aB = lerp(-.45, -1.0, pHit * (1 - pEnd * .5)); fB = .4;                                            // 뒷팔은 반대로 뒤로 젖혀 균형
+    const a1 = lerp(.2, .6, pWind), f1 = lerp(1.4, .4, pWind), n1 = lerp(-.2, .55, pWind);          // 준비: 팔을 앞·아래로 뻗어 채를 낮게 겨눔
+    const a2 = lerp(a1, 1.9, pHit), f2 = lerp(f1, .4, pHit), n2 = lerp(n1, -1.3, pHit);              // 휘두름: 아래에서 머리 위(얼굴 앞쪽)로 쓸어 올림
+    aF = lerp(a2, 1.5, pEnd); fF = lerp(f2, .5, pEnd); netT = lerp(n2, -1.0, pEnd);                    // 마무리(원래 자세 복귀는 스프링이 follow-through 로 만든다)
+    aB = lerp(.15, -.4, pHit * (1 - pEnd * .5)); fB = .3;                                              // 자유로운 팔은 반대로 살짝 뒤로 젖혀 균형
   }
-  else if (happy) { const w = Math.sin(t * 10) * .12; aF = 2.9 + w; fF = .2; aB = -2.3 - w; fB = .3; netT = -1.25; } // 만세: 뒷팔은 머리에 가리지 않게 바깥으로 벌린다
-  else if (oops) { aF = -.2; fF = 1.4; aB = -.35; fB = .3; netT = .25; }
-  else if (free) { aF = -.6 + Math.sin(t * 2) * .1; fF = 1.7; aB = -.8 + Math.sin(t * 2 + 1) * .1; fB = .45; netT = aF + fF - 1.5; }
-  else if (air) { if (player.vy < 0) { aF = .4; fF = 1.2; aB = -.9; fB = .5; } else { aF = -.7; fF = 1.9; aB = -.2; fB = .3; } netT = aF + fF - 1.5; }
-  else if (player.moving) { aF = -.4 + s1 * armAmp; fF = 1.5 + (s1 + 1) * .1; aB = -.45 - s1 * armAmp; fB = .25 + (1 - s1) * .15; netT = aF + fF - 1.5; }
-  else { aF = -.3 + P.weight * .03 + Math.sin(t * 1.3 + 1) * .02; fF = 1.6 + Math.sin(t * .9) * .03; aB = -.45 - P.weight * .03 + Math.sin(t * 1.1) * .02; fB = .25 + Math.sin(t * 1.1) * .03; netT = aF + fF - 1.5; }
+  else if (happy) { const w = Math.sin(t * 10) * .12; aF = 2.6 + w; fF = .3; aB = 2.0 - w; fB = .3; netT = -1.25; } // 만세: 두 팔 모두 앞·위로 (자유로운 팔은 얼굴 옆 바깥으로)
+  else if (oops) { aF = .1; fF = 1.3; aB = .15; fB = .2; netT = .25; }
+  else if (free) { aF = Math.sin(t * 2) * .1; fF = 1.5; aB = -.5 + Math.sin(t * 2 + 1) * .1; fB = .4; netT = aF + fF - 1.8; }
+  else if (air) { if (player.vy < 0) { aF = .6; fF = 1.0; aB = -.7; fB = .4; } else { aF = -.2; fF = 1.7; aB = -.1; fB = .3; } netT = aF + fF - 1.8; }
+  else if (player.moving) { aF = .1 + s1 * armAmp * .6; fF = 1.5 + (s1 + 1) * .1; aB = .15 - s1 * armAmp; fB = .1 + (1 - s1) * .15; netT = aF + fF - 1.8; }
+  else { aF = .2 + P.weight * .03 + Math.sin(t * 1.3 + 1) * .02; fF = 1.4 + Math.sin(t * .9) * .03; aB = .15 - P.weight * .03 + Math.sin(t * 1.1) * .02; fB = .1 + Math.sin(t * 1.1) * .03; netT = aF + fF - 1.8; }
+  [aF, fF, aB, fB] = [aB, fB, aF, fF]; // 위에서 '채 든 팔' 로 계산한 값은 먼 팔(B)에, '자유로운 팔' 값은 가까운 팔(F)에
   const aK = oops ? 55 : swinging ? 520 : 150, fK = oops ? 40 : swinging ? 420 : 95;
   spr(P, 'armF', aF, aK, .78, dt); spr(P, 'foreF', fF, fK, .72, dt); spr(P, 'armB', aB, aK, .78, dt); spr(P, 'foreB', fB, fK, .72, dt);
   spr(P, 'net', netT, swinging ? 520 : 110, swinging ? .85 : .7, dt);
@@ -717,8 +718,9 @@ function drawPlayer() {
   ctx.restore();
   // ---- 상체: 어깨 회전(twist)은 골반을 축으로, 체중 이동은 앞뒤로 살짝 ----
   ctx.save(); ctx.translate(P.weight * 1.2, HIP); ctx.rotate(P.twist); ctx.translate(0, -HIP);
-  // 뒤 팔: 재킷 소매 + 회색 붕대 아래팔 + 발
-  { const [ex, ey, hx, hy] = limb(-11, SH + 4, P.armB, 13, P.foreB, 12, 9, 7.5, sh(jacket, .85), sh(wrap, .9)); ctx.strokeStyle = sh(wrap, .6); ctx.lineWidth = 1; for (let i = 1; i <= 3; i++) { const k = i / 4; ctx.beginPath(); ctx.moveTo(ex + (hx - ex) * k - 3, ey + (hy - ey) * k); ctx.lineTo(ex + (hx - ex) * k + 3, ey + (hy - ey) * k); ctx.stroke(); } paw(hx, hy + 2, sh(fur, .9)); }
+  // 먼 팔(잠자리채): 몸통 뒤에 그려 팔은 가려지고, 손과 채는 나중에 몸 앞에 그린다
+  let hxN, hyN;
+  { const [ex, ey, hx, hy] = limb(-11, SH + 4, P.armB, 13, P.foreB, 12, 9, 7.5, sh(jacket, .85), sh(wrap, .9)); ctx.strokeStyle = sh(wrap, .6); ctx.lineWidth = 1; for (let i = 1; i <= 3; i++) { const k = i / 4; ctx.beginPath(); ctx.moveTo(ex + (hx - ex) * k - 3, ey + (hy - ey) * k); ctx.lineTo(ex + (hx - ex) * k + 3, ey + (hy - ey) * k); ctx.stroke(); } hxN = hx; hyN = hy; }
   // 몸통: 둥근 재킷, 지퍼, 벨트·파우치, 휘장 (가슴은 호흡에 따라 부풀었다 꺼진다)
   ctx.save(); ctx.translate(0, SH + 14); ctx.scale(1 + P.breath * .015, 1 + P.breath * .025); ctx.translate(0, -SH - 14);
   const jg = ctx.createLinearGradient(-20, 0, 20, 0); jg.addColorStop(0, sh(jacket, 1.18)); jg.addColorStop(.5, jacket); jg.addColorStop(1, sh(jacket, .6));
@@ -733,17 +735,8 @@ function drawPlayer() {
   ctx.fillStyle = '#3A3A40'; ctx.beginPath(); ctx.roundRect(7, HIP - 2, 8, 7, 2); ctx.fill(); ctx.stroke(); // 검은 파우치
   ctx.fillStyle = red; ctx.strokeStyle = '#F3EFE4'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(14, SH + 10, 4.5, 0, 6.3); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F3EFE4'; ctx.beginPath(); ctx.moveTo(14, SH + 7); ctx.lineTo(16.5, SH + 12); ctx.lineTo(11.5, SH + 12); ctx.closePath(); ctx.fill(); ctx.fillStyle = red; ctx.beginPath(); ctx.arc(14, SH + 10.5, 1, 0, 6.3); ctx.fill(); // 휘장
   ctx.restore();
-  // 앞 팔 + 잠자리채
-  const [ex, ey, hx, hy] = limb(10, SH + 4, P.armF, 13, P.foreF, 12, 9, 7.5, jacket, wrap);
-  ctx.strokeStyle = sh(wrap, .6); ctx.lineWidth = 1; for (let i = 1; i <= 3; i++) { const k = i / 4, px = ex + (hx - ex) * k, py = ey + (hy - ey) * k; ctx.beginPath(); ctx.moveTo(px - 3, py); ctx.lineTo(px + 3, py); ctx.stroke(); }
-  const netAng = P.net, sw = player.swing > 0 ? 1 - player.swing / SWING_T : 0, pHit = clamp01((sw - .2) / .45);
-  if (player.swing > 0 && pHit > 0 && pHit < 1) { ctx.globalAlpha = .28 * (1 - pHit * .7); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.arc(hx, hy, 96, netAng, Math.min(netAng + 1.1, 1.15)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; } // 휘두른 궤적
-  ctx.save(); ctx.translate(hx, hy); ctx.rotate(netAng);
-  ctx.strokeStyle = '#4A2E14'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(58, 0); ctx.stroke(); ctx.strokeStyle = '#A8743B'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(-6, -1.2); ctx.lineTo(56, -1.2); ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.beginPath(); ctx.ellipse(78, 0, 22, 16, 0, 0, 6.3); ctx.fill(); ctx.strokeStyle = '#2E2A33'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(78, 0, 22, 16, 0, 0, 6.3); ctx.stroke();
-  ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(78 + i * 7, -14); ctx.lineTo(78 + i * 7, 14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(58, i * 5); ctx.lineTo(98, i * 5); ctx.stroke(); }
-  ctx.restore();
-  paw(hx, hy, fur);
+  // 가까운 팔(자유): 몸 옆에 늘어뜨리고 걸을 때 흔들린다
+  { const [ex, ey, hx, hy] = limb(10, SH + 4, P.armF, 13, P.foreF, 12, 9, 7.5, jacket, wrap); ctx.strokeStyle = sh(wrap, .6); ctx.lineWidth = 1; for (let i = 1; i <= 3; i++) { const k = i / 4, px = ex + (hx - ex) * k, py = ey + (hy - ey) * k; ctx.beginPath(); ctx.moveTo(px - 3, py); ctx.lineTo(px + 3, py); ctx.stroke(); } paw(hx, hy + 2, fur); }
   // ---- 머리: 큰 둥근 시바 얼굴 + 후드 (귀가 후드 위로). 목에서 회전(head), 시선(look)에 따라 눈·주둥이가 앞뒤로 ----
   ctx.save(); ctx.translate(2 + P.look * 1.5, SH - 20 + P.headY); ctx.rotate(P.head);
   // 후드 뒷부분
@@ -772,6 +765,15 @@ function drawPlayer() {
   ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, 22, Math.PI * 1.1, Math.PI * 1.7); ctx.stroke();
   if (dive) { ctx.fillStyle = 'rgba(159,216,255,.45)'; ctx.strokeStyle = '#1E4FB0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(-10 + lk, -8, 26, 14, 5); ctx.fill(); ctx.stroke(); }
   ctx.restore();
+  // 잠자리채 + 먼 손: 머리까지 그린 뒤 맨 앞에 (채가 몸·얼굴 앞으로 지나간다)
+  const netAng = P.net, sw = player.swing > 0 ? 1 - player.swing / SWING_T : 0, pHit = clamp01((sw - .2) / .45);
+  if (player.swing > 0 && pHit > 0 && pHit < 1) { ctx.globalAlpha = .28 * (1 - pHit * .7); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.moveTo(hxN, hyN); ctx.arc(hxN, hyN, 96, netAng, Math.min(netAng + 1.1, 1.15)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; } // 휘두른 궤적
+  ctx.save(); ctx.translate(hxN, hyN); ctx.rotate(netAng);
+  ctx.strokeStyle = '#4A2E14'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(58, 0); ctx.stroke(); ctx.strokeStyle = '#A8743B'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(-6, -1.2); ctx.lineTo(56, -1.2); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.beginPath(); ctx.ellipse(78, 0, 22, 16, 0, 0, 6.3); ctx.fill(); ctx.strokeStyle = '#2E2A33'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(78, 0, 22, 16, 0, 0, 6.3); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(78 + i * 7, -14); ctx.lineTo(78 + i * 7, 14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(58, i * 5); ctx.lineTo(98, i * 5); ctx.stroke(); }
+  ctx.restore();
+  paw(hxN, hyN, fur);
   ctx.restore(); // 상체
   if (happy && Math.random() < .3) puffs.push({ x: player.x + rnd(-24, 24), y: baseY - 100 - hop, vx: rnd(-30, 30), vy: rnd(-80, -30), t: 0, life: .6, s: rnd(3, 5), c: pick(['#FFD54A', '#FFF', '#FF8FB1']) });
   if (free && player.moving && Math.random() < .2) puffs.push({ x: player.x - d * 6, y: baseY - 90, vx: rnd(-10, 10), vy: -50, t: 0, life: 1.1, s: rnd(2, 5), c: placeOf().fly ? 'rgba(255,255,255,.9)' : 'rgba(200,230,255,.75)' });
