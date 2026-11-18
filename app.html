@@ -537,8 +537,25 @@ function heroPart(name, x, y, rot, sx, sy) { // 피벗을 (x,y) 에 두고 rot �
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot || 0); if (sx != null) ctx.scale(sx, sy == null ? sx : sy);
   ctx.drawImage(im, -p.pivot[0] * k, -p.pivot[1] * k, p.w * k, p.h * k); ctx.restore();
 }
-const ARM_LEN = 19;            // 어깨에서 손까지 (논리 px)
-const EYE = [[-10.5, -16.5], [7, -16.5]], EYE_R = 5; // 목 피벗 기준 눈 위치
+const EYE = [[-10.5, -21], [7.5, -21]], EYE_R = 5; // 목 피벗 기준 눈 위치
+// 팔: 위팔(어깨 피벗) + 아래팔(팔꿈치 피벗). up 은 어깨→팔꿈치 길이, hand 는 팔꿈치 기준 손 위치 (논리 px, 오른팔 기준)
+const ARM = { up: 5.4, hand: [11.3, -1.9], elbowR: 5.6 };
+function drawArm(side, sx, sy, a, bend) { // side: 'R'(앞팔, 0=옆으로 수평, +아래) / 'L'(뒷팔, -x 방향이라 부호 반대)
+  const m = side === 'L' ? -1 : 1, up = ARM.up * m;
+  ctx.save(); ctx.translate(sx, sy); ctx.rotate(a);
+  // 팔꿈치 덮개: 굽힐 때 생기는 틈을 소매 색 원으로 가린다
+  ctx.fillStyle = (HERO.colors || {}).sleeve || '#4A9A4A'; ctx.strokeStyle = '#241C2A'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(up, 0, ARM.elbowR, 0, 6.3); ctx.fill(); ctx.stroke();
+  const pu = HERO.parts['arm' + side + '_up'], iu = heroImg['arm' + side + '_up'], k = HERO.scale;
+  if (iu.complete && iu.naturalWidth) ctx.drawImage(iu, -pu.pivot[0] * k, -pu.pivot[1] * k, pu.w * k, pu.h * k);
+  ctx.translate(up, 0); ctx.rotate(bend);
+  const pl = HERO.parts['arm' + side + '_lo'], il = heroImg['arm' + side + '_lo'];
+  if (il.complete && il.naturalWidth) ctx.drawImage(il, -pl.pivot[0] * k, -pl.pivot[1] * k, pl.w * k, pl.h * k);
+  ctx.restore();
+}
+function handPos(sx, sy, a, bend) { // 앞팔 손 위치 (몸 좌표)
+  const ex = sx + Math.cos(a) * ARM.up, ey = sy + Math.sin(a) * ARM.up, c = Math.cos(a + bend), sn = Math.sin(a + bend), [hx, hy] = ARM.hand;
+  return [ex + c * hx - sn * hy, ey + sn * hx + c * hy];
+}
 function drawPlayer() {
   if (!HERO.parts) return;
   const free = isFree(), fly = !!placeOf().fly, dive = free && !fly, x = player.x - cam, d = player.dir;
@@ -564,8 +581,14 @@ function drawPlayer() {
   else { lf = .03; lb = -.03; }
   // 팔 각도: 앞팔(armR) 은 0 이 옆으로 수평, + 가 아래. 뒷팔(armL) 은 반대 방향(- 가 아래)
   const sw = player.swing > 0 ? 1 - player.swing / .32 : 0, ease = sw < .5 ? 2 * sw * sw : 1 - Math.pow(-2 * sw + 2, 2) / 2;
-  const armF = happy ? -1.5 + Math.sin(t * 10) * .15 : player.swing > 0 ? 1.15 - ease * 2.4 : free ? .35 + Math.sin(t * 2) * .1 : mv ? .95 + s1 * .4 : .98 + breath * .04;
-  const armB = happy ? 1.5 - Math.sin(t * 10) * .15 : free ? -.35 - Math.sin(t * 2 + 1) * .1 : mv ? -.95 - s1 * .4 : -1.02 - breath * .04;
+  // 앞팔: 위팔 각도 armF, 팔꿈치 굽힘 bendF (음수 = 아래팔이 앞·위로 접힘). 뒷팔은 부호 반대
+  let armF, bendF, armB, bendB;
+  if (happy) { armF = -1.55 + Math.sin(t * 10) * .15; bendF = -.35; armB = 1.55 - Math.sin(t * 10) * .15; bendB = .35; }
+  else if (player.swing > 0) { armF = 1.2 - ease * 2.4; bendF = -.7 + ease * .55; armB = -1.1 + ease * .3; bendB = .5; }  // 휘두르기: 접었다가 쭉 뻗으며 올림
+  else if (free) { armF = .3 + Math.sin(t * 2) * .1; bendF = -.3; armB = -.3 - Math.sin(t * 2 + 1) * .1; bendB = .3; }
+  else if (mv) { armF = 1.05 + s1 * .5; bendF = -.45 - (s1 + 1) * .15; armB = -1.05 + s1 * .5; bendB = .45 + (1 - s1) * .15; } // 아래팔이 한 박자 늦게 따라옴
+  else { armF = 1.15 + breath * .03; bendF = -.4; armB = -1.15 - breath * .03; bendB = .4; }
+  if (player.y < 0 && !free) { armF -= .5; bendF -= .2; armB += .5; bendB += .2; } // 점프: 팔을 약간 들어 균형
   if (fly) { // ---- 하늘: 등에 묶은 빨간 풍선 (몸 뒤) ----
     const bx = -16 + Math.sin(t * 1.6) * 5, by = -138 + Math.sin(t * 2.2) * 3;
     ctx.strokeStyle = '#E8E2D4'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(-9, -54); ctx.quadraticCurveTo(bx - 8, (by - 54) / 2, bx, by + 20); ctx.stroke();
@@ -575,7 +598,7 @@ function drawPlayer() {
     ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.beginPath(); ctx.ellipse(bx - 5, by - 7, 3.5, 5, -.5, 0, 6.3); ctx.fill();
   }
   // 그리는 순서: 뒷팔 → 뒷다리 → 앞다리 → 몸통 → 머리 → 앞팔 + 잠자리채
-  heroPart('armL', ...heroAt('armL'), armB);
+  drawArm('L', ...heroAt('armL_up'), armB, bendB);
   heroPart('legL', ...heroAt('legL'), lb);
   heroPart('legR', ...heroAt('legR'), lf);
   heroPart('torso', ...heroAt('torso'), 0, 1 + breath * (mv ? 0 : .012), 1 + breath * (mv ? 0 : .02));
@@ -589,11 +612,11 @@ function drawPlayer() {
   if (oops) { ctx.fillStyle = '#5ED3F3'; ctx.beginPath(); ctx.moveTo(EYE[1][0] + 12, EYE[1][1] - 4); ctx.quadraticCurveTo(EYE[1][0] + 8, EYE[1][1] + 4, EYE[1][0] + 12, EYE[1][1] + 6); ctx.quadraticCurveTo(EYE[1][0] + 16, EYE[1][1] + 4, EYE[1][0] + 12, EYE[1][1] - 4); ctx.fill(); } // 땀방울
   ctx.restore();
   // 앞팔 + 잠자리채
-  const [sx0, sy0] = heroAt('armR');
-  heroPart('armR', sx0, sy0, armF);
-  const hx = sx0 + Math.cos(armF) * ARM_LEN, hy2 = sy0 + Math.sin(armF) * ARM_LEN;
+  const [sx0, sy0] = heroAt('armR_up');
+  drawArm('R', sx0, sy0, armF, bendF);
+  const [hx, hy2] = handPos(sx0, sy0, armF, bendF), fore = armF + bendF;
   const A0 = .55, A1 = -1.3; // 채 각도: 앞아래(.55) → 앞위(-1.3)
-  const netAng = player.swing > 0 ? A0 + (A1 - A0) * ease : happy ? armF - .2 : armF - .5;
+  const netAng = player.swing > 0 ? A0 + (A1 - A0) * ease : fore - .25; // 채는 아래팔 방향에서 살짝 들린 각도
   if (player.swing > 0) { ctx.globalAlpha = .25 * (1 - sw * .6); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.moveTo(hx, hy2); ctx.arc(hx, hy2, 96, netAng, A0); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
   ctx.save(); ctx.translate(hx, hy2); ctx.rotate(netAng);
   ctx.strokeStyle = '#4A2E14'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(58, 0); ctx.stroke(); ctx.strokeStyle = '#A8743B'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(-6, -1.2); ctx.lineTo(56, -1.2); ctx.stroke();

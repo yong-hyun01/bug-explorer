@@ -31,6 +31,10 @@ if spec.get('shadow_y'):
 rgba = im.convert('RGBA'); rgba.putalpha(mask)
 rgba.save(outd / 'full.png')
 out = {'scale': spec.get('scale', 0.12) / spec.get('downscale', 1), 'root': spec.get('root', [0, 0]), 'parts': {}}
+def _median_color(x, y, r=6):  # 작은 영역의 중간값 (윤곽선 피함)
+    px = [im.getpixel((x + i, y + j)) for i in range(-r, r + 1) for j in range(-r, r + 1)]
+    return '#%02x%02x%02x' % tuple(sorted(c[i] for c in px)[len(px) // 2] for i in range(3))
+out['colors'] = {k: _median_color(*v) for k, v in spec.get('sample', {}).items()}  # 관절 덮개용 색 샘플
 for name, p in spec['parts'].items():
     x0, y0, x1, y1 = p['box']
     part = rgba.crop((x0, y0, x1, y1))
