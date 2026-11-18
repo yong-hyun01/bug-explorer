@@ -1797,12 +1797,12 @@ function finishDraw() {}
 function drawAlerts() {
   for (const u of bugs) { if (!u.alert || u.leave) continue; const x = u.x - cam, y = u.y + u.hop - u.sc * .55 - 6; ctx.font = '900 18px "Noto Sans KR",sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText('!', x, y); ctx.fillStyle = '#FFD54A'; ctx.fillText('!', x, y); }
 }
-const SWING_T = .4; // 휘두르기 한 번에 걸리는 시간(초): 준비 25% → 휘두름 45% → 마무리 30%
+const SWING_T = .34; // 휘두르기 한 번에 걸리는 시간(초): 준비 20% → 휘두름 45% → 마무리 35%
 // ---- 탐험가 자세(pose) 시스템 ----
 // 매 프레임 입력·물리에서 '목표 자세'만 정하고, 부위마다 강성·감쇠가 다른 스프링으로 따라가게 한다.
 // 그래서 골반 → 어깨 → 머리, 위팔 → 아래팔 → 채 순으로 시간차가 생기고, 멈춘 뒤에도 관성이 남는다. 모두 dt 기반.
 const pose = { lean: 0, leanV: 0, hip: 0, hipV: 0, twist: 0, twistV: 0, head: 0, headV: 0, headY: 0, headYV: 0, crouch: 0, crouchV: 0, bodyY: 0, bodyYV: 0,
-  armF: -.5, armFV: 0, foreF: -1.25, foreFV: 0, armB: .1, armBV: 0, foreB: .35, foreBV: 0, net: -.18, netV: 0,
+  armF: -.5, armFV: 0, foreF: -1.25, foreFV: 0, armB: -.45, armBV: 0, foreB: .25, foreBV: 0, net: -.18, netV: 0,
   thighF: .07, thighFV: 0, kneeF: -.04, kneeFV: 0, thighB: -.07, thighBV: 0, kneeB: -.04, kneeBV: 0,
   look: 0, lookV: 0, lookT: 0, lookTimer: 2, weight: 0, ear: 0, earTimer: 3, tail: 0, tailV: 0, gait: 0, sneak: 0, stride: .25, prevVx: 0, ax: 0, jumpPrep: 0, stretch: 0, idleT: 0, breath: 0 };
 const lerp = (a, b, k) => a + (b - a) * k, clamp01 = v => Math.max(0, Math.min(1, v));
@@ -1820,7 +1820,7 @@ function updatePose(dt) {
   const axN = clamp(P.ax / 900, -1, 1);
   const air = player.y < 0 && !free, grounded = !air && !free;
   const swinging = player.swing > 0, sw = swinging ? 1 - player.swing / SWING_T : 0;
-  const pWind = easeOut(clamp01(sw / .25)), pHit = easeInOut(clamp01((sw - .25) / .45)), pEnd = easeOut(clamp01((sw - .7) / .3)), hitPulse = Math.sin(Math.PI * clamp01((sw - .25) / .45));
+  const pWind = easeOut(clamp01(sw / .2)), pHit = easeInOut(clamp01((sw - .2) / .45)), pEnd = easeOut(clamp01((sw - .65) / .35)), hitPulse = Math.sin(Math.PI * clamp01((sw - .2) / .45));
   const happy = player.happy > 0, oops = player.oops > 0 && !happy;
   // 걷기 ↔ 달리기 ↔ 살금살금: 짧게 톡톡 누르면(runT 작음) 살금살금, 계속 누르면 달리기
   const sneakT = player.moving && grounded && player.runT < .5 ? 1 : 0; P.sneak += (sneakT - P.sneak) * Math.min(1, dt * 7);
@@ -1869,20 +1869,20 @@ function updatePose(dt) {
   const armAmp = (.25 + .3 * speedK + .25 * P.gait) * (1 - P.sneak * .6);
   let aF, fF, aB, fB, netT;
   if (swinging) {
-    const a1 = lerp(-.5, -1.1, pWind), f1 = lerp(-1.25, -.7, pWind), n1 = lerp(-.18, 1.15, pWind);   // 준비: 팔을 뒤로 당기고 채를 아래로
-    const a2 = lerp(a1, 2.25, pHit), f2 = lerp(f1, -.4, pHit), n2 = lerp(n1, -1.3, pHit);            // 휘두름: 앞·위로 크게 쓸어 올림
-    aF = lerp(a2, 1.85, pEnd); fF = lerp(f2, -.7, pEnd); netT = lerp(n2, -1.0, pEnd);                  // 마무리(follow-through 는 스프링이 만든다)
-    aB = lerp(.1, -.6, pHit * (1 - pEnd * .5)); fB = .5;
+    const a1 = lerp(-.5, .5, pWind), f1 = lerp(-1.25, -1.0, pWind), n1 = lerp(-.18, .55, pWind);     // 준비: 채를 앞·아래로 내려 겨눔
+    const a2 = lerp(a1, 2.3, pHit), f2 = lerp(f1, -.3, pHit), n2 = lerp(n1, -1.3, pHit);             // 휘두름: 아래에서 머리 위로 쓸어 올림
+    aF = lerp(a2, 1.7, pEnd); fF = lerp(f2, -.6, pEnd); netT = lerp(n2, -1.0, pEnd);                   // 마무리(원래 자세 복귀는 스프링이 follow-through 로 만든다)
+    aB = lerp(-.45, -1.0, pHit * (1 - pEnd * .5)); fB = .4;                                            // 뒷팔은 반대로 뒤로 젖혀 균형
   }
-  else if (happy) { const w = Math.sin(t * 10) * .12; aF = 2.9 + w; fF = .2; aB = -2.9 - w; fB = -.2; netT = -1.25; }
-  else if (oops) { aF = -.2; fF = -1.4; aB = .25; fB = .4; netT = .25; }
-  else if (free) { aF = -1.2 + Math.sin(t * 2) * .1; fF = -.6; aB = 1.1 + Math.sin(t * 2 + 1) * .1; fB = .5; netT = aF + fF + Math.PI / 2; }
-  else if (air) { if (player.vy < 0) { aF = .4; fF = -1.1; aB = -.6; fB = .5; } else { aF = -.9; fF = -.9; aB = .4; fB = .3; } netT = aF + fF + Math.PI / 2; }
-  else if (player.moving) { aF = -.55 + s1 * armAmp; fF = -1.25 - (s1 + 1) * .15; aB = .1 - s1 * armAmp; fB = .35 + (1 - s1) * .15; netT = aF + fF + Math.PI / 2; }
-  else { aF = -.5 + P.weight * .03 + Math.sin(t * 1.3 + 1) * .02; fF = -1.25 + Math.sin(t * .9) * .03; aB = .1 - P.weight * .03; fB = .35 + Math.sin(t * 1.1) * .03; netT = aF + fF + Math.PI / 2; }
-  const aK = oops ? 55 : 150, fK = oops ? 40 : 95;
+  else if (happy) { const w = Math.sin(t * 10) * .12; aF = 2.9 + w; fF = .2; aB = -2.3 - w; fB = -.3; netT = -1.25; } // 만세: 뒷팔은 머리에 가리지 않게 바깥으로 벌린다
+  else if (oops) { aF = -.2; fF = -1.4; aB = -.35; fB = .3; netT = .25; }
+  else if (free) { aF = -1.2 + Math.sin(t * 2) * .1; fF = -.6; aB = -.8 + Math.sin(t * 2 + 1) * .1; fB = .45; netT = aF + fF + Math.PI / 2; }
+  else if (air) { if (player.vy < 0) { aF = .4; fF = -1.1; aB = -.9; fB = .5; } else { aF = -.9; fF = -.9; aB = -.2; fB = .3; } netT = aF + fF + Math.PI / 2; }
+  else if (player.moving) { aF = -.55 + s1 * armAmp; fF = -1.25 - (s1 + 1) * .15; aB = -.45 - s1 * armAmp; fB = .25 + (1 - s1) * .15; netT = aF + fF + Math.PI / 2; }
+  else { aF = -.5 + P.weight * .03 + Math.sin(t * 1.3 + 1) * .02; fF = -1.25 + Math.sin(t * .9) * .03; aB = -.45 - P.weight * .03 + Math.sin(t * 1.1) * .02; fB = .25 + Math.sin(t * 1.1) * .03; netT = aF + fF + Math.PI / 2; }
+  const aK = oops ? 55 : swinging ? 520 : 150, fK = oops ? 40 : swinging ? 420 : 95;
   spr(P, 'armF', aF, aK, .78, dt); spr(P, 'foreF', fF, fK, .72, dt); spr(P, 'armB', aB, aK, .78, dt); spr(P, 'foreB', fB, fK, .72, dt);
-  spr(P, 'net', netT, swinging ? 140 : 110, swinging ? .55 : .7, dt);
+  spr(P, 'net', netT, swinging ? 520 : 110, swinging ? .85 : .7, dt);
   // 시선: 살금살금 다가가거나 서 있을 땐 가까운 곤충 쪽을 보고, 아니면 가끔 주변을 둘러본다. 놓치면 고개를 젓는다
   P.lookTimer -= dt;
   let nearest = null, nd = 1e9; for (const u of bugs) { if (u.leave) continue; const dd = Math.abs(u.x - player.x); if (dd < nd) { nd = dd; nearest = u; } }
@@ -1960,7 +1960,7 @@ function drawPlayer() {
   // 앞 팔 + 잠자리채
   const [ex, ey, hx, hy] = limb(10, SH + 4, P.armF, 13, P.foreF, 12, 9, 7.5, jacket, wrap);
   ctx.strokeStyle = sh(wrap, .6); ctx.lineWidth = 1; for (let i = 1; i <= 3; i++) { const k = i / 4, px = ex + (hx - ex) * k, py = ey + (hy - ey) * k; ctx.beginPath(); ctx.moveTo(px - 3, py); ctx.lineTo(px + 3, py); ctx.stroke(); }
-  const netAng = P.net, sw = player.swing > 0 ? 1 - player.swing / SWING_T : 0, pHit = clamp01((sw - .25) / .45);
+  const netAng = P.net, sw = player.swing > 0 ? 1 - player.swing / SWING_T : 0, pHit = clamp01((sw - .2) / .45);
   if (player.swing > 0 && pHit > 0 && pHit < 1) { ctx.globalAlpha = .28 * (1 - pHit * .7); ctx.fillStyle = '#FFF'; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.arc(hx, hy, 96, netAng, Math.min(netAng + 1.1, 1.15)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; } // 휘두른 궤적
   ctx.save(); ctx.translate(hx, hy); ctx.rotate(netAng);
   ctx.strokeStyle = '#4A2E14'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(58, 0); ctx.stroke(); ctx.strokeStyle = '#A8743B'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(-6, -1.2); ctx.lineTo(56, -1.2); ctx.stroke();
