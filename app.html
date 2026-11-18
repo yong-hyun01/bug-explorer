@@ -578,7 +578,7 @@ const SWING_T = .34; // 휘두르기 한 번에 걸리는 시간(초): 준비 20
 // 매 프레임 입력·물리에서 '목표 자세'만 정하고, 부위마다 강성·감쇠가 다른 스프링으로 따라가게 한다.
 // 그래서 골반 → 어깨 → 머리, 위팔 → 아래팔 → 채 순으로 시간차가 생기고, 멈춘 뒤에도 관성이 남는다. 모두 dt 기반.
 const pose = { lean: 0, leanV: 0, hip: 0, hipV: 0, twist: 0, twistV: 0, head: 0, headV: 0, headY: 0, headYV: 0, crouch: 0, crouchV: 0, bodyY: 0, bodyYV: 0,
-  armF: -.5, armFV: 0, foreF: -1.25, foreFV: 0, armB: -.45, armBV: 0, foreB: .25, foreBV: 0, net: -.18, netV: 0,
+  armF: -.3, armFV: 0, foreF: 1.6, foreFV: 0, armB: -.45, armBV: 0, foreB: .25, foreBV: 0, net: -.2, netV: 0,
   thighF: .07, thighFV: 0, kneeF: -.04, kneeFV: 0, thighB: -.07, thighBV: 0, kneeB: -.04, kneeBV: 0,
   look: 0, lookV: 0, lookT: 0, lookTimer: 2, weight: 0, ear: 0, earTimer: 3, tail: 0, tailV: 0, gait: 0, sneak: 0, stride: .25, prevVx: 0, ax: 0, jumpPrep: 0, stretch: 0, idleT: 0, breath: 0 };
 const lerp = (a, b, k) => a + (b - a) * k, clamp01 = v => Math.max(0, Math.min(1, v));
@@ -645,17 +645,17 @@ function updatePose(dt) {
   const armAmp = (.25 + .3 * speedK + .25 * P.gait) * (1 - P.sneak * .6);
   let aF, fF, aB, fB, netT;
   if (swinging) {
-    const a1 = lerp(-.5, .5, pWind), f1 = lerp(-1.25, -1.0, pWind), n1 = lerp(-.18, .55, pWind);     // 준비: 채를 앞·아래로 내려 겨눔
-    const a2 = lerp(a1, 2.3, pHit), f2 = lerp(f1, -.3, pHit), n2 = lerp(n1, -1.3, pHit);             // 휘두름: 아래에서 머리 위로 쓸어 올림
-    aF = lerp(a2, 1.7, pEnd); fF = lerp(f2, -.6, pEnd); netT = lerp(n2, -1.0, pEnd);                   // 마무리(원래 자세 복귀는 스프링이 follow-through 로 만든다)
+    const a1 = lerp(-.3, .6, pWind), f1 = lerp(1.6, .4, pWind), n1 = lerp(-.2, .55, pWind);         // 준비: 팔을 앞·아래로 뻗어 채를 낮게 겨눔
+    const a2 = lerp(a1, 2.3, pHit), f2 = lerp(f1, .5, pHit), n2 = lerp(n1, -1.3, pHit);              // 휘두름: 아래에서 머리 위로 쓸어 올림
+    aF = lerp(a2, 1.5, pEnd); fF = lerp(f2, .9, pEnd); netT = lerp(n2, -1.0, pEnd);                    // 마무리(원래 자세 복귀는 스프링이 follow-through 로 만든다)
     aB = lerp(-.45, -1.0, pHit * (1 - pEnd * .5)); fB = .4;                                            // 뒷팔은 반대로 뒤로 젖혀 균형
   }
-  else if (happy) { const w = Math.sin(t * 10) * .12; aF = 2.9 + w; fF = .2; aB = -2.3 - w; fB = -.3; netT = -1.25; } // 만세: 뒷팔은 머리에 가리지 않게 바깥으로 벌린다
-  else if (oops) { aF = -.2; fF = -1.4; aB = -.35; fB = .3; netT = .25; }
-  else if (free) { aF = -1.2 + Math.sin(t * 2) * .1; fF = -.6; aB = -.8 + Math.sin(t * 2 + 1) * .1; fB = .45; netT = aF + fF + Math.PI / 2; }
-  else if (air) { if (player.vy < 0) { aF = .4; fF = -1.1; aB = -.9; fB = .5; } else { aF = -.9; fF = -.9; aB = -.2; fB = .3; } netT = aF + fF + Math.PI / 2; }
-  else if (player.moving) { aF = -.55 + s1 * armAmp; fF = -1.25 - (s1 + 1) * .15; aB = -.45 - s1 * armAmp; fB = .25 + (1 - s1) * .15; netT = aF + fF + Math.PI / 2; }
-  else { aF = -.5 + P.weight * .03 + Math.sin(t * 1.3 + 1) * .02; fF = -1.25 + Math.sin(t * .9) * .03; aB = -.45 - P.weight * .03 + Math.sin(t * 1.1) * .02; fB = .25 + Math.sin(t * 1.1) * .03; netT = aF + fF + Math.PI / 2; }
+  else if (happy) { const w = Math.sin(t * 10) * .12; aF = 2.9 + w; fF = .2; aB = -2.3 - w; fB = .3; netT = -1.25; } // 만세: 뒷팔은 머리에 가리지 않게 바깥으로 벌린다
+  else if (oops) { aF = -.2; fF = 1.4; aB = -.35; fB = .3; netT = .25; }
+  else if (free) { aF = -.6 + Math.sin(t * 2) * .1; fF = 1.7; aB = -.8 + Math.sin(t * 2 + 1) * .1; fB = .45; netT = aF + fF - 1.5; }
+  else if (air) { if (player.vy < 0) { aF = .4; fF = 1.2; aB = -.9; fB = .5; } else { aF = -.7; fF = 1.9; aB = -.2; fB = .3; } netT = aF + fF - 1.5; }
+  else if (player.moving) { aF = -.4 + s1 * armAmp; fF = 1.5 + (s1 + 1) * .1; aB = -.45 - s1 * armAmp; fB = .25 + (1 - s1) * .15; netT = aF + fF - 1.5; }
+  else { aF = -.3 + P.weight * .03 + Math.sin(t * 1.3 + 1) * .02; fF = 1.6 + Math.sin(t * .9) * .03; aB = -.45 - P.weight * .03 + Math.sin(t * 1.1) * .02; fB = .25 + Math.sin(t * 1.1) * .03; netT = aF + fF - 1.5; }
   const aK = oops ? 55 : swinging ? 520 : 150, fK = oops ? 40 : swinging ? 420 : 95;
   spr(P, 'armF', aF, aK, .78, dt); spr(P, 'foreF', fF, fK, .72, dt); spr(P, 'armB', aB, aK, .78, dt); spr(P, 'foreB', fB, fK, .72, dt);
   spr(P, 'net', netT, swinging ? 520 : 110, swinging ? .85 : .7, dt);
